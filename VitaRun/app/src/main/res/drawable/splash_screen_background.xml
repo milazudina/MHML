@@ -4,7 +4,8 @@
     <item android:drawable="@color/colorPrimaryDark" />
 
     <item>
-        <bitmap android:src="@drawable/vitarun_logo"
-            android:gravity="center" />
+        <bitmap android:src="@drawable/logo_vitarun_small"
+            android:gravity="center"
+            />
     </item>
 </layer-list>
