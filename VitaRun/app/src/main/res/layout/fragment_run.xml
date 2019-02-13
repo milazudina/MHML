@@ -10,4 +10,10 @@
         android:textColor="@android:color/white"
         android:textSize="30sp"
         android:layout_centerInParent="true"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/transport_control_fragment"></FrameLayout>
+
 </RelativeLayout>
