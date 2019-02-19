@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@android:color/black">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Run"
-        android:textColor="@android:color/white"
-        android:textSize="30sp"
-        android:layout_centerInParent="true"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
     <FrameLayout
+        android:id="@+id/run_title_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/transport_control_fragment"></FrameLayout>
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/run_reccomendation_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/run_title_container">
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/run_transportControl_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/run_reccomendation_container">
+    </FrameLayout>
+
 
 </RelativeLayout>
