@@ -202,8 +202,7 @@ for j in range (0, len(pronation_list)):
     sep_steps_length = np.array(list(sep_steps_length))
     counts = np.bincount(sep_steps_length)
     #most_common_length = np.argmax(counts) # for now it is 35
-    most_common_length = 38
-    
+    most_common_length = 36
 
     for i in range(0, len(sep_steps_list_tidy)):
         if len(sep_steps_list_tidy[i]) != most_common_length:
@@ -222,7 +221,7 @@ for j in range (0, len(pronation_list)):
             
     #    else if len(sep_steps_list_tidy[i]) < most_common_length:
         if len(sep_steps_list_tidy[i]) == most_common_length:
-            equal_steps.append(fixed_length_step)
+            equal_steps.append(sep_steps_list_tidy[i])
         
         labels.append(j)
 # https://docs.scipy.org/doc/numpy-1.15.1/reference/generated/numpy.stack.html        
