@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +44,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+
+
+
+
+
 
         mLeDevices = new ArrayList<>();
         mHandler = new Handler();
@@ -84,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void getStridalysers()
+    public void ConnectStridalyzers()
     {
         mLeDevices.clear();
         scanLeDevice(true);

@@ -10,8 +10,7 @@
         android:id="@+id/master_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/insole_connection">
-    </ScrollView>
+        android:layout_above="@+id/insole_connection"></ScrollView>
 
     <FrameLayout
         android:id="@+id/insole_connection"
@@ -23,41 +22,48 @@
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            tools:ignore="UselessParent">
+
             <TextView
                 android:id="@+id/Connect_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity = "bottom|center_horizontal"
+                android:layout_gravity="bottom|center_horizontal"
                 android:text="Connect" />
 
             <ImageButton
                 android:id="@+id/bluetooth_icon"
+                android:contentDescription="@+id/bluetooth_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_gravity = 'center'
+                android:layout_gravity='center'
+                android:clickable="true"
                 android:src="@drawable/ic_bluetooth_black_24dp" />
+
+
         </FrameLayout>
 
 
         <!--<ImageView-->
-            <!--android:id="@+id/insole_left_icon"-->
-            <!--android:layout_width="40dp"-->
-            <!--android:layout_height="60dp"-->
-            <!--&lt;!&ndash;android:layout_gravity="start||center_vertical"&ndash;&gt;-->
-            <!--android:src = "@drawable/vitarun_insoleleft">-->
-             <!--&lt;!&ndash;android:drawableLeft="@drawable/vitarun_insoleleft">&ndash;&gt;-->
+        <!--android:id="@+id/insole_left_icon"-->
+        <!--android:layout_width="40dp"-->
+        <!--android:layout_height="60dp"-->
+        <!--&lt;!&ndash;android:layout_gravity="start||center_vertical"&ndash;&gt;-->
+        <!--android:src = "@drawable/vitarun_insoleleft">-->
+        <!--&lt;!&ndash;android:drawableLeft="@drawable/vitarun_insoleleft">&ndash;&gt;-->
         <!--</ImageView>-->
 
     </FrameLayout>
+
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/bottom_navigation"
-        android:background="?android:attr/windowBackground"/>
+        android:background="?android:attr/windowBackground"
+        app:menu="@menu/bottom_navigation" />
 
 </RelativeLayout>
 
