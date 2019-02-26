@@ -89,11 +89,9 @@ public class MainActivity extends AppCompatActivity {
         mLeDevices.clear();
         scanLeDevice(true);
 
-        for (int i = 0; i < mLeDevices.size(); i++)
-        {
-            BluetoothDevice device = mLeDevices.get(i);
-            if (device.getAddress().equals(stridMACs[0]))
-            {
+        for (BluetoothDevice device : mLeDevices) {
+
+            if (device.getAddress().equals(stridMACs[0])) {
                 System.out.println(device.getAddress());
             }
         }
@@ -117,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
             mScanning = false;
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
         }
-        invalidateOptionsMenu();
+//        invalidateOptionsMenu();
     }
 
     // Device scan callback.
