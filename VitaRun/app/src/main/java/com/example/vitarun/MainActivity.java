@@ -45,11 +45,13 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        ImageButton bluetooth_button =(ImageButton)findViewById(R.id.bluetooth_icon);
+        bluetooth_button.setOnClickListener(new View.OnClickListener()  {
 
-
-
-
-
+            public void onClick(View v)  {
+                ConnectStridalyzers();
+            }
+        });
 
         mLeDevices = new ArrayList<>();
         mHandler = new Handler();
@@ -97,9 +99,11 @@ public class MainActivity extends AppCompatActivity {
         mLeDevices.clear();
         scanLeDevice(true);
 
-        for (BluetoothDevice device : mLeDevices) {
-
-            if (device.getAddress().equals(stridMACs[0])) {
+        for (int i = 0; i < mLeDevices.size(); i++)
+        {
+            BluetoothDevice device = mLeDevices.get(i);
+            if (device.getAddress().equals(stridMACs[0]))
+            {
                 System.out.println(device.getAddress());
             }
         }
@@ -123,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
             mScanning = false;
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
         }
-//        invalidateOptionsMenu();
+        invalidateOptionsMenu();
     }
 
     // Device scan callback.
