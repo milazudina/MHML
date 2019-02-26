@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/button9"
+        android:id="@+id/pause_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Pause"
@@ -20,7 +20,7 @@
         app:layout_constraintVertical_bias="0.573" />
 
     <Button
-        android:id="@+id/button11"
+        android:id="@+id/stop_button"
         android:layout_width="wrap_content"
         android:layout_height="44dp"
         android:text="Stop"
