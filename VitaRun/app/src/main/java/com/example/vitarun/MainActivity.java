@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_ENABLE_BT = 1;
     // Stops scanning after 10 seconds.
-    private static final long SCAN_PERIOD = 10000;
+    private static final long SCAN_PERIOD = 3000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,16 +98,13 @@ public class MainActivity extends AppCompatActivity {
     {
         mLeDevices.clear();
         scanLeDevice(true);
-
-        for (int i = 0; i < mLeDevices.size(); i++)
-        {
-            BluetoothDevice device = mLeDevices.get(i);
-            if (device.getAddress().equals(stridMACs[0]))
-            {
-                System.out.println(device.getAddress());
-            }
-        }
     }
+
+    public void printStridAdresses()
+    {
+        System.out.println(String.format("Number of devices %1d", mLeDevices.size()));
+    }
+
 
     private void scanLeDevice(final boolean enable) {
         if (enable) {
@@ -139,10 +136,17 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (!mLeDevices.contains(device))
+
+                            if (device.getAddress().equals(stridMACs[0]))
                             {
                                 mLeDevices.add(device);
+                                System.out.println(device.getAddress());
                             }
+                        }
+
+                        @Override
+                        protected void finalize() throws Throwable {
+                            super.finalize();
                         }
                     });
                 }
