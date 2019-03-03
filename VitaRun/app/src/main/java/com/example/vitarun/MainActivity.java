@@ -28,6 +28,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Use this array to store the MAC addresses of the insoles.
     public String[] stridMACs = {"0C:1C:57:6E:A1:B9"};
 
     private boolean mScanning;
