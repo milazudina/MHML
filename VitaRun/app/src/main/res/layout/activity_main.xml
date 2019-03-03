@@ -32,7 +32,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
-                android:text="Connect" />
+                android:text="Connect"
+                android:layout_marginBottom="10dp"/>
 
             <ImageButton
                 android:id="@+id/bluetooth_icon"
@@ -48,6 +49,7 @@
         <ImageView
             android:id="@+id/insole_left_icon"
             android:src = "@drawable/vitarun_insoleleft"
+            android:layout_marginStart="45dp"
             android:layout_width="40dp"
             android:layout_height="60dp"
             android:layout_gravity="center_vertical"/>
@@ -57,12 +59,14 @@
             android:layout_height="match_parent"
             android:layout_gravity="end"
             tools:ignore="UselessParent">
+
             <ImageView
                 android:id="@+id/insole_right_icon"
-                android:src = "@drawable/vitarun_insoleright"
                 android:layout_width="40dp"
                 android:layout_height="60dp"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="45dp"
+                android:src="@drawable/vitarun_insoleright" />
         </FrameLayout>
 
 
