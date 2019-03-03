@@ -38,7 +38,7 @@ public class TransportControlFragment extends Fragment {
         pause_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String text_pronate = "Pronate";
+                String text_pronate = "Pause";
                 Intent speechIntent = new Intent(getActivity(), TextToSpeechService.class);
 
                 speechIntent.putExtra(TextToSpeechService.EXTRA_WORD, text_pronate );

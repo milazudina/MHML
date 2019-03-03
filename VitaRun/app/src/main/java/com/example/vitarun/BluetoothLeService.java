@@ -39,6 +39,9 @@ import java.util.UUID;
  * given Bluetooth LE device.
  */
 public class BluetoothLeService extends Service {
+
+//    "00001814-0000-1000-8000-00805f9b34fb", "Stidalyzer Service"
+//    "00002a53-0000-1000-8000-00805f9b34fb", "Pressure Characteristic"
     private final static String TAG = BluetoothLeService.class.getSimpleName();
 
     private BluetoothManager mBluetoothManager;
