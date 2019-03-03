@@ -3,6 +3,7 @@ package com.example.vitarun;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -31,11 +32,13 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     // Use this array to store the MAC addresses of the insoles.
-    public String[] stridMACs = {"0C:1C:57:6E:A1:B9", "F8:36:9B:74:6D:C8"};
+//    public String[] stridMACs = {"0C:1C:57:6E:A1:B9", "F8:36:9B:74:6D:C8"};
+    public String[] stridMACs = {"0C:1C:57:6E:A1:B9"};
 
     private boolean mScanning;
     Handler mHandler;
@@ -77,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
         mLeDevices = new ArrayList<>();
         mHandler = new Handler();
-
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
@@ -166,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
                             if (Arrays.asList(stridMACs).contains(device.getAddress()))
                             {
+                                mLeDevices.add(device);
                                 CreateBleService(device.getAddress());
                             }
                         }
@@ -178,18 +181,48 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
+    BluetoothLeService mBluetoothLeService;
 
-    public void CreateBleService(String Address)
+    public void CreateBleService(final String mDeviceAddress)
     {
-        if (!mBleServices.containsKey(Address)) {
-            BluetoothLeService service = new BluetoothLeService();
-            if (service.connect(Address)) {
-                System.out.println(String.format("Connecting to Service %s", Address));
-                mBleServices.put(Address, service);
-            }
+        if (!mBleServices.containsKey(mDeviceAddress)) {
+
+            System.out.println(String.format("Trying Service at %s", mDeviceAddress));
+
+            final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+                @Override
+                public void onServiceConnected(ComponentName componentName, IBinder service) {
+                    mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+                    if (!mBluetoothLeService.initialize()) {
+                        Log.e("MAIN", "Unable to initialize Bluetooth");
+                        finish();
+                    }
+                    // Automatically connects to the device upon successful start-up initialization.
+                    if (mBluetoothLeService.connect(mDeviceAddress)) {
+                        System.out.println(String.format("Connected to Service %s", mDeviceAddress));
+                        mBleServices.put(mDeviceAddress, mBluetoothLeService);
+
+                        List<BluetoothGattService> gattServices = mBluetoothLeService.getSupportedGattServices();
+
+                        for (BluetoothGattService gattService : gattServices)
+                        {
+                            System.out.println(gattService.getInstanceId());
+                        }
+                    }
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName componentName) {
+                    mBluetoothLeService = null;
+                }
+            };
+
+            Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
+            bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
         }
     }
-
 
     // NAVIGATION
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
