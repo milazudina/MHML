@@ -13,7 +13,6 @@
         android:layout_above="@+id/insole_connection"></ScrollView>
 
 
-
     <FrameLayout
         android:id="@+id/insole_connection"
         android:layout_width="match_parent"
@@ -37,11 +36,12 @@
 
             <ImageButton
                 android:id="@+id/bluetooth_icon"
-                android:contentDescription="@+id/bluetooth_icon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_gravity='center'
                 android:clickable="true"
+                android:background="@android:color/transparent"
+                android:contentDescription="@+id/bluetooth_icon"
                 android:src="@drawable/ic_bluetooth_black_24dp" />
 
         </FrameLayout>
