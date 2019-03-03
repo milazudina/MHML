@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothAdapter mBluetoothAdapter;
 
     private static final int REQUEST_ENABLE_BT = 1;
-    // Stops scanning after 10 seconds.
+    // Stops scanning after 3 seconds.
     private static final long SCAN_PERIOD = 3000;
 
     @Override
@@ -44,6 +45,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        mLeDevices = new ArrayList<>();
+        mHandler = new Handler();
+
+        // Only initialise bluetooth if not being run in emulator.
+        if (!Build.FINGERPRINT.contains("generic")) {
+            InitialiseBluetooth();
+        }
 
         ImageButton bluetooth_button =(ImageButton)findViewById(R.id.bluetooth_icon);
         bluetooth_button.setOnClickListener(new View.OnClickListener()  {
@@ -53,9 +62,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mLeDevices = new ArrayList<>();
-        mHandler = new Handler();
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
 
+        getSupportFragmentManager().beginTransaction().replace(R.id.master_fragment_container,
+                new DashboardFragment()).commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // User chose not to enable Bluetooth.
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
+            finish();
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void InitialiseBluetooth()
+    {
         // Bluetooth Stuff
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
@@ -76,22 +101,6 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
-
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setOnNavigationItemSelectedListener(navListener);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.master_fragment_container,
-                new DashboardFragment()).commit();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // User chose not to enable Bluetooth.
-        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
-            finish();
-            return;
-        }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void ConnectStridalyzers()
@@ -151,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
             };
-
 
     // NAVIGATION
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
