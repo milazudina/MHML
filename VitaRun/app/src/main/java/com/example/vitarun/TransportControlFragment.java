@@ -1,5 +1,6 @@
 package com.example.vitarun;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +19,8 @@ public class TransportControlFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_transport_control, container, false);
         Button button = (Button) view.findViewById(R.id.stop_button);
+        Button pause_button = (Button) view.findViewById(R.id.pause_button);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -29,6 +32,19 @@ public class TransportControlFragment extends Fragment {
                             .replace(R.id.run_transportControl_container, new StartRunFragment())
                             .commit();
                 }
+            }
+        });
+
+        pause_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text_pronate = "Pronate";
+                Intent speechIntent = new Intent(getActivity(), TextToSpeechService.class);
+
+                speechIntent.putExtra(TextToSpeechService.EXTRA_WORD, text_pronate );
+
+                getActivity().startService(speechIntent);
+
             }
         });
 
