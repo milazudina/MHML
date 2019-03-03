@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
@@ -72,14 +74,13 @@ public class DeviceScanActivity extends ListActivity {
 
     private BluetoothAdapter.LeScanCallback leScanCallback =
             new BluetoothAdapter.LeScanCallback() {
-
                 @Override
                 public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            leDeviceListAdapter.addDevice(device);
-                            leDeviceListAdapter.notifyDataSetChanged();
+//                            leDeviceListAdapter.addDevice(device);
+//                            leDeviceListAdapter.notifyDataSetChanged();
                         }
                     });
                 }
