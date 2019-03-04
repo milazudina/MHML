@@ -1,32 +1,47 @@
 package com.example.vitarun;
 
+import java.time.Duration;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 public class RunEvent {
 
-    Date startTime;
-    Date endTime;
+    private ZonedDateTime startTime;
+    private ZonedDateTime endTime;
 
-    ArrayList<float> DATA_BUFFER;
+    ArrayList<Float> DATA_BUFFER;
 
     public RunEvent()
     {
-        this.startTime = Calendar.getInstance().getTime();
+        this.startTime = ZonedDateTime.now(ZoneId.systemDefault());
 
         DATA_BUFFER = new ArrayList<>();
     }
 
-    public void PauseRun()
+    public void PauseRunEvent()
     {
 
     }
 
     public void EndRunEvent()
     {
-        endTime = Calendar.getInstance().getTime();
+        endTime = ZonedDateTime.now(ZoneId.systemDefault());
+
     }
+
+    public Duration getEllapsedTime()
+    {
+        return Duration.between(startTime, ZonedDateTime.now(ZoneId.systemDefault()));
+    }
+
+    public ZonedDateTime getStartTime()
+    {
+        return startTime;
+    }
+
 
 
 
