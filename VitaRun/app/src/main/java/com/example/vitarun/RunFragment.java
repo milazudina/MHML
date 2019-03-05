@@ -16,7 +16,7 @@ public class RunFragment extends Fragment {
         getChildFragmentManager().beginTransaction().replace(R.id.run_reccomendation_container,
                 new ReccomendationsFragment()).commit();
         getChildFragmentManager().beginTransaction().replace(R.id.run_transportControl_container,
-                new StartRunFragment()).commit();
+                new TransportControlFragment()).commit();
 
         getChildFragmentManager().beginTransaction().replace(R.id.run_title_container,
                 new RunTitleFragment()).commit();
@@ -25,10 +25,10 @@ public class RunFragment extends Fragment {
 
     }
 
-    public void newRun() {
-        getChildFragmentManager().beginTransaction().replace(R.id.run_transportControl_container,
-                new TransportControlFragment()).commit();
-
-    }
+//    public void newRun() {
+//        getChildFragmentManager().beginTransaction().replace(R.id.run_transportControl_container,
+//                new TransportControlFragment()).commit();
+//
+//    }
 }
 
