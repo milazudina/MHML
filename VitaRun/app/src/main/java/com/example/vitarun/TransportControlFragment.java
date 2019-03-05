@@ -22,7 +22,7 @@ public class TransportControlFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_start_run, container, false);
+        View view = inflater.inflate(R.layout.fragment_transport_control, container, false);
         mViewSwitcher = view.findViewById(R.id.profileSwitcher);
         Button button = (Button) view.findViewById(R.id.start_run_button);
         Button stopButton = (Button) view.findViewById(R.id.stop_button);
