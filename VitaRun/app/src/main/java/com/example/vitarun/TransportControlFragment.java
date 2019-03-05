@@ -1,6 +1,7 @@
 package com.example.vitarun;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,22 +20,35 @@ import android.widget.ViewSwitcher;
  */
 public class TransportControlFragment extends Fragment {
     ViewSwitcher mViewSwitcher;
+
+    private RunFragment runFragment;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // Get Reference to parent RunFragment.
+        runFragment = (RunFragment)this.getParentFragment();
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_transport_control, container, false);
         mViewSwitcher = view.findViewById(R.id.profileSwitcher);
-        Button button = (Button) view.findViewById(R.id.start_run_button);
+        Button startButton = (Button) view.findViewById(R.id.start_run_button);
         Button stopButton = (Button) view.findViewById(R.id.stop_button);
         Button pauseButton = (Button) view.findViewById(R.id.pause_button);
 
-        button.setOnClickListener(new View.OnClickListener(){
+        startButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v ) {
                 System.out.println("change view"); // some function here
                 // mViewSwitcher.setDisplayedChild(0);
                 mViewSwitcher.showNext();
                 System.out.println("change view complete?");
+
+                StartRun();
 
                 // This Changes Fragments:
 //                FragmentManager fm = getFragmentManager();
@@ -71,8 +85,23 @@ public class TransportControlFragment extends Fragment {
             }
         });
         return view;
+    }
 
-    };
 
+    // Call Run Methods in Parent Run Fragment.
+    private void StartRun()
+    {
+        runFragment.StartRun();
+    }
+
+    public void PauseRun()
+    {
+        runFragment.PauseRun();
+    }
+
+    public void StopRun()
+    {
+        runFragment.StopRun();
+    }
 }
 
