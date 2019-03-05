@@ -53,18 +53,21 @@ public class MainActivity extends AppCompatActivity {
 
     private HashMap<String, BluetoothLeService> mBleServices;
 
+    private RunFragment runFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
+        runFragment = new RunFragment();
 
         mLeDevices = new ArrayList<>();
         mHandler = new Handler();
         mBleServices = new HashMap<>();
 
-        // Only initialise bluetooth if not being run in emulator.
+        // Only initialise bluetooth if NOT being run in emulator.
         if (!Build.FINGERPRINT.contains("generic")) {
             InitialiseBluetooth();
             System.out.println("ON PHONE");
@@ -221,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
             Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
             bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
+            runFragment.setBleServices(mBleServices);
         }
     }
 
@@ -236,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                             selectedFragment = new DashboardFragment();
                             break;
                         case R.id.nav_run:
-                            selectedFragment = new RunFragment();
+                            selectedFragment = runFragment;
                             break;
                         case R.id.nav_profile:
                             selectedFragment = new ProfileFragment();

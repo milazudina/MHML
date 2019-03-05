@@ -15,6 +15,7 @@
  */
 
 package com.example.vitarun;
+
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -42,6 +43,8 @@ public class BluetoothLeService extends Service {
 
 //    "00001814-0000-1000-8000-00805f9b34fb", "Stidalyzer Service"
 //    "00002a53-0000-1000-8000-00805f9b34fb", "Pressure Characteristic"
+
+    private final static String stridServiceUUID = "00001814-0000-1000-8000-00805f9b34fb";
 
     private final static String TAG = BluetoothLeService.class.getSimpleName();
 
@@ -126,9 +129,29 @@ public class BluetoothLeService extends Service {
                                  final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
 
-        // This is special handling for the Heart Rate Measurement profile.  Data parsing is
-        // carried out as per profile specifications:
-        // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
+        System.out.println("BROADCAST_UPDATE");
+
+        if (characteristic.getUuid().equals(stridServiceUUID)) {
+
+            System.out.println("GOT_STRID_UUID");
+
+            int flag = characteristic.getProperties();
+            int format = -1;
+
+            if ((flag & 0x01) != 0) {
+                format = BluetoothGattCharacteristic.FORMAT_UINT16;
+            } else {
+                format = BluetoothGattCharacteristic.FORMAT_UINT8;
+            }
+
+            final int stridValue = characteristic.getIntValue(format, 1);
+            System.out.println(String.format("Received value: %d", stridValue));
+            intent.putExtra(EXTRA_DATA, String.valueOf(stridValue));
+        }
+
+//         This is special handling for the Heart Rate Measurement profile.  Data parsing is
+//         carried out as per profile specifications:
+//         http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
 //        if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
 //            int flag = characteristic.getProperties();
 //            int format = -1;
@@ -206,11 +229,10 @@ public class BluetoothLeService extends Service {
      * Connects to the GATT server hosted on the Bluetooth LE device.
      *
      * @param address The device address of the destination device.
-     *
      * @return Return true if the connection is initiated successfully. The connection result
-     *         is reported asynchronously through the
-     *         {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
-     *         callback.
+     * is reported asynchronously through the
+     * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
+     * callback.
      */
     public boolean connect(final String address) {
         if (mBluetoothAdapter == null || address == null) {
@@ -289,7 +311,7 @@ public class BluetoothLeService extends Service {
      * Enables or disables notification on a give characteristic.
      *
      * @param characteristic Characteristic to act on.
-     * @param enabled If true, enable notification.  False otherwise.
+     * @param enabled        If true, enable notification.  False otherwise.
      */
     public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic,
                                               boolean enabled) {

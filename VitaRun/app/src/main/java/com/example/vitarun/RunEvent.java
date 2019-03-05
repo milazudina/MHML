@@ -12,11 +12,14 @@ public class RunEvent {
     private ZonedDateTime startTime;
     private ZonedDateTime endTime;
 
+    ArrayList<BluetoothLeService> bleServices;
     ArrayList<Float> DATA_BUFFER;
 
-    public RunEvent()
+    public RunEvent(ArrayList<BluetoothLeService> bleServices)
     {
-        this.startTime = ZonedDateTime.now(ZoneId.systemDefault());
+        startTime = ZonedDateTime.now(ZoneId.systemDefault());
+        this.bleServices = bleServices;
+
 
         DATA_BUFFER = new ArrayList<>();
     }
@@ -25,6 +28,7 @@ public class RunEvent {
     {
 
     }
+
 
     public void EndRunEvent()
     {
