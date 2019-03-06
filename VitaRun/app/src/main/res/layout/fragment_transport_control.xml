@@ -1,38 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/transport_control_fragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/profileSwitcher"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <Button
-        android:id="@+id/pause_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:drawableTop="@drawable/ic_pause_black_24dp"
-        android:text="Pause"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button11"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/stop_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="76dp"
-        android:drawableTop="@drawable/ic_stop_black_24dp"
-        android:text="Stop"
-        app:layout_constraintBaseline_toBaselineOf="@+id/button9"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button9" />
+        <Button
+            android:id="@+id/start_run_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal ='true'
+            android:text="@string/start_run" />
+
+    </RelativeLayout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/pause_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart ='90dp'
+            android:drawableTop="@drawable/ic_pause_black_24dp"
+            android:text="Pause"
+            />
 
 
+        <Button
+            android:id="@+id/stop_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/ic_stop_black_24dp"
+            android:layout_toEndOf="@id/pause_button"
+            android:layout_marginStart ='60dp'
+            android:text="Stop" />
 
-</android.support.constraint.ConstraintLayout>
+
+
+    </RelativeLayout>
+
+</ViewSwitcher>

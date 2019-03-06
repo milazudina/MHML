@@ -16,7 +16,7 @@
         android:id="@+id/reccomendations_title"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:text='Your latest recommendations'
+        android:text='@string/latest_recommendations'
         android:textAlignment="center"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"

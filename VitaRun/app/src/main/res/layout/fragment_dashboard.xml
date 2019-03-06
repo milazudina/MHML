@@ -4,9 +4,17 @@
     android:background="@android:color/darker_gray">
 
     <TextView
+        android:id="@+id/Dashboard_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dashboard"
-        android:textSize="30sp"
-        android:layout_centerInParent="true"/>
+        android:text="@string/left_fragment"
+        android:textSize="30sp" />
+
+    <com.anychart.anychart.AnyChartView
+        android:id="@+id/any_chart_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/Dashboard_title"
+        />
+
 </RelativeLayout>
