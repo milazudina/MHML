@@ -25,7 +25,7 @@ public class ServerComms {
         gson = new Gson();
     }
 
-    public String GetFeature(final String featureName)
+    public void GetFeature(final String featureName)
     {
         final String featureReturn = new String();
 
@@ -45,13 +45,13 @@ public class ServerComms {
                 if (response.isSuccessful())
                 {
                     String myResponse = response.body().string();
-                    featureReturn = myResponse;
+//                    featureReturn = myResponse;
 
                 }
             }
         });
 
-        return response;
+//        return response;
     }
 
     public void PostPressureData(HashMap<Integer, String> data)
