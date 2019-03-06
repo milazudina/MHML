@@ -8,7 +8,7 @@
 
     <FrameLayout
         android:id="@+id/insole_connection"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="220dp"
         android:background="@color/offwhite">
 
