@@ -4,9 +4,78 @@
     android:background="@android:color/white">
 
     <TextView
+        android:id="@+id/tvYourProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Profile"
-        android:textSize="30sp"
-        android:layout_centerInParent="true"/>
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="112dp"
+        android:text="@string/your_profile"
+        android:textSize="30sp" />
+
+
+
+    <LinearLayout
+        android:id="@+id/LLvCategories"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tvYourProfile"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:gravity="fill_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="25dp"
+            android:text="@string/username" />
+
+        <TextView
+            android:id="@+id/tvEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="23dp"
+            android:layout_marginEnd="40dp"
+            android:text="@string/email" />
+
+
+        <TextView
+            android:id="@+id/tvAge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="40dp"
+            android:text="@string/age" />
+
+        <TextView
+            android:id="@+id/tvWeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="41dp"
+            android:layout_marginEnd="40dp"
+
+            android:text="@string/weight" />
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bCreateProfile"
+        android:layout_width="223dp"
+        android:layout_height="53dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="144dp"
+        android:gravity="center_horizontal"
+        android:text="@string/edit" />
+
 </RelativeLayout>
