@@ -3,7 +3,12 @@ package com.example.vitarun;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -25,9 +30,9 @@ public class ServerComms {
         gson = new Gson();
     }
 
-    public void GetFeature(final String featureName)
+    public String GetFeature(final String featureName)
     {
-        final String featureReturn = new String();
+        final SyncResult syncResult = new SyncResult();
 
         Request request = new Request.Builder()
                 .url(url)
@@ -35,6 +40,9 @@ public class ServerComms {
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
+
+            String myResponse;
+
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
@@ -44,17 +52,18 @@ public class ServerComms {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful())
                 {
-                    String myResponse = response.body().string();
-//                    featureReturn = myResponse;
-
+                    myResponse = response.body().string();
+                    syncResult.setResult(myResponse);
                 }
             }
         });
 
-//        return response;
+        return syncResult.getResult();
     }
 
-    public void PostPressureData(HashMap<Integer, String> data)
+
+    // Need to add userName reference.
+    public void PostPressureData(HashMap<Date, String> data)
     {
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -81,5 +90,31 @@ public class ServerComms {
                 System.out.println(response.body().string());
             }
         });
+    }
+
+    public class SyncResult {
+        private static final long TIMEOUT = 20000L;
+        private String result;
+
+        public String getResult() {
+            long startTimeMillis = System.currentTimeMillis();
+            while (result == null && System.currentTimeMillis() - startTimeMillis < TIMEOUT) {
+                synchronized (this) {
+                    try {
+                        wait(TIMEOUT);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return result;
+        }
+
+        public void setResult(String result) {
+            this.result = result;
+            synchronized (this) {
+                notify();
+            }
+        }
     }
 }
