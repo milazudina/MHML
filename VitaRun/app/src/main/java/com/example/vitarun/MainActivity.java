@@ -10,9 +10,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -26,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,8 +40,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     // Use this array to store the MAC addresses of the insoles.
-//    public String[] stridMACs = {"0C:1C:57:6E:A1:B9", "F8:36:9B:74:6D:C8"};
-    public String[] stridMACs = {"0C:1C:57:6E:A1:B9"};
+    //Left [0],  Right [1]
+    public String[] stridMACs = {"0C:1C:57:6E:A1:B9", "F8:36:9B:74:6D:C8"};
+//    public String[] stridMACs = {"0C:1C:57:6E:A1:B9"};
 
     private boolean mScanning;
     Handler mHandler;
@@ -73,10 +77,10 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("ON PHONE");
         }
 
-        ImageButton bluetooth_button =(ImageButton)findViewById(R.id.bluetooth_icon);
-        bluetooth_button.setOnClickListener(new View.OnClickListener()  {
+        ImageButton bluetooth_button = (ImageButton) findViewById(R.id.bluetooth_icon);
+        bluetooth_button.setOnClickListener(new View.OnClickListener() {
 
-            public void onClick(View v)  {
+            public void onClick(View v) {
                 ConnectStridalyzers();
             }
         });
@@ -91,8 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 new DashboardFragment()).commit();
     }
 
-    public void InitialiseBluetooth()
-    {
+    public void InitialiseBluetooth() {
         // Bluetooth Stuff
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
@@ -125,11 +128,23 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void ConnectStridalyzers()
-    {
+    public void ConnectStridalyzers() {
+
+        for (BluetoothLeService service : mBleServices.values()) {
+            for (String mDeviceAddress : mBleServices.keySet()) {
+                System.out.println(String.format("Gatt Services for address %s: Empty = %b",
+                        mDeviceAddress, service.getSupportedGattServices().isEmpty()));
+            }
+        }
+
         for (BluetoothLeService service : mBleServices.values()) {
             service.disconnect();
+//            service.unbindService();
         }
+
+        setSoleConnected(false, 0);
+        setSoleConnected(false, 1);
+
         mBleServices = new HashMap<>();
         mLeDevices.clear();
 
@@ -137,6 +152,34 @@ public class MainActivity extends AppCompatActivity {
         scanLeDevice(true);
     }
 
+    private void setSoleConnected(Boolean connected, Integer soleIndex)
+    {
+        switch (soleIndex) {
+            case 0:
+                ImageView leftSoleIcon = findViewById(R.id.insole_left_icon);
+
+                if (connected)
+                {
+                    leftSoleIcon.setImageResource(R.drawable.vitarun_insoleleft_fill);
+                }
+                else {
+                    leftSoleIcon.setImageResource(R.drawable.vitarun_insoleleft);
+                }
+                break;
+            case 1:
+                ImageView rightSoleIcon = findViewById(R.id.insole_right_icon);
+
+                if (connected)
+                {
+                    rightSoleIcon.setImageResource(R.drawable.vitarun_insoleright_fill);
+                }
+                else {
+                    rightSoleIcon.setImageResource(R.drawable.vitarun_insoleright);
+                }
+                break;
+        }
+
+    }
 
     private void scanLeDevice(final boolean enable) {
         if (enable) {
@@ -169,10 +212,12 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
 
-                            if (Arrays.asList(stridMACs).contains(device.getAddress()))
-                            {
-                                mLeDevices.add(device);
-                                CreateBleService(device.getAddress());
+                            if (Arrays.asList(stridMACs).contains(device.getAddress())
+                                    && !mLeDevices.contains(device)) {
+
+                                    mLeDevices.add(device);
+                                    System.out.println(String.format("Found! Sole at %s", device.getAddress()));
+                                    CreateBleService(device.getAddress());
                             }
                         }
 
@@ -186,46 +231,39 @@ public class MainActivity extends AppCompatActivity {
 
     BluetoothLeService mBluetoothLeService;
 
-    public void CreateBleService(final String mDeviceAddress)
-    {
-        if (!mBleServices.containsKey(mDeviceAddress)) {
+    public void CreateBleService(final String mDeviceAddress) {
+        System.out.println(String.format("Trying Service at %s", mDeviceAddress));
 
-            System.out.println(String.format("Trying Service at %s", mDeviceAddress));
+        final ServiceConnection mServiceConnection = new ServiceConnection() {
 
-            final ServiceConnection mServiceConnection = new ServiceConnection() {
-
-                @Override
-                public void onServiceConnected(ComponentName componentName, IBinder service) {
-                    mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
-                    if (!mBluetoothLeService.initialize()) {
-                        Log.e("MAIN", "Unable to initialize Bluetooth");
-                        finish();
-                    }
-                    // Automatically connects to the device upon successful start-up initialization.
-                    if (mBluetoothLeService.connect(mDeviceAddress)) {
-                        System.out.println(String.format("Connected to Service %s", mDeviceAddress));
-                        mBleServices.put(mDeviceAddress, mBluetoothLeService);
-
-                        List<BluetoothGattService> gattServices = mBluetoothLeService.getSupportedGattServices();
-
-                        for (BluetoothGattService gattService : gattServices)
-                        {
-                            System.out.println(gattService.getInstanceId());
-                        }
-                    }
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder service) {
+                mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+                if (!mBluetoothLeService.initialize()) {
+                    Log.e("MAIN", "Unable to initialize Bluetooth");
+                    finish();
                 }
+                // Automatically connects to the device upon successful start-up initialization.
+                if (mBluetoothLeService.connect(mDeviceAddress)) {
 
-                @Override
-                public void onServiceDisconnected(ComponentName componentName) {
-                    mBluetoothLeService = null;
+                    System.out.println(String.format("Connected to Service %s", mDeviceAddress));
+                    mBleServices.put(mDeviceAddress, mBluetoothLeService);
+
+                    Integer soleIndex = Arrays.asList(stridMACs).indexOf(mDeviceAddress);
+                    setSoleConnected(true, soleIndex);
                 }
-            };
+            }
 
-            Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
-            bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+                mBluetoothLeService = null;
+            }
+        };
 
-            runFragment.setBleServices(mBleServices);
-        }
+        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
+        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+//
+//        runFragment.setBleServices(mBleServices);
     }
 
     // NAVIGATION
