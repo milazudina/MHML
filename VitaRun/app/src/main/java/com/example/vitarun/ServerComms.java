@@ -20,20 +20,34 @@ import okhttp3.Response;
 
 public class ServerComms {
 
+    // ip address of server machine + port.
     static String url = "http://146.169.147.94:3000";
+
     Gson gson;
     OkHttpClient client;
 
     public ServerComms()
     {
+        // HTTP Client.
         client = new OkHttpClient();
+
+        // GSON object converts Java types into JSON string format.
         gson = new Gson();
+    }
+
+    // Method to set user database on server side.
+    public void SetUser()
+    {
+
     }
 
     public String GetFeature(final String featureName)
     {
+        // SyncResult object allows string returned from the GET request to be assigned
+        // asyncronously.
         final SyncResult syncResult = new SyncResult();
 
+        // Add featureName to header of request.
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Feature", featureName)
@@ -52,6 +66,7 @@ public class ServerComms {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful())
                 {
+                    // Assign body of response to returned value.
                     myResponse = response.body().string();
                     syncResult.setResult(myResponse);
                 }
@@ -61,8 +76,6 @@ public class ServerComms {
         return syncResult.getResult();
     }
 
-
-    // Need to add userName reference.
     public void PostPressureData(HashMap<Date, String> data)
     {
         OkHttpClient client = new OkHttpClient();
