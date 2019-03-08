@@ -1,12 +1,260 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@android:color/white">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Profile"
-        android:textSize="30sp"
-        android:layout_centerInParent="true"/>
-</RelativeLayout>
+<ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swProfileEdit"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/tvYourProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="100dp"
+            android:text="@string/your_profile"
+            android:textSize="30sp" />
+
+
+        <LinearLayout
+            android:id="@+id/LLvCategories"
+            android:layout_width="127dp"
+            android:layout_height="500dp"
+            android:layout_below="@+id/tvYourProfile"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="50dp"
+            android:gravity="end"
+            android:orientation="vertical"
+            android:weightSum="4">
+
+            <TextView
+                android:id="@+id/tvUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:text="@string/username" />
+
+            <TextView
+                android:id="@+id/tvEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:text="@string/email" />
+
+
+            <TextView
+                android:id="@+id/tvAge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:text="@string/age" />
+
+            <TextView
+                android:id="@+id/tvWeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:text="@string/weight" />
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/bEditProfile"
+            android:layout_width="122dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="100dp"
+            android:layout_marginEnd="15dp"
+            android:gravity="center_horizontal"
+            android:text="@string/edit" />
+
+        <LinearLayout
+            android:id="@+id/LLvProfile"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_below="@+id/tvYourProfile"
+
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="40dp"
+            android:layout_toEndOf="@+id/LLvCategories"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvUserUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:text="@string/username" />
+
+            <TextView
+                android:id="@+id/tvUserEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:text="@string/email" />
+
+
+            <TextView
+                android:id="@+id/tvUserAge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:text="@string/age" />
+
+            <TextView
+                android:id="@+id/tvUserWeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:text="@string/weight" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/tvYourProfileEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="100dp"
+            android:text="@string/your_profile"
+            android:textSize="30sp" />
+
+
+        <LinearLayout
+            android:id="@+id/LLvCategoriesEdit"
+            android:layout_width="127dp"
+            android:layout_height="500dp"
+            android:layout_below="@+id/tvYourProfileEdit"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="50dp"
+            android:gravity="end"
+            android:orientation="vertical"
+            android:weightSum="4">
+
+            <TextView
+                android:id="@+id/tvUsernameEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:text="@string/username" />
+
+            <TextView
+                android:id="@+id/tvEmailEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:text="@string/email" />
+
+
+            <TextView
+                android:id="@+id/tvAgeEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:text="@string/age" />
+
+            <TextView
+                android:id="@+id/tvWeightEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:text="@string/weight" />
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/bSaveProfile"
+            android:layout_width="122dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="100dp"
+            android:layout_marginEnd="15dp"
+            android:gravity="center_horizontal"
+            android:text="@string/save" />
+
+        <LinearLayout
+            android:id="@+id/LLvProfileEdit"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_below="@+id/tvYourProfileEdit"
+
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="40dp"
+            android:layout_toEndOf="@+id/LLvCategoriesEdit"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/tvUserUsernameEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:text="@string/username" />
+
+            <EditText
+                android:id="@+id/tvUserEmailEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:text="@string/email" />
+
+
+            <EditText
+                android:id="@+id/tvUserAgeEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:text="@string/age" />
+
+            <EditText
+                android:id="@+id/tvUserWeightEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:text="@string/weight" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</ViewSwitcher>

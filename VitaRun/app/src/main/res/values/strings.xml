@@ -1,3 +1,33 @@
 <resources>
+
+
+    <!-- General -->
+
     <string name="app_name">VitaRun</string>
+    <string name="left_fragment">Dashboard</string>
+    <string name="centre_fragment">Run</string>
+    <string name="right_fragment">Profile</string>
+    <string name="connect">Connect</string>
+
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
+
+    <!-- Run Fragment -->
+
+    <string name="start_run">START NEW RUN</string>
+    <string name="latest_recommendations">Your Latest Recommendations:</string>
+
+
+    <!-- Profile Fragment -->
+
+    <string name="your_profile">Your Profile</string>
+
+    <string name="weight">Weight</string>
+    <string name="age">Age</string>
+    <string name="username">username</string>
+    <string name="email">Email</string>
+    <string name="name">Name</string>
+    <string name="password">Password</string>
+
+
 </resources>

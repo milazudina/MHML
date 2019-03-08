@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">BLE_TEST</string>
+    <string name = 'unknown_device'>BLE_TEST</string>
+</resources>
