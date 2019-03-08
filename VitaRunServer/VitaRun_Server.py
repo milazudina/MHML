@@ -22,7 +22,7 @@ class S(SimpleHTTPRequestHandler):
         self.wfile.write("POST request received".encode('utf-8'))
 
 def run(server_class = HTTPServer, handler_class=S, port=3000):
-    server_address = ('', port)
+    server_address = ('146.169.177.229', port)
     httpd = server_class(server_address, handler_class)
     print('Starting httpd... on port {}'.format(port))
     httpd.serve_forever()
