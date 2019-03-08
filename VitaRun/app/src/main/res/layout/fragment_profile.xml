@@ -10,30 +10,30 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="9dp"
-        android:layout_marginTop="112dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="100dp"
         android:text="@string/your_profile"
         android:textSize="30sp" />
 
 
-
     <LinearLayout
         android:id="@+id/LLvCategories"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="127dp"
+        android:layout_height="500dp"
         android:layout_below="@+id/tvYourProfile"
         android:layout_alignParentStart="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:gravity="fill_vertical"
-        android:orientation="vertical">
+        android:layout_marginTop="50dp"
+        android:gravity="end"
+        android:orientation="vertical"
+        android:weightSum="4">
 
         <TextView
             android:id="@+id/tvUsername"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="25dp"
+            android:layout_weight="1"
             android:text="@string/username" />
 
         <TextView
@@ -41,8 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="23dp"
-            android:layout_marginEnd="40dp"
+            android:layout_weight="1"
             android:text="@string/email" />
 
 
@@ -51,8 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="40dp"
+            android:layout_weight="1"
             android:text="@string/age" />
 
         <TextView
@@ -60,9 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="41dp"
-            android:layout_marginEnd="40dp"
-
+            android:layout_weight="1"
             android:text="@string/weight" />
 
 
@@ -70,12 +66,60 @@
 
     <Button
         android:id="@+id/bCreateProfile"
-        android:layout_width="223dp"
-        android:layout_height="53dp"
+        android:layout_width="122dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="144dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="15dp"
         android:gravity="center_horizontal"
         android:text="@string/edit" />
+
+    <LinearLayout
+        android:id="@+id/LLvProfile"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_below="@+id/tvYourProfile"
+
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="40dp"
+        android:layout_toEndOf="@+id/LLvCategories"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvUserUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_weight="1"
+            android:text="@string/username" />
+
+        <TextView
+            android:id="@+id/tvUserEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_weight="1"
+            android:text="@string/email" />
+
+
+        <TextView
+            android:id="@+id/tvUserAge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_weight="1"
+            android:text="@string/age" />
+
+        <TextView
+            android:id="@+id/tvUserWeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_weight="1"
+            android:text="@string/weight" />
+    </LinearLayout>
 
 </RelativeLayout>
