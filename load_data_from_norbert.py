@@ -1,10 +1,11 @@
 import pandas
 import matplotlib as plt
 import numpy as np
+#
 from scipy.spatial.distance import pdist, squareform #scipy spatial distance
 import sklearn as sk
 import sklearn.metrics.pairwise
-import matplotlib.pyplot as plt
+
 
 # Load data
 
@@ -38,13 +39,15 @@ import matplotlib.pyplot as plt
 
 import pandas as pd
 
-steps = pd.read_csv('/Users/mila/Bioengineering_Year_4/MHML/pronation_classification/Steps.csv', 
+# 
+
+steps = pd.read_csv('/Users/mila/Bioengineering_Year_4/MHML/pronation_classification/data/v3/teststeps2.csv', 
                     header = None,
-                    sep = ',', 
-                    usecols = [8, 9, 10])
+                    sep = ',',
+                    usecols = [0, 2, 3, 4, 5, 6, 8, 9, 10])
 steps = steps.values
 
-labels_for_steps = pd.read_csv('/Users/mila/Bioengineering_Year_4/MHML/pronation_classification/Labels.csv',
+labels_for_steps = pd.read_csv('/Users/mila/Bioengineering_Year_4/MHML/pronation_classification/data/v3/testlabel2.csv',
                                header = None, sep = ',')
 norbs_labels = labels_for_steps.values
 
@@ -55,28 +58,36 @@ all_types = []
 for j in range(1,4):
     types = []
     for i in range(0, len(steps_with_labels_norbs)):
-        if steps_with_labels_norbs[i,4] == j:
+#        col number below is where the pronation label is found
+        if steps_with_labels_norbs[i, len(steps_with_labels_norbs[1,:])-1] == j:
             types.append(steps_with_labels_norbs[i,:])
     types = np.array(types)
     all_types.append(types)
 
 steps = []
 steps_labels = []
+person_labels = []
+count = 0
 for j in range(0,3):
-    for i in range(0, len(all_types[j]), 38):
-        step = np.array(all_types[j][i:i+38, :3])
+#    the magical number below is the length of the step - 30 rn
+    for i in range(0, len(all_types[j]), 30): 
+#   the number of :col is the sensor data
+        step = np.array(all_types[j][i:i+30, :len(steps_with_labels_norbs[1,:])-3])
         steps.append(step)
-        steps_labels.append(j)
+        steps_labels.append(norbs_labels[count, 2]-1)
+        person_labels.append(norbs_labels[count, 1])
+        count = count + 30
+        
 
-del steps[-1]
-del steps_labels[-1]
-del steps[263]
-del steps_labels[263]
+#del steps[-1]
+#del steps_labels[-1]
+#del steps[263]
+#del steps_labels[263]
 steps_stack = np.stack(steps, axis = 0) 
 
-t = np.arange(0,38)/50
-for j in range(0,len(steps_stack[:,1,1])):     
-    plt.plot(t, steps_stack[j,:,1])
+#t = np.arange(0,30)/50
+#for j in range(0,len(steps_stack[:,1,0])):     
+#    plt.plot(t, steps_stack[j,:,0])
 
 ##equal_steps_norbs = []
 #labels_norbs = []  
