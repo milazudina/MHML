@@ -22,6 +22,15 @@ public class ReccomendationsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_reccomendations, container, false);
     }
 
+    Float[] pronationClassifier;
+
+    public void Update(Float[] pronationClassifier)
+    {
+        this.pronationClassifier = pronationClassifier;
+
+
+    }
+
 }
 
 
