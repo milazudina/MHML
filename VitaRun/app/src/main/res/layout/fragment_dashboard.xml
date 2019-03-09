@@ -20,10 +20,37 @@
             android:layout_height="200dip"
             android:id="@+id/graph" />
 
+        <TextView
+            android:id="@+id/Month_title"
+            android:background="#ffe95451"
+            android:textColor="#fff"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Month"/>
+
+        <com.github.sundeepk.compactcalendarview.CompactCalendarView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/compactcalendar_view"
+            android:layout_width="fill_parent"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:layout_height="250dp"
+            app:compactCalendarTargetHeight="250dp"
+            app:compactCalendarTextSize="12sp"
+            app:compactCalendarBackgroundColor="#ffe95451"
+            app:compactCalendarTextColor="#fff"
+            app:compactCalendarCurrentSelectedDayBackgroundColor="#E57373"
+            app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
+            app:compactCalendarMultiEventIndicatorColor="#fff"
+            />
+
         <CalendarView
             android:id="@+id/simpleCalendarView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
+
+
 
     </LinearLayout>
 
