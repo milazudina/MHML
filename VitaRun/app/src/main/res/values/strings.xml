@@ -25,9 +25,17 @@
     <string name="weight">Weight</string>
     <string name="age">Age</string>
     <string name="username">username</string>
+    <string name="nickname">Name</string>
     <string name="email">Email</string>
     <string name="name">Name</string>
     <string name="password">Password</string>
 
+    <string name="login">Log In</string>
+    <string name="log_out">Log Out</string>
+
+
+    <!-- LoginActivity Activity -->
+
+    <string name="new_profile">Create Profile</string>
 
 </resources>
