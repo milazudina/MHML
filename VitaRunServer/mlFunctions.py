@@ -43,7 +43,20 @@ def loadPronationClassifier(model_name = 'model'):
     loaded_model.load_weights(str(model_name) + '.h5')
     print('Loaded model from disk')
     return loaded_model
-#
+    
+def predictStepType(stepsBatch, loaded_model): # numpy array of 30, 9
+    # currently only valid for one step, need to change 
+    # where reshape happens
+    current_step = stepsBatch.reshape(1,30,9)
+    predictions = loaded_model.predict(current_step)
+    return predictions
+
+def getPredictionMode():
+    return stepType
+
+def getTypesEOR():
+    return countNP, countOP, countUP
+
 ## evaluate loaded model on test data
 #loaded_model.compile(Adam(lr=1e-4), loss='categorical_crossentropy', metrics=['accuracy'])
 #score = loaded_model.evaluate(X_test, labels_test_cat, verbose=1)
