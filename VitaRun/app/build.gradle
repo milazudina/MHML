@@ -31,4 +31,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.github.AnyChart:AnyChart-Android:0.0.3'
     implementation 'com.jjoe64:graphview:4.2.2'
+    implementation 'com.github.sundeepk:compact-calendar-view:3.0.0'
 }
