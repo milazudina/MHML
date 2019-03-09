@@ -1,32 +1,28 @@
 from http.server import SimpleHTTPRequestHandler, HTTPServer
+#from keras.models import model_from_json
+#from keras.models import load_model
+import load_model
 import logging
 
 reqcount = 0
 probs = 0
 
+# This class handles any incoming requests
 class S(SimpleHTTPRequestHandler):
+    
     def _set_response(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
+# Handles the GET requests
     def do_GET(self):
         print(str(self.headers).split()[1])
         
         keyword = str(self.headers).split()[1] 
         
         if (keyword in "getClassifier"):
-            return 
-        
-        else if (keyword in "getFrequency")
-        
-    
-        
-     
-        
-         
-        
-        
+            return
         self._set_response()
         global reqcount
         global probs

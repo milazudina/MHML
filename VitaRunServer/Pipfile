@@ -10,6 +10,9 @@ autopep8 = "*"
 [packages]
 basehttpserver = "*"
 urlparse = "*"
+keras.models = "*"
+keras = "*"
+json = "*"
 
 [requires]
 python_version = "3.7"
