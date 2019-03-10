@@ -78,7 +78,7 @@ public class ServerComms {
         try {
             return  Boolean.parseBoolean(syncResult.getResult());
         }catch(Exception e){
-            System.out.print("Non-boolean response to setUser GET request");
+            System.out.print("Non-boolean response to login GET request");
             return false;
         }
     }
@@ -93,7 +93,7 @@ public class ServerComms {
         System.out.println(json);
         Request request = new Request.Builder()
                 .url(url)
-                .addHeader("login", json)
+                .addHeader("createProfile", json)
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -119,10 +119,78 @@ public class ServerComms {
         try {
             return  Boolean.parseBoolean(syncResult.getResult());
         }catch(Exception e){
-            System.out.print("Non-boolean response to setUser GET request");
+            System.out.print("Non-boolean response to createProfile GET request");
             return false;
         }
     }
+
+
+    public void setUserDetails(String userName, String password, String nickname, int Age, int weight)
+    {
+        final SyncResult syncResult = new SyncResult();
+        User user = new User(userName, password, nickname, Age, weight);
+        String json = gson.toJson(user);
+        //String header = String.format("login : , %s : %s", userName,password);
+
+        // Add featureName to header of request.
+        System.out.println(json);
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("setDetails", json)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            String myResponse;
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    // Assign body of response to returned value.
+                    myResponse = response.body().string();
+                    syncResult.setResult(myResponse);
+                }
+            }
+        });
+
+    }
+
+//
+//    public  Object getUserDetails(String username)
+//    {
+//        final SyncResult syncResult = new SyncResult();
+//
+//
+//        Request request = new Request.Builder()
+//                .url(url)
+//                .addHeader("getUserDetails", username)
+//                .build();
+//        client.newCall(request).enqueue((new Callback() {
+//
+//            String myResponse;
+//
+//            @Override
+//            public void onFailure(Call call, IOException e) {e.printStackTrace();}
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                if (response.isSuccessful()){
+//                    myResponse = response.body().string();
+//                    syncResult.setResult(myResponse);
+//
+//                }
+//
+//            }
+//        }));
+//        //User user = new User(UserNa)
+//
+//        return myResponse;
+//    }
 
     public String getFeature(final String featureName)
     {
@@ -159,34 +227,6 @@ public class ServerComms {
         return syncResult.getResult();
     }
 
-    public void setUserDetails(String userDetails)
-    {
-        // Add featureName to header of request.
-        Request request = new Request.Builder()
-                .url(url)
-                .addHeader("UserDetails", userDetails)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-
-            String myResponse;
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful())
-                {
-                    // Assign body of response to returned value.
-                    myResponse = response.body().string();
-                }
-            }
-        });
-
-    }
 
     public void PostPressureData(HashMap<Date, String> data)
     {

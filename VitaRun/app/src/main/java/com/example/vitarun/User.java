@@ -9,8 +9,8 @@ public class User {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
-        this.age = -1;
-        this.weight = -1;
+        this.age = age;
+        this.weight = weight;
     }
 
 }

@@ -45,8 +45,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 int age = Integer.parseInt(etAge.getText().toString());
                 int weight = Integer.parseInt(etWeight.getText().toString());
 
-                //User createProfile = new User(username, password, nickname, age, weight);
+                User createProfile = new User(username, password, nickname, age, weight);
                 boolean created = serverComms.createProfile(username, password, nickname, age, weight);
+                System.out.println(createProfile);
 
                 if(created){
                     finish();
