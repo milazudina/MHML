@@ -40,12 +40,15 @@
 #run()
 
 from http.server import SimpleHTTPRequestHandler, HTTPServer
-from load_model import loadPronationClassifier
+from mlFunctions import loadPronationClassifier
+from mlFunctions import predictStepType
 
 import logging
 import json
+import numpy as np
 
 class S(SimpleHTTPRequestHandler):
+    
 
     def _set_response(self):
         self.send_response(200)
@@ -53,31 +56,39 @@ class S(SimpleHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        print(str(self.headers))
+        print(str(self.headers).split()[1])
         self._set_response()
+        keyword = str(self.headers).split()[1] 
+        print(str(self.headers))
         self.wfile.write("GET request received".encode('utf-8'))
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         post_data = self.rfile.read(content_length) # <--- Gets the data itself
-        #decoded_post_data = post_data.decode('utf-8')
-        
-        inputFile = list(decoded_post_data.values())
-        print(inputFile)
+        postDataDict = json.loads(post_data.decode('utf-8'))
+        stepsBatch = np.array(list(postDataDict.values()))
+        # here we should have functions from N
+        print(stepsBatch.shape)
+        predictions = predictStepType(stepsBatch, pronationClassifier)
+        print(predictions)
         self._set_response()
         self.wfile.write("POST request received".encode('utf-8'))
+        
 
 # this function starts the server and loads the ML model
 def run(server_class = HTTPServer, handler_class=S, port=3000, model_name = 'model'):
     server_address = ('', port)
     # create a server
     httpd = server_class(server_address, handler_class)
-    pronationClassifier = loadPronationClassifier()
+    #pronationClassifier = loadPronationClassifier()
     print('Starting httpd... on port {}'.format(port))
-    print(pronationClassifier.summary())
-    httpd.serve_forever()  
+    #print(pronationClassifier.summary())
+    httpd.serve_forever() 
     
-
+pronationClassifier = loadPronationClassifier()
+    
+#def f(stepsBatch):
+#    predictStepType(stepsBatch, pronationClassifier)
 
    
 #inputFile= list(post_data.values())
