@@ -43,7 +43,7 @@ filename = now.strftime("%Y-%m-%d %h:%m:%s") + ".csv"
 
 file_path = "/Users/jonathanmidgen/Documents/GitHub/MHML_old/VitaRunServer/"
 directory = os.path.dirname(file_path)
-def createFiles(Username, Password):
+def createFiles(Username, Password, Nickname, Age, Weight):
     # print(Username)
     # print(Password)
 
@@ -57,9 +57,16 @@ def createFiles(Username, Password):
         # f = csv.writer(open(directory+ '/' + username + '/'+ 'info' , "w"))
 
         with open(directory+ '/' + Username + '/'+ 'info.csv', 'wt', newline ='') as file:
-            header = ['Name', 'Username', 'Password', 'Age']
+            header = ['Nickname', 'Username', 'Password', 'Weight', 'Age']
             writer = csv.DictWriter(file, fieldnames=header)
             writer.writeheader()
+            newLogin = [Nickname, Username, Password, Weight, Age]
+            print(newLogin)
+            writer = csv.writer(file)
+            file.write('\n')
+            writer.writerow(newLogin)
+            print(newLogin[0])
+
         with open(directory+ '/' + Username + '/History.csv', 'wt', newline ='') as file:
             header = ['DateTime_Start', 'DateTime_End', 'Number_Of_Steps','Count_NP','Count_OP','Count_UP','Average_Frequency']
             writer = csv.DictWriter(file, fieldnames=header)
@@ -186,11 +193,6 @@ def login(Username, Password):
 
 
 
-
-
-
-
-
 def checkUsername(Username):
     with open(directory+ '/' + 'info.csv') as fin:
         df = pd.read_csv(fin)
@@ -254,7 +256,7 @@ def writeJsonToFile():
 
 
 
-createFiles('jacob', 'hi4')
+createFiles('jake', 'hi4', 'jake','22','145' )
 
 # writeJsonToFile()
 
@@ -269,10 +271,10 @@ createFiles('jacob', 'hi4')
 # count_NP_last5()
 
 # getPassword()
-User = 'jacob'
-p = 'hi4'
-test = login(User,p)
-print(test)
+# User = 'jacob'
+# p = 'hi4'
+# test = login(User,p)
+# print(test)
 # # checkUsername('Mila')
 
 # setUserDetails()
