@@ -57,22 +57,29 @@ class S(SimpleHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        print(str(self.headers))
-        print(type(self.headers))
+        #print(str(self.headers)) # Host: localhost:3000
+                                #Connection: keep-alive
+                                #Accept: */*
+                                #User-Agent: Rested/2009 CFNetwork/976 Darwin/18.2.0 (x86_64)
+                                #Accept-Language: en-gb
+                                #Accept-Encoding: gzip, deflate
+                                #login: {"password":"789ab","username":"Mila123"}
+        #print(type(self.headers)) # <class 'http.client.HTTPMessage'>
         
-        key = str(self.headers).split()[0] 
-        value = str(self.headers).split()[1]
+        key = str(self.headers).split()[16] 
+        value = str(self.headers).split()[17]
 
         print("Key:", key)
-        print("Value", value)
-        print(type(key))
-        print(type(value))
+        print("Value:", value)
+#        print(type(key)) # <class 'str'>
+#        print(type(value)) # <class 'str'>
         
         self._set_response()
         # 17 is a temporary solution for using with Rested app
         
         if (key in "feature"):
-            mostRecentPred = allPredictions[-1]
+            mostRecentPred = allPredictions[-1] #a mode of this
+#            mostRecentAvgFreq = allFrequencies[-1] an average of this
             self.wfile.write(str(mostRecentPred).encode('utf-8'))
             
             
@@ -84,33 +91,32 @@ class S(SimpleHTTPRequestHandler):
 #            self.wfile.write("GET request received".encode('utf-8'))
 #            
 #        elif (key in "getTypesEOR"):
+#           flatten the list
 #            self.wfile.write()
 #            
 #        elif (key in "setUser"):
 #            self.wfile.write()
 #        elif (key in "createProfile"):
             
-        elif (key in "getUserDetails:"):
-            
-        elif (key in "setUserDetails:"):
+#        elif (key in "getUserDetails:"):
+#            
+#        elif (key in "setUserDetails:"):
             
             
         
         elif (key in "login:"):
-            print(self.headers)
-#            content_length = int(self.headers['Content-Length'])
-#            post_data = self.rfile.read(content_length)
-            
+            #print(self.headers)
+
             json_output = json.loads(value)
-            print(json_output)
-            print(type(json_output))
+            #print(json_output) # {'password': '789ab', 'username': 'Mila123'}
+            #print(type(json_output)) # <class 'dict'>
             username = json_output["username"]
             password = json_output["password"]
-            print('hello')
-            print(type(username))
-            print(type(password))
-            test = login(username, password)
-            print(test)
+            print(type(username)) # <class 'str'>
+            print(type(password)) # <class 'str'>
+            loginReturn = login(username, password)
+            self.wfile.write(str(loginReturn).encode('utf-8'))
+
 
 # postPressureData        
     def do_POST(self):
@@ -120,7 +126,7 @@ class S(SimpleHTTPRequestHandler):
         stepsBatch = np.array(list(postDataDict.values()))
         # here we should have functions from N
         print(stepsBatch.shape)
-        typePrediction = predictStepType(stepsBatch, pronationClassifier) # probabilities for each step in the batch
+        typePrediction = predictStepType(stepsBatch, pronationClassifier, 30) # probabilities for each step in the batch
         allPredictions.append(typePrediction) # appending to this array to return it at the end of run
         print(allPredictions)
         # need to flatten the list
