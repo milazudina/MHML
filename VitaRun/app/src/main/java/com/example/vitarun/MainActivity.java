@@ -59,7 +59,11 @@ public class MainActivity extends AppCompatActivity {
     StridBLE leftStrid;
     StridBLE rightStrid;
 
+    private DashboardFragment dashboardFragment;
     private RunFragment runFragment;
+    private ProfileFragment profileFragment;
+
+
     public RunEvent runEvent;
 
     @Override
@@ -78,7 +82,9 @@ public class MainActivity extends AppCompatActivity {
         // The Stridalyser pressure/acc Characteristic UUID.
         stridBioCharUUID = convertFromInteger(0x2A53);
 
+        dashboardFragment = new DashboardFragment();
         runFragment = new RunFragment();
+        profileFragment = new ProfileFragment();
 
 
         // Only initialise bluetooth if NOT being run in emulator.
@@ -297,7 +303,6 @@ public class MainActivity extends AppCompatActivity {
 //                        System.out.println(DataString);
                 }
             }
-
             ;
         }
 
@@ -320,13 +325,13 @@ public class MainActivity extends AppCompatActivity {
 
                     switch (menuItem.getItemId()) {
                         case R.id.nav_dashboard:
-                            selectedFragment = new DashboardFragment();
+                            selectedFragment = dashboardFragment;
                             break;
                         case R.id.nav_run:
                             selectedFragment = runFragment;
                             break;
                         case R.id.nav_profile:
-                            selectedFragment = new ProfileFragment();
+                            selectedFragment = profileFragment;
                             break;
                     }
 
