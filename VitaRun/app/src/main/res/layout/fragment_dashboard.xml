@@ -15,10 +15,15 @@
         android:text="@string/left_fragment"
         android:textSize="30sp" />
         
-        <com.jjoe64.graphview.GraphView
+        <!--<com.jjoe64.graphview.GraphView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="200dp"-->
+            <!--android:id="@+id/graph" />-->
+
+        <com.github.mikephil.charting.charts.BarChart
             android:layout_width="match_parent"
-            android:layout_height="200dip"
-            android:id="@+id/graph" />
+            android:layout_height="250dp"
+            android:id="@+id/Bar_chart"/>
 
         <TextView
             android:id="@+id/Month_title"
@@ -45,10 +50,10 @@
             app:compactCalendarMultiEventIndicatorColor="#fff"
             />
 
-        <CalendarView
-            android:id="@+id/simpleCalendarView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
+        <!--<CalendarView-->
+            <!--android:id="@+id/simpleCalendarView"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="fill_parent" />-->
 
 
 
