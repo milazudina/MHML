@@ -24,10 +24,13 @@
             android:name=".TextToSpeechService"
             android:enabled="true"
             android:exported="true"></service>
+
         <!-- Main Activity. -->
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity> <!-- Splash Screen Activity -->
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+    <!-- Splash Screen Activity -->
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/SplashTheme">
@@ -35,6 +38,27 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/AppTheme">
+
+            <intent-filter>
+                <action android:name="android.intent.action.LOGIN" />
+                <category android:name="android.intent.caregory.android"/>
+            </intent-filter>
+        </activity>
+
+
+        <activity
+            android:name=".RegisterActivity"
+            android:theme="@style/AppTheme">
+
+            <intent-filter>
+                <action android:name="android.intent.action.REGISTER" />
+                <category android:name="android.intent.caregory.android"/>
             </intent-filter>
         </activity>
 
