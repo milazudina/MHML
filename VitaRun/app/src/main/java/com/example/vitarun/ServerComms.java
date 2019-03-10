@@ -25,7 +25,7 @@ import okhttp3.Response;
 public class ServerComms {
 
     // ip address of server machine + port.
-    static String url = "http://146.169.185.70:3000";
+    static String url = "http://146.169.129.196:3000";
 
     Gson gson;
     OkHttpClient client;
@@ -136,7 +136,7 @@ public class ServerComms {
         System.out.println(json);
         Request request = new Request.Builder()
                 .url(url)
-                .addHeader("setDetails", json)
+                .addHeader("setUserDetails", json)
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
