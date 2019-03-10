@@ -29,16 +29,16 @@ public class RunFragment extends Fragment {
 
     }
 
-    private HashMap<String, BluetoothLeService> BleServices;
-
-    public void setBleServices(HashMap<String, BluetoothLeService> _BleServices)
-    {
-        this.BleServices = _BleServices;
-
-        for (String MAC : BleServices.keySet()) {
-            System.out.println(MAC);
-        }
-    }
+//    private HashMap<String, BluetoothLeService> BleServices;
+//
+//    public void setBleServices(HashMap<String, BluetoothLeService> _BleServices)
+//    {
+//        this.BleServices = _BleServices;
+//
+//        for (String MAC : BleServices.keySet()) {
+//            System.out.println(MAC);
+//        }
+//    }
 
     RunEvent runEvent;
 
