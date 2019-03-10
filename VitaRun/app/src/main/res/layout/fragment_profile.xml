@@ -16,7 +16,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
             android:layout_marginStart="15dp"
             android:layout_marginTop="100dp"
             android:text="@string/your_profile"
@@ -71,16 +70,28 @@
 
         </LinearLayout>
 
+
         <Button
             android:id="@+id/bEditProfile"
-            android:layout_width="122dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/tvYourProfile"
             android:layout_marginTop="100dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
             android:gravity="center_horizontal"
             android:text="@string/edit" />
+
+        <Button
+            android:id="@+id/bLogOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/bEditProfile"
+            android:layout_marginTop="100dp"
+            android:layout_marginStart="15dp"
+            android:gravity="center_horizontal"
+            android:text="@string/log_out" />
 
         <LinearLayout
             android:id="@+id/LLvProfile"
@@ -199,12 +210,12 @@
 
         <Button
             android:id="@+id/bSaveProfile"
-            android:layout_width="122dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/tvYourProfileEdit"
             android:layout_marginTop="100dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
             android:gravity="center_horizontal"
             android:text="@string/save" />
 

@@ -1,10 +1,14 @@
 package com.example.vitarun;
 
+import android.renderscript.Sampler;
+
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +25,7 @@ import okhttp3.Response;
 public class ServerComms {
 
     // ip address of server machine + port.
-    static String url = "http://146.169.147.94:3000";
+    static String url = "http://146.169.185.70:3000";
 
     Gson gson;
     OkHttpClient client;
@@ -36,12 +40,91 @@ public class ServerComms {
     }
 
     // Method to set user database on server side.
-    public void SetUser()
+    public boolean login(String userName, String password)
     {
+        final SyncResult syncResult = new SyncResult();
+        Map<String, String> table = new Hashtable<>();
+        table.put("username", userName);
+        table.put("password", password);
+        String json = gson.toJson(table);
+        //String header = String.format("login : , %s : %s", userName,password);
 
+        // Add featureName to header of request.
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("login", json)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            String myResponse;
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    // Assign body of response to returned value.
+                    myResponse = response.body().string();
+                    syncResult.setResult(myResponse);
+                }
+            }
+        });
+
+
+        try {
+            return  Boolean.parseBoolean(syncResult.getResult());
+        }catch(Exception e){
+            System.out.print("Non-boolean response to setUser GET request");
+            return false;
+        }
+    }
+    public boolean createProfile(String userName, String password, String nickname, int Age, int weight)
+    {
+        final SyncResult syncResult = new SyncResult();
+        User user = new User(userName, password, nickname, Age, weight);
+        String json = gson.toJson(user);
+        //String header = String.format("login : , %s : %s", userName,password);
+
+        // Add featureName to header of request.
+        System.out.println(json);
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("login", json)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            String myResponse;
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    // Assign body of response to returned value.
+                    myResponse = response.body().string();
+                    syncResult.setResult(myResponse);
+                }
+            }
+        });
+
+
+        try {
+            return  Boolean.parseBoolean(syncResult.getResult());
+        }catch(Exception e){
+            System.out.print("Non-boolean response to setUser GET request");
+            return false;
+        }
     }
 
-    public String GetFeature(final String featureName)
+    public String getFeature(final String featureName)
     {
         // SyncResult object allows string returned from the GET request to be assigned
         // asyncronously.
@@ -50,7 +133,7 @@ public class ServerComms {
         // Add featureName to header of request.
         Request request = new Request.Builder()
                 .url(url)
-                .addHeader("Feature", featureName)
+                .addHeader(featureName, "")
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -74,6 +157,35 @@ public class ServerComms {
         });
 
         return syncResult.getResult();
+    }
+
+    public void setUserDetails(String userDetails)
+    {
+        // Add featureName to header of request.
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("UserDetails", userDetails)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            String myResponse;
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful())
+                {
+                    // Assign body of response to returned value.
+                    myResponse = response.body().string();
+                }
+            }
+        });
+
     }
 
     public void PostPressureData(HashMap<Date, String> data)
