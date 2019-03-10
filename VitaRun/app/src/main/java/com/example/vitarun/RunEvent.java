@@ -19,28 +19,23 @@ public class RunEvent {
     private ZonedDateTime startTime;
     private ZonedDateTime endTime;
 
-    //    ArrayList<BluetoothLeService> bleServices;
     HashMap<String, String[]> DATA_BUFFER;
 
-    static int dataBufferLength = 128;
-
-//    ServerComms serverComms;
-
+    static int dataBufferLength = 32;
+    ServerComms serverComms;
 
     ArrayList<String[]> dataSet;
     int dataIndex;
 
     Gson gson;
-
     private Context context;
 
     public RunEvent(Context current)
     {
         System.out.println("Run Event Created");
         this.context = current;
-//        this.bleServices = bleServices;
 
-//        serverComms = new ServerComms();
+        serverComms = new ServerComms();
         DATA_BUFFER = new HashMap<>();
 
         InputStream inputStream = context.getResources().openRawResource(R.raw.mockdata);
@@ -48,7 +43,6 @@ public class RunEvent {
         dataSet = csvFile.read();
 
         dataIndex = 0;
-
         gson = new Gson();
     }
 
@@ -65,7 +59,7 @@ public class RunEvent {
 
         if (DATA_BUFFER.size() == dataBufferLength)
         {
-//            serverComms.PostPressureData(DATA_BUFFER);
+            serverComms.PostPressureData(DATA_BUFFER);
 
             String jsonString = gson.toJson(DATA_BUFFER);
             System.out.println(jsonString);
