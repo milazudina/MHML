@@ -125,10 +125,9 @@ public class ServerComms {
     }
 
 
-    public void setUserDetails(String userName, String password, String nickname, int Age, int weight)
+    public void setUserDetails(Object user)
     {
         final SyncResult syncResult = new SyncResult();
-        User user = new User(userName, password, nickname, Age, weight);
         String json = gson.toJson(user);
         //String header = String.format("login : , %s : %s", userName,password);
 
