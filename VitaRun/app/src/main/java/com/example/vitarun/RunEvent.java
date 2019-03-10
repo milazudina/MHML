@@ -1,30 +1,37 @@
 package com.example.vitarun;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class RunEvent {
 
     private ZonedDateTime startTime;
     private ZonedDateTime endTime;
 
-    HashMap<String, String[]> DATA_BUFFER;
+    HashMap<String, double[]> DATA_BUFFER;
 
-    static int dataBufferLength = 32;
+    static int dataBufferLength = 128;
     ServerComms serverComms;
 
-    ArrayList<String[]> dataSet;
+    ArrayList<double[]> dataSet;
     int dataIndex;
 
     Gson gson;
@@ -57,11 +64,14 @@ public class RunEvent {
 
         DATA_BUFFER.put(currTime, dataSet.get(dataIndex));
 
+
         if (DATA_BUFFER.size() == dataBufferLength)
         {
             serverComms.PostPressureData(DATA_BUFFER);
 
             String jsonString = gson.toJson(DATA_BUFFER);
+
+            writeToFile(jsonString, context);
             System.out.println(jsonString);
 
             DATA_BUFFER.clear();
@@ -69,6 +79,17 @@ public class RunEvent {
 
         dataIndex += 1;
 
+    }
+
+    private void writeToFile(String data,Context context) {
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("data.txt", Context.MODE_PRIVATE));
+            outputStreamWriter.write(data);
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
     }
 
     public void StartRunEvent()
@@ -107,14 +128,18 @@ public class RunEvent {
             this.inputStream = inputStream;
         }
 
-        public ArrayList<String[]> read(){
-            ArrayList<String[]> resultList = new ArrayList<>();
+        public ArrayList<double[]> read(){
+            ArrayList<double[]> resultList = new ArrayList<>();
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             try {
                 String csvLine;
                 while ((csvLine = reader.readLine()) != null) {
                     String[] row = csvLine.split(",");
-                    resultList.add(row);
+
+                    double[] parsed = new double[row.length];
+                    for (int i = 0; i<row.length; i++) parsed[i] = Double.valueOf(row[i]);
+
+                    resultList.add(parsed);
                 }
             }
             catch (IOException ex) {
