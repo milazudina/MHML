@@ -3,8 +3,13 @@ package com.example.vitarun;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -36,40 +41,43 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
+
+import static android.bluetooth.BluetoothAdapter.STATE_CONNECTED;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Use this array to store the MAC addresses of the insoles.
-    //Left [0],  Right [1]
-    public String[] stridMACs = {"0C:1C:57:6E:A1:B9", "F8:36:9B:74:6D:C8"};
-//    public String[] stridMACs = {"0C:1C:57:6E:A1:B9"};
+    public static HashMap<String, String> stridMACs;
+    private static UUID stridServiceUUID;
+    private static UUID stridBioCharUUID;
 
-    private boolean mScanning;
-    Handler mHandler;
+    BluetoothAdapter bluetoothAdapter;
 
-    private ArrayList<BluetoothDevice> mLeDevices;
-    private BluetoothAdapter mBluetoothAdapter;
-
-    private static final int REQUEST_ENABLE_BT = 1;
-
-    // Stops scanning after 8 seconds.
-    private static final long SCAN_PERIOD = 8000;
-
-    private HashMap<String, BluetoothLeService> mBleServices;
+    // Custom class for storing objects necessary for BLE connection.
+    StridBLE leftStrid;
+    StridBLE rightStrid;
 
     private RunFragment runFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+
+        stridMACs = new HashMap<>();
+        stridMACs.put("0C:1C:57:6E:A1:B9", "left");
+        leftStrid = new StridBLE("0C:1C:57:6E:A1:B9", "left");
+
+        stridMACs.put("F8:36:9B:74:6D:C8", "right");
+        rightStrid = new StridBLE("F8:36:9B:74:6D:C8", "right");
+
+        // The Stridalyzer Service UUID.
+        stridServiceUUID = convertFromInteger(0x1814);
+        // The Stridalyser pressure/acc Characteristic UUID.
+        stridBioCharUUID = convertFromInteger(0x2A53);
 
         runFragment = new RunFragment();
 
-        mLeDevices = new ArrayList<>();
-        mHandler = new Handler();
-        mBleServices = new HashMap<>();
 
         // Only initialise bluetooth if NOT being run in emulator.
         if (!Build.FINGERPRINT.contains("generic")) {
@@ -81,12 +89,9 @@ public class MainActivity extends AppCompatActivity {
         bluetooth_button.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                ConnectStridalyzers();
+                RunBLE();
             }
         });
-
-        mLeDevices = new ArrayList<>();
-        mHandler = new Handler();
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
@@ -108,48 +113,71 @@ public class MainActivity extends AppCompatActivity {
         // BluetoothAdapter through BluetoothManager.
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = bluetoothManager.getAdapter();
+        bluetoothAdapter = bluetoothManager.getAdapter();
 
         // Checks if Bluetooth is supported on the device.
-        if (mBluetoothAdapter == null) {
+        if (bluetoothAdapter == null) {
             Toast.makeText(this, "Bluetooth Not Supported", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // User chose not to enable Bluetooth.
-        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
-            finish();
-            return;
-        }
-        super.onActivityResult(requestCode, resultCode, data);
+    public void RunBLE() {
+
+        // Stop scanning, used in case scan was already being performed.
+        bluetoothAdapter.stopLeScan(scanCallback);
+
+        // Handler used to stop scan after a set period of time.
+        Handler mHandler = new Handler();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                bluetoothAdapter.stopLeScan(scanCallback);
+                invalidateOptionsMenu();
+            }
+        }, 8000);
+
+
+        // Start the scan.
+        bluetoothAdapter.startLeScan(scanCallback);
+        System.out.println("Starting Scan");
     }
 
-    public void ConnectStridalyzers() {
+    boolean leftConnected = false;
+    boolean rightConnected = false;
 
-        for (BluetoothLeService service : mBleServices.values()) {
-            for (String mDeviceAddress : mBleServices.keySet()) {
-                System.out.println(String.format("Gatt Services for address %s: Empty = %b",
-                        mDeviceAddress, service.getSupportedGattServices().isEmpty()));
-            }
-        }
+    private BluetoothAdapter.LeScanCallback scanCallback =
+            new BluetoothAdapter.LeScanCallback() {
 
-        for (BluetoothLeService service : mBleServices.values()) {
-            service.disconnect();
-//            service.unbindService();
-        }
+                @Override
+                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
 
-        setSoleConnected(false, 0);
-        setSoleConnected(false, 1);
+                    // If a found device's address is equal to the address of an insole.
+                    if (stridMACs.keySet().contains(device.getAddress())) {
 
-        mBleServices = new HashMap<>();
-        mLeDevices.clear();
+                        // Determine which insole it is.
+                        String side = stridMACs.get(device.getAddress());
 
-        System.out.println("Searching");
-        scanLeDevice(true);
+                        if (side == "left" && !leftConnected) {
+                            leftStrid.bleDevice = device;
+                            ConnectGatt(leftStrid);
+                            leftConnected = true;
+                            System.out.println("Left Insole Found");
+
+                        } else if (side == "right" && !rightConnected) {
+                            rightStrid.bleDevice = device;
+                            ConnectGatt(rightStrid);
+                            rightConnected = true;
+                            System.out.println("Right Insole Found");
+                        }
+                    }
+                }
+            };
+
+    private void ConnectGatt(final StridBLE insole) {
+        insole.gatt = insole.bleDevice.connectGatt(this, true, insole.gattCallback);
+
     }
 
     private void setSoleConnected(Boolean connected, Integer soleIndex)
@@ -181,89 +209,80 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void scanLeDevice(final boolean enable) {
-        if (enable) {
-            // Stops scanning after a pre-defined scan period.
-            mHandler.postDelayed(new Runnable() {
+    private class StridBLE {
+
+        public final String side;
+        public String MAC;
+        public BluetoothDevice bleDevice;
+        public BluetoothGatt gatt;
+        public BluetoothGattCallback gattCallback;
+
+        public StridBLE(String MAC, final String side) {
+            this.side = side;
+            this.MAC = MAC;
+
+
+            gattCallback = new BluetoothGattCallback() {
                 @Override
-                public void run() {
-                    mScanning = false;
-                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
-                    invalidateOptionsMenu();
+                public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+                    super.onConnectionStateChange(gatt, status, newState);
+
+                    if (newState == STATE_CONNECTED) {
+                        System.out.println(side + " Insole Connected");
+                        gatt.discoverServices();
+                    }
                 }
-            }, SCAN_PERIOD);
-
-            mScanning = true;
-            mBluetoothAdapter.startLeScan(mLeScanCallback);
-        } else {
-            mScanning = false;
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
-        }
-        invalidateOptionsMenu();
-    }
-
-    // Device scan callback.
-    private BluetoothAdapter.LeScanCallback mLeScanCallback =
-            new BluetoothAdapter.LeScanCallback() {
 
                 @Override
-                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+                    super.onServicesDiscovered(gatt, status);
 
-                            if (Arrays.asList(stridMACs).contains(device.getAddress())
-                                    && !mLeDevices.contains(device)) {
+                    BluetoothGattCharacteristic characteristic =
+                            gatt.getService(stridServiceUUID)
+                                    .getCharacteristic(stridBioCharUUID);
 
-                                    mLeDevices.add(device);
-                                    System.out.println(String.format("Found! Sole at %s", device.getAddress()));
-                                    CreateBleService(device.getAddress());
-                            }
-                        }
+                    gatt.setCharacteristicNotification(characteristic, true);
 
-                        @Override
-                        protected void finalize() throws Throwable {
-                            super.finalize();
-                        }
-                    });
+                    BluetoothGattDescriptor descriptor =
+                            characteristic.getDescriptor(convertFromInteger(0x2902));
+
+                    descriptor.setValue(
+                            BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+
+                    gatt.writeDescriptor(descriptor);
+                }
+
+                @Override
+                public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+                    super.onDescriptorWrite(gatt, descriptor, status);
+
+                    BluetoothGattCharacteristic characteristic =
+                            gatt.getService(stridServiceUUID)
+                                    .getCharacteristic(stridBioCharUUID);
+
+                    characteristic.setValue(new byte[]{1, 1});
+                    gatt.writeCharacteristic(characteristic);
+                }
+
+                @Override
+                public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+                    super.onCharacteristicChanged(gatt, characteristic);
+
+                    byte[] DataBytes = characteristic.getValue();
+//                    runEvent.addDataSample(side, DataBytes);
+
+//                        String DataString = new String(DataBytes, StandardCharsets.UTF_16);
+//                        System.out.println(DataString);
                 }
             };
-
-    BluetoothLeService mBluetoothLeService;
-
-    public void CreateBleService(final String mDeviceAddress) {
-        System.out.println(String.format("Trying Service at %s", mDeviceAddress));
-
-        final ServiceConnection mServiceConnection = new ServiceConnection() {
-
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder service) {
-                mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
-                if (!mBluetoothLeService.initialize()) {
-                    Log.e("MAIN", "Unable to initialize Bluetooth");
-                    finish();
-                }
-                // Automatically connects to the device upon successful start-up initialization.
-                if (mBluetoothLeService.connect(mDeviceAddress)) {
-
-                    System.out.println(String.format("Connected to Service %s", mDeviceAddress));
-                    mBleServices.put(mDeviceAddress, mBluetoothLeService);
-
-                    Integer soleIndex = Arrays.asList(stridMACs).indexOf(mDeviceAddress);
-                    setSoleConnected(true, soleIndex);
-                }
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-                mBluetoothLeService = null;
-            }
-        };
-
-        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
-        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-//
-//        runFragment.setBleServices(mBleServices);
+        }
+    }
+    
+    public UUID convertFromInteger(int i) {
+        final long MSB = 0x0000000000001000L;
+        final long LSB = 0x800000805f9b34fbL;
+        long value = i & 0xFFFFFFFF;
+        return new UUID(MSB | (value << 32), LSB);
     }
 
     // NAVIGATION
