@@ -36,7 +36,7 @@ print(now.strftime("%Y-%m-%d %H:%M:%S"))
 
 
 
-username = "Mila" #put username into there
+username = "Jonny" #put username into there
 
 
 filename = now.strftime("%Y-%m-%d %h:%m:%s") + ".csv"
@@ -194,11 +194,11 @@ def login(Username, Password):
 
 
 def checkUsername(Username):
-    with open(directory+ '/' + 'info.csv') as fin:
+    with open(directory+ '/' + 'Login.csv') as fin:
         df = pd.read_csv(fin)
-        print(df)
+        # print(df)
         length=len(df)
-        print(Username)
+        # print(Username)
         column_of_interest = df["Username"]
         for x in range(1, length):
             if column_of_interest[x] == Username:
@@ -208,28 +208,49 @@ def checkUsername(Username):
 
 
 
-def setUserDetails():
-    inputFile= list(details.values())
-    print(inputFile)
+def setUserDetails(Username, Password, Nickname, Age, Weight):
+    os.remove(directory + '/'+ username + '/' + 'info.csv')
 
     with open(directory + '/'+ username + '/' + 'info.csv','a') as fin:
+        header = ['Nickname', 'Username', 'Password', 'Weight', 'Age']
+        writer = csv.DictWriter(fin, fieldnames=header)
+        writer.writeheader()
+        newLogin = [Nickname, Username, Password, Weight, Age]
+        print(newLogin)
         writer = csv.writer(fin)
-        writer.writerow(inputFile)
-        print(inputFile[0])
+        fin.write('\n')
+        writer.writerow(newLogin)
+        print(newLogin[0])
+
 
 
 
 
 def getUserDetails():
+    
+    input = pd.read_csv(directory + '/'+ username + '/' + 'info.csv');
+    print(input.iloc[0])
 
-    with open(directory + '/'+ username + '/' + 'info.csv') as fin:
-         print (''.format(fin.readline().split()))
-         line = fin.readline()
-         print(line)
-         for x in fin:
-                x=x.split()
-                # print ('{0}'.format(x[0],sum(map(int,x[1:]))))
-                line = fin.readline()
+
+
+
+
+
+
+    # with open(directory + '/'+ username + '/' + 'info.csv') as fin:
+    #     reader = csv.reader(fin)
+    #     field_names_list = next(reader)
+    #     print(field_names_list)
+    #      # print ('{0}'.format(fin.readline().split()))
+    #      # line = fin.readline()
+    #      # print(line)
+    #      # print('test')
+    #      # for x in fin:
+    #      #        x=x.split()
+    #      #        # print ('{0}'.format(x[0],sum(map(int,x[1:]))))
+    #      #        line = fin.readline()
+
+
 
 
 
@@ -256,7 +277,7 @@ def writeJsonToFile():
 
 
 
-createFiles('jake', 'hi4', 'jake','22','145' )
+# createFiles('Jonny', 'let me in', 'Midge','22','1333' )
 
 # writeJsonToFile()
 
@@ -275,11 +296,11 @@ createFiles('jake', 'hi4', 'jake','22','145' )
 # p = 'hi4'
 # test = login(User,p)
 # print(test)
-# # checkUsername('Mila')
+# checkUsername('Jonny')
 
-# setUserDetails()
+# setUserDetails('Jonny123', 'test', 'hello', '23', '12')
 
-# getUserDetails()
+getUserDetails()
 
 
 
@@ -425,3 +446,4 @@ createFiles('jake', 'hi4', 'jake','22','145' )
     #             x["fields"]["codename"],
     #             x["fields"]["name"],
     #             x["fields"]["content_type"]])
+
