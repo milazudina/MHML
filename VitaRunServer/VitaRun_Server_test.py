@@ -47,6 +47,7 @@ from userFunctions import login
 import logging
 import json
 import numpy as np
+import scipy.stats as stats
 
 
 class S(SimpleHTTPRequestHandler):
@@ -57,25 +58,49 @@ class S(SimpleHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        print(str(self.headers))
-        print(type(self.headers))
+        print(str(self.headers)) # Host: localhost:3000
+                                #Connection: keep-alive
+                                #Accept: */*
+                                #User-Agent: Rested/2009 CFNetwork/976 Darwin/18.2.0 (x86_64)
+                                #Accept-Language: en-gb
+                                #Accept-Encoding: gzip, deflate
+                                #login: {"password":"789ab","username":"Mila123"}
+        #print(type(self.headers)) # <class 'http.client.HTTPMessage'>
         
-        key = str(self.headers).split()[0] 
-        value = str(self.headers).split()[1]
+        # test for LOGIN
+#        key = str(self.headers).split()[16] 
+#        value = str(self.headers).split()[17]
+        
+        # test for CREATE PROFILE
+#        key = str(self.headers).split()[2] 
+#        value = str(self.headers).split()[3]
+        
+        # test for FEATURE EOR
+        key = str(self.headers).split()[13] 
+        value = str(self.headers).split()[14]
 
         print("Key:", key)
-        print("Value", value)
-        print(type(key))
-        print(type(value))
+        print("Value:", value)
+#        print(type(key)) # <class 'str'>
+#        print(type(value)) # <class 'str'>
         
         self._set_response()
         # 17 is a temporary solution for using with Rested app
-        
-        if (key in "feature"):
-            mostRecentPred = allPredictions[-1]
-            self.wfile.write(str(mostRecentPred).encode('utf-8'))
+        if (key in "feature:"):
+            mostRecentPredAvg = int(stats.mode(allPredictions[-1])[0])
+#            mostRecentAvgFreq = allFrequencies[-1] an average of this
+            self.wfile.write(str(mostRecentPredAvg).encode('utf-8'))
             
+        elif (key in "featureEOR:"):
+            allSteps = np.concatenate(allPredictions).ravel()
+            print(allSteps)
+            self.wfile.write(str(allSteps).encode('utf-8'))
             
+# FIGURE OUT HOWTO PUT STUFF INTO JSON
+# TO DO LIST: WHAT"S UP WITH CREATE PROFILE SERVER FUNCTION
+# ASK JACOB DOES HE NEED COUNTS
+
+          
 #        elif (key in "getTypeEOR"):
 #            
 #            
@@ -84,33 +109,37 @@ class S(SimpleHTTPRequestHandler):
 #            self.wfile.write("GET request received".encode('utf-8'))
 #            
 #        elif (key in "getTypesEOR"):
+#           flatten the list
 #            self.wfile.write()
 #            
 #        elif (key in "setUser"):
 #            self.wfile.write()
 #        elif (key in "createProfile"):
             
-        elif (key in "getUserDetails:"):
+#        elif (key in "getUserDetails:"):
+#            
+#        elif (key in "setUserDetails:"):
             
-        elif (key in "setUserDetails:"):
-            
-            
-        
         elif (key in "login:"):
-            print(self.headers)
-#            content_length = int(self.headers['Content-Length'])
-#            post_data = self.rfile.read(content_length)
-            
             json_output = json.loads(value)
-            print(json_output)
-            print(type(json_output))
+#            print(json_output) # {'password': '789ab', 'username': 'Mila123'}
+#            print(type(json_output)) # <class 'dict'>
             username = json_output["username"]
             password = json_output["password"]
-            print('hello')
-            print(type(username))
-            print(type(password))
-            test = login(username, password)
-            print(test)
+#            print(type(username)) # <class 'str'>
+#            print(type(password)) # <class 'str'>
+            loginReturn = login(username, password)
+            self.wfile.write(str(loginReturn).encode('utf-8'))
+        
+        elif (key in "ProfileCreate:"):
+            json_output = json.loads(value)
+            username = json_output["username"]
+            password = json_output["password"]
+            age = json_output["age"]
+            weight = json_output["weight"]
+            print(json_output)
+            
+
 
 # postPressureData        
     def do_POST(self):
@@ -120,7 +149,7 @@ class S(SimpleHTTPRequestHandler):
         stepsBatch = np.array(list(postDataDict.values()))
         # here we should have functions from N
         print(stepsBatch.shape)
-        typePrediction = predictStepType(stepsBatch, pronationClassifier) # probabilities for each step in the batch
+        typePrediction = predictStepType(stepsBatch, pronationClassifier, 30) # probabilities for each step in the batch
         allPredictions.append(typePrediction) # appending to this array to return it at the end of run
         print(allPredictions)
         # need to flatten the list

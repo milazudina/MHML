@@ -27,21 +27,10 @@ details = {
     'Age': 89,
 }
 
-print(type(post_data))
-
-print(now.strftime("%Y-%m-%d %H:%M:%S"))
-
-
-
-
-
-
-username = "Jonny" #put username into there
-
-
+username = "Mila" #put username into there
 filename = now.strftime("%Y-%m-%d %h:%m:%s") + ".csv"
 
-file_path = "/Users/jonathanmidgen/Documents/GitHub/MHML_old/VitaRunServer/"
+file_path = "/Users/mila/Bioengineering_Year_4/MHML/pronation_classification/VitaRunServer/"
 directory = os.path.dirname(file_path)
 def createFiles(Username, Password, Nickname, Age, Weight):
     # print(Username)
@@ -169,9 +158,7 @@ def count_NP_last5():
 
 
 def login(Username, Password):
-    with open(directory+ '/' + 'Login.csv') as fin:
-        print(Username)
-        print(Password)
+    with open(directory + '/' + 'Login.csv') as fin:
         df = pd.read_csv(fin)
         length=len(df)
         # print(df)
@@ -180,9 +167,7 @@ def login(Username, Password):
         # print(column_of_interest)
         for x in range(0, length):
             if column_of_interest[x] in Username:
-                print('test1')
                 if str(password_of_interest[x]) in Password:
-                    print('test2')
                     return 1
                 else:
                     return 0
@@ -277,7 +262,9 @@ def writeJsonToFile():
 
 
 
+
 # createFiles('Jonny', 'let me in', 'Midge','22','1333' )
+
 
 # writeJsonToFile()
 
@@ -292,15 +279,16 @@ def writeJsonToFile():
 # count_NP_last5()
 
 # getPassword()
-# User = 'jacob'
-# p = 'hi4'
-# test = login(User,p)
-# print(test)
-# checkUsername('Jonny')
+
+#User = 'jacob'
+#p = 'hi4'
+#test = login(User,p)
+#print(test)
+# # checkUsername('Mila')
 
 # setUserDetails('Jonny123', 'test', 'hello', '23', '12')
 
-getUserDetails()
+#getUserDetails()
 
 
 

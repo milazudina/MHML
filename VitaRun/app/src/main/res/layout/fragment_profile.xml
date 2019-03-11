@@ -232,7 +232,7 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/tvUserUsernameEdit"
+                android:id="@+id/etUserUsername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
@@ -240,7 +240,7 @@
                 android:text="@string/username" />
 
             <EditText
-                android:id="@+id/tvUserEmailEdit"
+                android:id="@+id/etUserEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
@@ -249,7 +249,7 @@
 
 
             <EditText
-                android:id="@+id/tvUserAgeEdit"
+                android:id="@+id/etUserAge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
@@ -257,7 +257,7 @@
                 android:text="@string/age" />
 
             <EditText
-                android:id="@+id/tvUserWeightEdit"
+                android:id="@+id/etUserWeight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"

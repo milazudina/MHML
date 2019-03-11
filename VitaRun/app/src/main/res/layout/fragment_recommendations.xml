@@ -13,7 +13,7 @@
         android:background="@color/offwhite">
 
         <TextView
-        android:id="@+id/reccomendations_title"
+        android:id="@+id/recommendations_title"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:text='@string/latest_recommendations'
@@ -44,6 +44,12 @@
             android:paddingTop="120dp"
             android:paddingBottom="30dp"
             android:paddingLeft="30dp"/>
+
+        <Button
+            android:id="@+id/button_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ok"/>
 
 
 
