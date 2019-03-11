@@ -16,12 +16,13 @@ def running_mean(x, N):
     return (cumsum[N:] - cumsum[:-N]) / N
 
 
-def splitter(steps, stepnum, debug=False, log=False, lab1=0, lab2=0):
+def splitter(steps, stpnr, debug=False, log=False, lab1=0, lab2=0):
+    stepnum = np.asarray(stpnr, dtype=np.int16)
     stepsnorm = zscore(steps, 0, 0)
     where_are_NaNs = np.isnan(stepsnorm)
     stepsnorm[where_are_NaNs] = 0
 
-    stepsums = np.sum(stepsnorm, axis=1)
+    stepsums = np.sum(stepsnorm[:,:6], axis=1)
 
     dstepnum = np.diff(stepnum)
     runperiod = np.zeros(dstepnum.shape, dtype=int)
@@ -143,17 +144,11 @@ if __name__ == "__main__":
             next(data, None)
             for row in data:
                 if row[2][1:5]=="LEFT":
-                    stps.append([row[3],row[5],row[6],row[7],row[8],row[9],row[11],row[12],row[13]])
-                    stpnr.append(row[17])
+                    stps.append([row[3],row[5],row[6],row[7],row[8],row[9],row[11],row[12],row[13],row[17]])
+                    # stpnr.append(row[17])
 
         steps = np.asarray(stps, dtype=np.float32)
-        stepnum = np.asarray(stpnr, dtype=np.int16)
-        splitter(steps[:,:6], stepnum, debug=True, log=True, lab1=0, lab2=0)
-        
-        
-def running_mean(x, N):
-    cumsum = np.cumsum(np.insert(x, 0, 0))
-    return (cumsum[N:] - cumsum[:-N]) / N
+        splitter(steps[:,:9], steps[:,9], debug=True, log=True, lab1=0, lab2=0)
 
 
 def running_frequency(window):
