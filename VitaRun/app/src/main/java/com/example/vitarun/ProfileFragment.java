@@ -34,13 +34,13 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         mViewSwitcher = view.findViewById(R.id.swProfileEdit);
-        etUsername = (EditText) view.findViewById(R.id.etUsername);
-        etname = (EditText) view.findViewById(R.id.etUserEmail);
+        etUsername = (EditText) view.findViewById(R.id.etUserUsername);
+        etname = (EditText) view.findViewById(R.id.etUserName);
         etAge = (EditText) view.findViewById(R.id.etUserAge);
         etWeight = (EditText) view.findViewById(R.id.etUserWeight);
 
         tvUsername = view.findViewById(R.id.tvUserUsername);
-        tvname = view.findViewById(R.id.tvUserEmail);
+        tvname = view.findViewById(R.id.tvUserName);
         tvAge = view.findViewById(R.id.tvUserAge);
         tvWeight = view.findViewById(R.id.tvUserWeight);
 

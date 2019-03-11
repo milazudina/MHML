@@ -50,7 +50,7 @@ tools:context=".LoginActivity">
                 app:layout_constraintTop_toBottomOf="@+id/tvWeight" />
 
             <TextView
-                android:id="@+id/tvname"
+                android:id="@+id/tvName"
                 android:layout_width="59dp"
                 android:layout_height="21dp"
                 android:layout_weight="1"
