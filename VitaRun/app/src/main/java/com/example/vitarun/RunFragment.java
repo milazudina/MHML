@@ -1,24 +1,24 @@
 package com.example.vitarun;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class RunFragment extends Fragment {
+
+    public RecommendationsFragment recommendationsFragment;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        recommendationsFragment = new RecommendationsFragment();
+
         getChildFragmentManager().beginTransaction().replace(R.id.run_reccomendation_container,
-                new ReccomendationsFragment()).commit();
+                recommendationsFragment).commit();
         getChildFragmentManager().beginTransaction().replace(R.id.run_transportControl_container,
                 new TransportControlFragment()).commit();
 

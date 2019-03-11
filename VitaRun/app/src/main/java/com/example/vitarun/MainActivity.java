@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private DashboardFragment dashboardFragment;
     private RunFragment runFragment;
     private ProfileFragment profileFragment;
+    private RecommendationsFragment recommendationsFragment;
 
 
     public RunEvent runEvent;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         runEvent = new RunEvent(this);
+
 
         stridMACs = new HashMap<>();
         stridMACs.put("0C:1C:57:6E:A1:B9", "left");
@@ -85,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
         dashboardFragment = new DashboardFragment();
         runFragment = new RunFragment();
         profileFragment = new ProfileFragment();
+
+        recommendationsFragment = runFragment.recommendationsFragment;
 
 
         // Only initialise bluetooth if NOT being run in emulator.
@@ -111,6 +115,12 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.master_fragment_container,
                 new DashboardFragment()).commit();
     }
+
+
+    public void onInputASent(CharSequence input) {
+        recommendationsFragment.updateEditText(input);
+    }
+
 
     public void InitialiseBluetooth() {
         // Bluetooth Stuff
