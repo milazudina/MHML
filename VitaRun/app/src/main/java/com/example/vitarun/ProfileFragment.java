@@ -51,10 +51,15 @@ public class ProfileFragment extends Fragment {
         Button saveButton = (Button) view.findViewById(R.id.bSaveProfile);
         Button logOutButton = (Button) view.findViewById(R.id.bLogOut);
 
+
+        System.out.print("Running Profile Fragment");
+
         // Set User Information
 
         String getUsername = SaveSharedPreferences.getUserName(getContext());
         if(getUsername.equals("")){
+
+            System.out.print("No username, starting login");
 
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
@@ -109,7 +114,7 @@ public class ProfileFragment extends Fragment {
                     String username = etUsername.getText().toString();
                     String name = etName.getText().toString();
 
-                    User user = new User(username, "", name, age_int, weight_int);
+                    User user = new User(username, getUser.password, name, age_int, weight_int);
 
                     serverComms.setUserDetails(user);
 
