@@ -82,7 +82,9 @@ def splitter(steps, stpnr, debug=False, log=False, lab1=0, lab2=0):
             if runperiod[i] & dstepnum[i]:
                 cutsteps.append(stepsnorm[i:i + 30, :])
 
-    return(cutsteps)
+    cutstepstack = np.stack(cutsteps, axis=0)
+
+    return(cutstepstack)
 
 
 if __name__ == "__main__":
