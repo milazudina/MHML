@@ -37,6 +37,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity
     private RunFragment runFragment;
     private ProfileFragment profileFragment;
     private RecommendationsFragment recommendationsFragment;
+    private EndOfRunFragment endOfRunFragment;
 
     public RunEvent runEvent;
 
@@ -119,6 +121,7 @@ public class MainActivity extends AppCompatActivity
             runFragment.setRunFragmentListener(this);
 
             recommendationsFragment = runFragment.recommendationsFragment;
+            endOfRunFragment = runFragment.endOfRunFragment;
 //            recommendationsFragment.test();
         }
     }
@@ -133,6 +136,7 @@ public class MainActivity extends AppCompatActivity
     public void StartRun(){
         runEvent = new RunEvent(this);
         runEvent.StartRunEvent();
+        endOfRunFragment.mViewSwitcher.showNext();
     }
 
     public void PauseRun(){
@@ -141,6 +145,9 @@ public class MainActivity extends AppCompatActivity
 
     public void EndRun(){
         runEvent.EndRunEvent();
+        endOfRunFragment.mViewSwitcher.showNext();
+
+
     }
 
     // BLUETOOTH STUFF

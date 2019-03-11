@@ -1,14 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".EndOfRunFragment">
+<ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/viewSwitcher"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/OP_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Over Pronation = " />
+        <TextView
+            android:id="@+id/UP_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Under Pronation = "
+            android:layout_toRightOf="@id/OP_text"/>
+        <TextView
+            android:id="@+id/NP_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Normal Pronation = "
+            android:layout_toRightOf="@id/UP_text"/>
+
+        <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/graph" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/empty_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </RelativeLayout>
+
+</ViewSwitcher>

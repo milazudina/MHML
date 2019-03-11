@@ -30,4 +30,11 @@
         android:layout_below="@+id/run_recommendation_container">
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/end_of_run_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/run_transportControl_container">
+    </FrameLayout>
+
 </RelativeLayout>
