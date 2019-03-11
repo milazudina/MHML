@@ -58,11 +58,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
                 boolean serverResponse = serverComms.login(username, attemptPassword);
-                System.out.print(serverResponse);
+                System.out.print("Server Response:" + serverResponse);
 
                 if (!serverResponse) {
                     Snackbar sbUsername = Snackbar.make(v, "Incorrect Username or Password", Snackbar.LENGTH_LONG);
                     sbUsername.show();
+                    System.out.println("Response Incorrect");
                 } else {
                     finish();
                     System.out.println("Correct Password");

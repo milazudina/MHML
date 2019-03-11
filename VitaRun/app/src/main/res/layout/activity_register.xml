@@ -44,7 +44,6 @@ tools:context=".LoginActivity">
 
                 android:text="@string/password"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/etPassword"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvWeight" />
@@ -57,7 +56,6 @@ tools:context=".LoginActivity">
 
                 android:text="@string/name"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/etname"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvPassword" />
@@ -110,7 +108,7 @@ tools:context=".LoginActivity">
                 app:layout_constraintVertical_bias="0.0" />
 
             <EditText
-                android:id="@+id/etname"
+                android:id="@+id/etPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -124,7 +122,7 @@ tools:context=".LoginActivity">
                 app:layout_constraintVertical_bias="0.0" />
 
             <EditText
-                android:id="@+id/etPassword"
+                android:id="@+id/etName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
