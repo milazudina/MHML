@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity
             runFragment.setRunFragmentListener(this);
 
             recommendationsFragment = runFragment.recommendationsFragment;
-            recommendationsFragment.test();
+//            recommendationsFragment.test();
         }
     }
 //
