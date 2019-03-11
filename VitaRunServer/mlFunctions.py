@@ -33,6 +33,8 @@ from keras.utils import to_categorical
 from keras.optimizers import Adam
 from sklearn.model_selection import train_test_split, StratifiedKFold
 import h5py
+import numpy as np
+
 
 def loadPronationClassifier(model_name = 'model'):
     json_file = open(str(model_name) + '.json', 'r')
@@ -43,19 +45,29 @@ def loadPronationClassifier(model_name = 'model'):
     loaded_model.load_weights(str(model_name) + '.h5')
     print('Loaded model from disk')
     return loaded_model
-    
-def predictStepType(stepsBatch, loaded_model): # numpy array of 30, 9
-    # currently only valid for one step, need to change 
-    # where reshape happens
-    current_step = stepsBatch.reshape(1,30,9)
-    predictions = loaded_model.predict(current_step)
-    return predictions
 
-def getPredictionMode():
+ # returns type of each step into an array
+ # array then concatenated
+def predictStepType(stepsBatch, loaded_model, stepLength): # numpy array of 30, 9
+    nSteps = int(stepsBatch.shape[0]/stepLength)
+    current_step = stepsBatch.reshape(nSteps, 30, 9)
+    probabilities = loaded_model.predict(current_step)
+    predictions = probabilities[:,:]
+    
+    typePrediction = np.zeros((probabilities.shape[0]))
+    for i in range(0, probabilities.shape[0]):
+        predictions[i,:] = probabilities[i, :] == np.max(probabilities[i, :])
+        typePrediction[i] = int(np.argmax(predictions[i, :]))
+    typePrediction = typePrediction.astype(int)
+    return typePrediction # returns predictions for all steps in the batch
+
+def getPredictionMode(predictions):
+    
     return stepType
 
 def getTypesEOR():
     return countNP, countOP, countUP
+
 
 ## evaluate loaded model on test data
 #loaded_model.compile(Adam(lr=1e-4), loss='categorical_crossentropy', metrics=['accuracy'])

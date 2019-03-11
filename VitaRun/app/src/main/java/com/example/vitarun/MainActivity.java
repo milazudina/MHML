@@ -22,6 +22,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,6 +45,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static android.bluetooth.BluetoothAdapter.STATE_CONNECTED;
+import static android.bluetooth.BluetoothAdapter.STATE_DISCONNECTED;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,18 +60,18 @@ public class MainActivity extends AppCompatActivity {
     StridBLE rightStrid;
 
     private RunFragment runFragment;
+    public RunEvent runEvent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        runEvent = new RunEvent(this);
+
         stridMACs = new HashMap<>();
         stridMACs.put("0C:1C:57:6E:A1:B9", "left");
-        leftStrid = new StridBLE("0C:1C:57:6E:A1:B9", "left");
-
         stridMACs.put("F8:36:9B:74:6D:C8", "right");
-        rightStrid = new StridBLE("F8:36:9B:74:6D:C8", "right");
 
         // The Stridalyzer Service UUID.
         stridServiceUUID = convertFromInteger(0x1814);
@@ -88,7 +90,11 @@ public class MainActivity extends AppCompatActivity {
         ImageButton bluetooth_button = (ImageButton) findViewById(R.id.bluetooth_icon);
         bluetooth_button.setOnClickListener(new View.OnClickListener() {
 
-            public void onClick(View v) {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Scanning for Insoles", 2000)
+                        .setAction("Action", null).show();
+
                 RunBLE();
             }
         });
@@ -125,6 +131,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void RunBLE() {
 
+        leftFound = false;
+        leftStrid = new StridBLE("0C:1C:57:6E:A1:B9", "left");
+        setSoleConnected(false, "left");
+
+        rightFound = false;
+        rightStrid = new StridBLE("F8:36:9B:74:6D:C8", "right");
+        ;
+        setSoleConnected(false, "right");
+
         // Stop scanning, used in case scan was already being performed.
         bluetoothAdapter.stopLeScan(scanCallback);
 
@@ -144,8 +159,8 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("Starting Scan");
     }
 
-    boolean leftConnected = false;
-    boolean rightConnected = false;
+    boolean leftFound = false;
+    boolean rightFound = false;
 
     private BluetoothAdapter.LeScanCallback scanCallback =
             new BluetoothAdapter.LeScanCallback() {
@@ -159,16 +174,16 @@ public class MainActivity extends AppCompatActivity {
                         // Determine which insole it is.
                         String side = stridMACs.get(device.getAddress());
 
-                        if (side == "left" && !leftConnected) {
+                        if (side == "left" && !leftFound) {
                             leftStrid.bleDevice = device;
                             ConnectGatt(leftStrid);
-                            leftConnected = true;
+                            leftFound = true;
                             System.out.println("Left Insole Found");
 
-                        } else if (side == "right" && !rightConnected) {
+                        } else if (side == "right" && !rightFound) {
                             rightStrid.bleDevice = device;
                             ConnectGatt(rightStrid);
-                            rightConnected = true;
+                            rightFound = true;
                             System.out.println("Right Insole Found");
                         }
                     }
@@ -180,33 +195,33 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setSoleConnected(Boolean connected, Integer soleIndex)
-    {
-        switch (soleIndex) {
-            case 0:
-                ImageView leftSoleIcon = findViewById(R.id.insole_left_icon);
+    private void setSoleConnected(final Boolean connected, final String side) {
 
-                if (connected)
-                {
-                    leftSoleIcon.setImageResource(R.drawable.vitarun_insoleleft_fill);
-                }
-                else {
-                    leftSoleIcon.setImageResource(R.drawable.vitarun_insoleleft);
-                }
-                break;
-            case 1:
-                ImageView rightSoleIcon = findViewById(R.id.insole_right_icon);
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                switch (side) {
+                    case "left":
+                        ImageView leftSoleIcon = findViewById(R.id.insole_left_icon);
 
-                if (connected)
-                {
-                    rightSoleIcon.setImageResource(R.drawable.vitarun_insoleright_fill);
-                }
-                else {
-                    rightSoleIcon.setImageResource(R.drawable.vitarun_insoleright);
-                }
-                break;
-        }
+                        if (connected) {
+                            leftSoleIcon.setImageResource(R.drawable.vitarun_insoleleft_fill);
+                        } else {
+                            leftSoleIcon.setImageResource(R.drawable.vitarun_insoleleft);
+                        }
+                        break;
+                    case "right":
+                        ImageView rightSoleIcon = findViewById(R.id.insole_right_icon);
 
+                        if (connected) {
+                            rightSoleIcon.setImageResource(R.drawable.vitarun_insoleright_fill);
+                        } else {
+                            rightSoleIcon.setImageResource(R.drawable.vitarun_insoleright);
+                        }
+                        break;
+                }
+            }
+        });
     }
 
     private class StridBLE {
@@ -221,7 +236,6 @@ public class MainActivity extends AppCompatActivity {
             this.side = side;
             this.MAC = MAC;
 
-
             gattCallback = new BluetoothGattCallback() {
                 @Override
                 public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -229,9 +243,14 @@ public class MainActivity extends AppCompatActivity {
 
                     if (newState == STATE_CONNECTED) {
                         System.out.println(side + " Insole Connected");
+                        setSoleConnected(true, side);
                         gatt.discoverServices();
+                    } else if (newState == STATE_DISCONNECTED) {
+                        System.out.println(side + " Insole Disconnected");
+                        setSoleConnected(false, side);
                     }
                 }
+
 
                 @Override
                 public void onServicesDiscovered(BluetoothGatt gatt, int status) {
@@ -253,7 +272,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+                public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor,
+                                              int status) {
                     super.onDescriptorWrite(gatt, descriptor, status);
 
                     BluetoothGattCharacteristic characteristic =
@@ -265,19 +285,25 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+                public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic
+                        characteristic) {
                     super.onCharacteristicChanged(gatt, characteristic);
 
                     byte[] DataBytes = characteristic.getValue();
-//                    runEvent.addDataSample(side, DataBytes);
+
+                    runEvent.addDataSample(side, DataBytes);
 
 //                        String DataString = new String(DataBytes, StandardCharsets.UTF_16);
 //                        System.out.println(DataString);
                 }
-            };
+            }
+
+            ;
         }
+
     }
-    
+
+
     public UUID convertFromInteger(int i) {
         final long MSB = 0x0000000000001000L;
         final long LSB = 0x800000805f9b34fbL;
