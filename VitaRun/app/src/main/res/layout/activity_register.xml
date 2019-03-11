@@ -25,7 +25,7 @@ tools:context=".LoginActivity">
         app:layout_constraintVertical_bias="0.0" />
 
     <EditText
-        android:id="@+id/etNickname"
+        android:id="@+id/etname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="150dp"
@@ -86,15 +86,15 @@ tools:context=".LoginActivity">
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvWeight" />
     <TextView
-        android:id="@+id/tvNickname"
+        android:id="@+id/tvname"
         android:layout_width="59dp"
         android:layout_height="21dp"
         android:layout_marginStart="63dp"
         android:layout_marginEnd="40dp"
         android:layout_marginBottom="344dp"
-        android:text="@string/nickname"
+        android:text="@string/name"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/etNickname"
+        app:layout_constraintEnd_toStartOf="@+id/etname"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvPassword" />

@@ -25,8 +25,8 @@ import static android.content.Context.MODE_PRIVATE;
 public class ProfileFragment extends Fragment {
     ViewSwitcher mViewSwitcher;
     LocalStore userLocalStore;
-    EditText etUsername, etNickname, etAge, etWeight;
-    TextView tvUsername, tvNickname, tvAge, tvWeight;
+    EditText etUsername, etname, etAge, etWeight;
+    TextView tvUsername, tvname, tvAge, tvWeight;
     ServerComms serverComms;
 
     @Nullable
@@ -35,12 +35,12 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         mViewSwitcher = view.findViewById(R.id.swProfileEdit);
         etUsername = (EditText) view.findViewById(R.id.etUsername);
-        etNickname = (EditText) view.findViewById(R.id.etUserEmail);
+        etname = (EditText) view.findViewById(R.id.etUserEmail);
         etAge = (EditText) view.findViewById(R.id.etUserAge);
         etWeight = (EditText) view.findViewById(R.id.etUserWeight);
 
         tvUsername = view.findViewById(R.id.tvUserUsername);
-        tvNickname = view.findViewById(R.id.tvUserEmail);
+        tvname = view.findViewById(R.id.tvUserEmail);
         tvAge = view.findViewById(R.id.tvUserAge);
         tvWeight = view.findViewById(R.id.tvUserWeight);
 
@@ -63,7 +63,7 @@ public class ProfileFragment extends Fragment {
 
         tvUsername.setText(getUser.username);
         tvAge.setText(getUser.age);
-        tvNickname.setText(getUser.nickname);
+        tvname.setText(getUser.name);
         tvWeight.setText(getUser.weight);
 
         // Edit User Information
@@ -93,9 +93,9 @@ public class ProfileFragment extends Fragment {
                 int age_int = Integer.parseInt(age);
                 int weight_int = Integer.parseInt(weight);
                 String username = etUsername.getText().toString();
-                String nickname = etNickname.getText().toString();
+                String name = etname.getText().toString();
 
-                User user = new User(username,"", nickname, age_int, weight_int);
+                User user = new User(username,"", name, age_int, weight_int);
 
                 serverComms.setUserDetails(user);
 

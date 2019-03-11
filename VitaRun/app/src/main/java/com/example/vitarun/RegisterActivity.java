@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     Button bCreateProfile;
-    EditText etUsername, etAge, etWeight, etPassword, etNickname;
+    EditText etUsername, etAge, etWeight, etPassword, etname;
     TextView tvLoginLink;
     ServerComms serverComms;
 
@@ -23,7 +23,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         etAge = (EditText) findViewById(R.id.etAge);
         etUsername = (EditText) findViewById(R.id.etUsername);
-        etNickname = (EditText) findViewById(R.id.etNickname);
+        etname = (EditText) findViewById(R.id.etname);
         etPassword = (EditText) findViewById(R.id.etPassword);
         etWeight = (EditText) findViewById(R.id.etWeight);
 
@@ -41,12 +41,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
-                String nickname = etNickname.getText().toString();
+                String name = etname.getText().toString();
                 int age = Integer.parseInt(etAge.getText().toString());
                 int weight = Integer.parseInt(etWeight.getText().toString());
 
-                User createProfile = new User(username, password, nickname, age, weight);
-                boolean created = serverComms.createProfile(username, password, nickname, age, weight);
+                User createProfile = new User(username, password, name, age, weight);
+                boolean created = serverComms.createProfile(username, password, name, age, weight);
                 System.out.println(createProfile);
 
                 if(created){
