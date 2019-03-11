@@ -47,7 +47,8 @@ import java.util.UUID;
 import static android.bluetooth.BluetoothAdapter.STATE_CONNECTED;
 import static android.bluetooth.BluetoothAdapter.STATE_DISCONNECTED;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+                        implements TransportControlFragment.RunTransportListener{
 
     public static HashMap<String, String> stridMACs;
     private static UUID stridServiceUUID;
@@ -63,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
     private RunFragment runFragment;
     private ProfileFragment profileFragment;
     private RecommendationsFragment recommendationsFragment;
-
 
     public RunEvent runEvent;
 
