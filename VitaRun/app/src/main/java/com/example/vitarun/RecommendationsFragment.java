@@ -52,22 +52,23 @@ public class RecommendationsFragment extends Fragment {
         editText.setText(newText);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof FragmentAlistener) {
-            listener = (FragmentAlistener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + "must implement FragmentAlistener");
-        }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        listener = null;
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (context instanceof FragmentAlistener) {
+//            listener = (FragmentAlistener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + "must implement FragmentAlistener");
+//        }
+//    }
+//
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//        listener = null;
+//    }
 
 
 }

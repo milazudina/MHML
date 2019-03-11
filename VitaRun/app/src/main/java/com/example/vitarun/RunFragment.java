@@ -1,5 +1,6 @@
 package com.example.vitarun;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,14 +12,27 @@ import android.view.ViewGroup;
 
 public class RunFragment extends Fragment {
 
+    RunFragmentListener callback;
+
+    public void setRunFragmentListener(Activity activity)
+    {
+        callback = (MainActivity) activity;
+    }
+
+    // Interface for controlling RunEvent in MainActivity.
+    public interface RunFragmentListener {
+        void StartRun();
+        void PauseRun();
+        void EndRun();
+    }
+
     public RecommendationsFragment recommendationsFragment;
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//
-//        recommendationsFragment = new RecommendationsFragment();
-//    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        recommendationsFragment = new RecommendationsFragment();
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

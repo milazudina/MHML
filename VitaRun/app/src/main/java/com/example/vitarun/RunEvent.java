@@ -99,16 +99,18 @@ public class RunEvent {
     }
 
     public void StartRunEvent() {
+        System.out.println("Run Started");
         startTime = ZonedDateTime.now(ZoneId.systemDefault());
     }
 
     public void PauseRunEvent() {
-
+        System.out.println("Run Paused");
     }
 
 
     public void EndRunEvent() {
         endTime = ZonedDateTime.now(ZoneId.systemDefault());
+        System.out.println("Run Ended");
 
     }
 
