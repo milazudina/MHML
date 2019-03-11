@@ -15,6 +15,7 @@ public class RunFragment extends Fragment {
 
     RunFragmentListener callback;
 
+
     public void setRunFragmentListener(Activity activity)
     {
         callback = (MainActivity) activity;
@@ -28,12 +29,14 @@ public class RunFragment extends Fragment {
     }
 
     public RecommendationsFragment recommendationsFragment;
+    public EndOfRunFragment endOfRunFragment;
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         recommendationsFragment = new RecommendationsFragment();
+        endOfRunFragment = new EndOfRunFragment();
     }
 
     @Override
@@ -45,6 +48,8 @@ public class RunFragment extends Fragment {
                 new TransportControlFragment()).commit();
         getChildFragmentManager().beginTransaction().replace(R.id.run_title_container,
                 new RunTitleFragment()).commit();
+        getChildFragmentManager().beginTransaction().replace(R.id.end_of_run_container,
+                endOfRunFragment).commit();
 
 
 
