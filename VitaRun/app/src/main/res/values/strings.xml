@@ -25,9 +25,8 @@
     <string name="weight">Weight</string>
     <string name="age">Age</string>
     <string name="username">username</string>
-    <string name="nickname">Name</string>
-    <string name="email">Email</string>
     <string name="name">Name</string>
+    <string name="email">Email</string>
     <string name="password">Password</string>
 
     <string name="login">Log In</string>

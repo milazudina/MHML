@@ -84,10 +84,10 @@ public class ServerComms {
             return false;
         }
     }
-    public boolean createProfile(String userName, String password, String nickname, int Age, int weight)
+    public boolean createProfile(String userName, String password, String name, int Age, int weight)
     {
         final SyncResult syncResult = new SyncResult();
-        User user = new User(userName, password, nickname, Age, weight);
+        User user = new User(userName, password, name, Age, weight);
         String json = gson.toJson(user);
         //String header = String.format("login : , %s : %s", userName,password);
 
