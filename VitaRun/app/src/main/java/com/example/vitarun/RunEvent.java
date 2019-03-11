@@ -30,7 +30,7 @@ public class RunEvent {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
-    ArrayList<Pair<String, Float[]>> DATA_BUFFER;
+    HashMap<Integer, Float[]> DATA_BUFFER;
 
     static int dataBufferLength = 128;
     ServerComms serverComms;
@@ -50,7 +50,7 @@ public class RunEvent {
         this.context = current;
 
         serverComms = new ServerComms();
-        DATA_BUFFER = new ArrayList<>();
+        DATA_BUFFER = new HashMap<>();
 
         dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 
@@ -63,15 +63,16 @@ public class RunEvent {
     }
 
 
-    public void addDataSample(String side, byte[] dataSample) {
+    public void addDataSample() {
 //        DATA_BUFFER.add(dataSample);
 
         LocalDateTime currTimeDT = LocalDateTime.now(ZoneId.systemDefault());
         String currTime = currTimeDT.format(dateFormat);
-        System.out.println(side + "Data Sample Added");
+//        System.out.println(side + "Data Sample Added");
 
-        DATA_BUFFER.add(new Pair(currTime, (dataSet.get(dataIndex))));
-
+        for (int dataIndex = 0; dataIndex < 1540; dataIndex++) {
+            DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
+        }
 
         if (DATA_BUFFER.size() == dataBufferLength) {
 
