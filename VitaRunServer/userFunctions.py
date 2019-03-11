@@ -95,22 +95,21 @@ def addFreq(username, num):
         writer = csv.writer(outputFile)
         writer.writerow([num])
 
-def addPronation(username, num1, num2, num3, num4, num5, num6):
+
+def addPronation(username, num):
+    print(type(num[1]))
     with open(directory+ '/' + username + '/'+ 'temp/pronationRunData.csv', 'a', newline ='') as outputFile:
         writer = csv.writer(outputFile)
-        writer.writerow([num1])
-        writer.writerow([num2])
-        writer.writerow([num3])
-        writer.writerow([num4])
-        writer.writerow([num5])
-        writer.writerow([num6])
+        for i in range(0,len(num)):
+            y = num[i]
+            writer.writerow(y)
+
 
 def averageFreq(username):
     with open(directory+ '/' + username + '/temp/frequencyRunData.csv') as fin:
         # fin.next()
         total = sum(int(r[0]) for r in csv.reader(fin))
         return total
-
 
 
 def totalSteps():
@@ -120,13 +119,52 @@ def totalSteps():
         print(totalSteps)
 
 
-def count_NP_last5():
+def count_NP_last5(username):
     with open(directory+ '/' + username + '/'+ 'History.csv') as fin:
         df = pd.read_csv(fin)
         length=len(df)
-        for x in range(length-5, length):
-            count_NP_last5 = df[1:7]
-            print(count_NP_last5)
+        # for x in range(length-5, length):
+        count_NP_last5 = df['Count_NP']
+        test = count_NP_last5[length-5:length]
+        sum1 = sum(test)
+        return sum1
+
+def count_OP_last5(username):
+    with open(directory+ '/' + username + '/'+ 'History.csv') as fin:
+        df = pd.read_csv(fin)
+        length=len(df)
+        # for x in range(length-5, length):
+        count_NP_last5 = df['Count_OP']
+        test = count_NP_last5[length-5:length]
+        sum1 = sum(test)
+        return sum1
+
+def count_UP_last5(username):
+    with open(directory+ '/' + username + '/'+ 'History.csv') as fin:
+        df = pd.read_csv(fin)
+        length=len(df)
+        # for x in range(length-5, length):
+        count_NP_last5 = df['Count_UP']
+        test = count_NP_last5[length-5:length]
+        sum1 = sum(test)
+        return sum1
+
+def pronation(Username):
+    NP = count_NP_last5(Username)
+    OP = count_OP_last5(Username)
+    UP = count_UP_last5(Username)
+    if NP>OP:
+        if NP>UP:
+            return 'NP'
+        else:
+            return 'UP'
+    else:
+        if OP>UP:
+            return 'OP'
+        else:
+            return 'UP'
+
+
 
 
 def writeHistory(Username,DateTime_Start, DateTime_End, Number_Of_Steps,Count_NP,Count_OP,Count_UP):
@@ -150,9 +188,9 @@ def login(Username, Password):
         # print(column_of_interest)
         for x in range(0, length):
             if column_of_interest[x] in Username:
+
                 print('test1')
                 if str(password_of_interest[x]) in Password:
-                    print('test2')
                     return 1
                 else:
                     return 0
@@ -191,7 +229,6 @@ def getUserDetails(username):
         return df
 
 
-
 def writeJsonToFile():
 
     inputFile= list(post_data.values())
@@ -211,7 +248,6 @@ def startRun(Username):
         os.remove(directory + '/'+ Username + '/' + 'temp/pronationRunData.csv')
         with open(directory+ '/' + Username + '/'+ 'temp/pronationRunData.csv', 'wt', newline ='') as file:
             file.close()
-
 
 
 def readHistoryFile(Username):
@@ -240,6 +276,7 @@ def readHistoryFile(Username):
 
         return historyDict, length
 
+
 def readPronation(Username):
     with open(directory+ '/' + Username + '/'+ 'temp/pronationRunData.csv') as csv_file:
 
@@ -258,6 +295,7 @@ def readPronation(Username):
                 test = json.dumps(dictPronation)
 
         return dictPronation
+
 
 def readFrequency(Username):
     with open(directory+ '/' + Username + '/'+ 'temp/frequencyRunData.csv') as csv_file:
@@ -350,15 +388,17 @@ def readFrequency(Username):
 # print(totalAV)
 
 # totalSteps()
+# x = ['2', '2','2','1','1']
+# addPronation('Jonny1', x)
 
-# addPronation('Jonny1', 2, 2, 2, 1, 1, 1)
+# count_NP_last5('Jonny1')
 
-# count_NP_last5()
-
+test = pronation('Jonny1')
+print(test)
 # getPassword()
 
 # User = 'jacob'
-# p = 'hi4'
+# p = 'hhi4'
 # test = login(User,p)
 # print(test)
 
@@ -376,10 +416,10 @@ def readFrequency(Username):
 # Username = 'Jonny1'
 # DateTime_Start = '28'
 # DateTime_End = '29'
-# Number_Of_Steps = '30394'
-# Count_NP = '655'
-# Count_OP = '2948'
-# Count_UP = '4444'
+# Number_Of_Steps = '6'
+# Count_NP = '5'
+# Count_OP = '2'
+# Count_UP = '7'
 # writeHistory(Username,DateTime_Start, DateTime_End, Number_Of_Steps,Count_NP,Count_OP,Count_UP)
 # print(now.strftime("%Y-%m-%d %H:%M:%S"))
 

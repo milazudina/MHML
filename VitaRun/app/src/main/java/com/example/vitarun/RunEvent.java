@@ -22,6 +22,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -32,7 +37,7 @@ public class RunEvent {
 
     HashMap<Integer, Float[]> DATA_BUFFER;
 
-    static int dataBufferLength = 128;
+    static int dataBufferLength = 256;
     ServerComms serverComms;
 
     ArrayList<Float[]> dataSet;
@@ -60,6 +65,20 @@ public class RunEvent {
 
         dataIndex = 0;
         gson = new Gson();
+
+        // Runnable for refreshing features.
+        Runnable refreshRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!paused) {
+                    RefreshFeatures();
+                }
+            }
+        };
+
+        // Schedules get requests for recommendations.
+        ScheduledExecutorService service  = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleAtFixedRate(refreshRunnable, 15, 15, TimeUnit.SECONDS);
     }
 
 
@@ -80,27 +99,31 @@ public class RunEvent {
         dataIndex += 1;
     }
 
+    // Send a test packet of data
     public void testDataPacket() {
+        int _size = 800;
 
-        for (int dataIndex = 0; dataIndex < 1540; dataIndex++) {
-            DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
+        for (int index = dataIndex*_size; dataIndex < _size; dataIndex++) {
+            DATA_BUFFER.put(index, dataSet.get(dataIndex));
         }
-        if (DATA_BUFFER.size() >= dataBufferLength) {
-            serverComms.PostPressureData(DATA_BUFFER);
 
-            String jsonString = gson.toJson(DATA_BUFFER);
-            writeToFile(jsonString, context);
-            System.out.println(jsonString);
-            DATA_BUFFER.clear();
-        }
+        serverComms.PostPressureData(DATA_BUFFER);
+
+        String jsonString = gson.toJson(DATA_BUFFER);
+        writeToFile(jsonString, context);
+        System.out.println(jsonString);
+        DATA_BUFFER.clear();
+        dataIndex += 1;
     }
 
     public void RefreshFeatures() {
         //Make get request.
+        String features = serverComms.getFeature("features");
+        System.out.println(String.format("Features: %s", features));
 
-        // Store result.
-
-        // Call recommendations fragment update text method
+        MainActivity activity = (MainActivity) context;
+        // Calls the update recommendations
+        activity.UpdateRecommendations(features);
     }
 
     private void writeToFile(String data, Context context) {
