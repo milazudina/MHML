@@ -13,6 +13,7 @@
         android:layout_above="@+id/insole_connection"></ScrollView>
 
 
+
     <FrameLayout
         android:id="@+id/insole_connection"
         android:layout_width="match_parent"

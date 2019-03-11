@@ -48,10 +48,10 @@ def loadPronationClassifier(model_name = 'model'):
 
  # returns type of each step into an array
  # array then concatenated
-def predictStepType(stepsBatch, loaded_model, stepLength): # numpy array of 30, 9
-    nSteps = int(stepsBatch.shape[0]/stepLength)
-    current_step = stepsBatch.reshape(nSteps, 30, 9)
-    probabilities = loaded_model.predict(current_step)
+def predictStepType(stepsStack, loaded_model, stepLength): # numpy array of 30, 9
+#    nSteps = int(stepsBatch.shape[0]/stepLength)
+#    current_step = stepsBatch.reshape(nSteps, 30, 9)
+    probabilities = loaded_model.predict(stepsStack)
     predictions = probabilities[:,:]
     
     typePrediction = np.zeros((probabilities.shape[0]))

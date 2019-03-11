@@ -13,62 +13,64 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class RecommendationsFragment extends Fragment {
 
-    private FragmentAlistener listener;
-    private TextView editText;
-    private Button buttonOk;
+    Gson gson = new Gson();
 
-    public interface FragmentAlistener {
-        void onInputASent(CharSequence input);
-    }
+
+
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_recommendations, container, false);
+       View RootView = inflater.inflate(R.layout.fragment_recommendations, container, false);
 
-        editText = v.findViewById(R.id.firstrecom_body);
-        buttonOk = v.findViewById(R.id.button_ok);
-        buttonOk.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                CharSequence input = "Overpronation";
-                listener.onInputASent(input);
-
-            }
-
-        });
-
-        return v;
-    }
-
-    public void updateEditText(CharSequence newText) {
-        editText.setText(newText);
-    }
+        String request = "{'type': 1, 'freq': 180, 'totalNum': 73}";
 
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof FragmentAlistener) {
-//            listener = (FragmentAlistener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + "must implement FragmentAlistener");
-//        }
-//    }
+        TextView tv = (TextView)RootView.findViewById(R.id.firstrecom_body);
+
+
+        Summary_recom summary_recom = gson.fromJson(request , Summary_recom.class);
+        System.out.println(summary_recom.type);
+
+
+
+        switch (summary_recom.type) {
+            case "0":
+                tv.setText("Normal Pronation");
+                break;
+            case "1":
+                tv.setText("UnderPronation");
+                break;
+            case "2":
+                tv.setText("OverPronation");
+                break;
+        }
+
 //
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        listener = null;
-//    }
+        return RootView;
+    }
+
+    private class Summary_recom {
+        public String type;
+        public String freq;
+        public String totalNum;
+
+        public Summary_recom(String type, String freq, String totalNum) {
+            this.type = type;
+            this.freq = freq;
+            this.totalNum = totalNum;
+        }
+    }
+
 
 
 }

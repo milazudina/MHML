@@ -122,14 +122,9 @@ public class MainActivity extends AppCompatActivity
 
             recommendationsFragment = runFragment.recommendationsFragment;
             endOfRunFragment = runFragment.endOfRunFragment;
-//            recommendationsFragment.test();
         }
     }
-//
-//    public void onInputASent(CharSequence input) {
-//        recommendationsFragment.updateEditText(input);
-//    }
-//
+
 
     // RUN TRANSPORT STUFF
 
@@ -337,7 +332,9 @@ public class MainActivity extends AppCompatActivity
 
                     byte[] DataBytes = characteristic.getValue();
 
-                    runEvent.addDataSample(side, DataBytes);
+                    if (runEvent != null && runEvent.paused == false) {
+                        runEvent.addDataSample(side, DataBytes);
+                    }
 
 //                        String DataString = new String(DataBytes, StandardCharsets.UTF_16);
 //                        System.out.println(DataString);
