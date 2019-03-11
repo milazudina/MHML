@@ -30,31 +30,26 @@ details = {
 username = "Mila" #put username into there
 filename = now.strftime("%Y-%m-%d %h:%m:%s") + ".csv"
 
-file_path = "/Users/mila/Bioengineering_Year_4/MHML/pronation_classification/VitaRunServer/"
+file_path = "/Users/mila/Bioengineering_Year_4/MHML/pronation_classification/VitaRunServer/userProfiles/"
 directory = os.path.dirname(file_path)
-def createFiles(Username, Password, Nickname, Age, Weight):
-    # print(Username)
-    # print(Password)
 
-# create a file name and file and put the json into the file
-    # file_path = "/Users/jonathanmidgen/Documents/GitHub/MHML_old/VitaRunServer/"
-    # directory = os.path.dirname(file_path)
+
+
+
+def createFiles(Username, Password, Nickname, Age, Weight):
+
     if not os.path.isdir(directory+ '/'+ Username):
         os.makedirs(directory + '/'+ Username + '/' )
         os.makedirs(directory + '/'+ Username + '/' + 'temp/')
 
-        # f = csv.writer(open(directory+ '/' + username + '/'+ 'info' , "w"))
-
-        with open(directory+ '/' + Username + '/'+ 'info.csv', 'wt', newline ='') as file:
+        with open(directory + '/' + Username + '/'+ 'info.csv', 'wt', newline ='') as file:
             header = ['Nickname', 'Username', 'Password', 'Weight', 'Age']
             writer = csv.DictWriter(file, fieldnames=header)
             writer.writeheader()
             newLogin = [Nickname, Username, Password, Weight, Age]
-            print(newLogin)
             writer = csv.writer(file)
             file.write('\n')
             writer.writerow(newLogin)
-            print(newLogin[0])
 
         with open(directory+ '/' + Username + '/History.csv', 'wt', newline ='') as file:
             header = ['DateTime_Start', 'DateTime_End', 'Number_Of_Steps','Count_NP','Count_OP','Count_UP','Average_Frequency']
@@ -63,18 +58,19 @@ def createFiles(Username, Password, Nickname, Age, Weight):
 
 
         with open(directory+ '/' + Username + '/'+ 'temp/frequecyRunData.csv', 'wt', newline ='') as file:
-            header = ['DateTime Start', 'DateTime End', 'Number Of Steps','Count NP','Count OP','Count UP','Average Frequency']
+            header = ['Time','Frequency','Pronation']
             writer = csv.DictWriter(file, fieldnames=header)
             writer.writeheader()
 
 
         with open(directory+ '/'+ 'Login.csv', 'a', newline ='') as file:
             newLogin = [Username, Password]
-            print(newLogin)
             writer = csv.writer(file)
             file.write('\n')
             writer.writerow(newLogin)
-            print(newLogin[0])
+            
+        return 1
+    return 0
                 # fd.write(myCsvRow)
         #     header = ['Username', 'Password']
         #     writer = csv.DictWriter(file, fieldnames=header)

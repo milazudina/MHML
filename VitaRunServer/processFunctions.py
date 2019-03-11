@@ -9,7 +9,6 @@ Created on Sun Mar 10 18:48:06 2019
 import csv
 import numpy as np
 import matplotlib.pyplot as plt
-from running_frequency import running_frequency
 from scipy.stats import zscore
 
 def running_mean(x, N):
@@ -152,13 +151,13 @@ if __name__ == "__main__":
         splitter(steps[:,:6], stepnum, debug=True, log=True, lab1=0, lab2=0)
         
         
-        def running_mean(x, N):
+def running_mean(x, N):
     cumsum = np.cumsum(np.insert(x, 0, 0))
     return (cumsum[N:] - cumsum[:-N]) / N
 
 
 def running_frequency(window):
-    windows = np.sum(window, axis=1)
+    windows = np.sum(window[:,:6], axis=1)
     windowsr = running_mean(windows, 9)
 
     w = np.fft.fft(windowsr)
