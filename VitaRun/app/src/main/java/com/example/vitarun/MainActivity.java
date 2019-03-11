@@ -122,14 +122,9 @@ public class MainActivity extends AppCompatActivity
 
             recommendationsFragment = runFragment.recommendationsFragment;
             endOfRunFragment = runFragment.endOfRunFragment;
-//            recommendationsFragment.test();
         }
     }
-//
-//    public void onInputASent(CharSequence input) {
-//        recommendationsFragment.updateEditText(input);
-//    }
-//
+
 
     // RUN TRANSPORT STUFF
 
