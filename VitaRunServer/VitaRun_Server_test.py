@@ -40,13 +40,10 @@
 #run()
 
 from http.server import SimpleHTTPRequestHandler, HTTPServer
-from mlFunctions import loadPronationClassifier
-from mlFunctions import predictStepType
-from userFunctions import login
-from userFunctions import createFiles
-from processFunctions import running_frequency
+from mlFunctions import loadPronationClassifier, predictStepType
+from userFunctions import login, createFiles, setUserDetails, getUserDetails
+from processFunctions import running_frequency, splitter
 
-import logging
 import json
 import numpy as np
 import scipy.stats as stats
@@ -84,6 +81,7 @@ class S(SimpleHTTPRequestHandler):
         print("Key:", key) # <class 'str'>
         print("Value:", value) # <class 'str'>
 
+
         if (key in "features:"):
             mostRecentPredAvg = int(stats.mode(allPredictions[-1])[0])
             mostRecentFreqAvg = 180
@@ -93,36 +91,29 @@ class S(SimpleHTTPRequestHandler):
 #            mostRecentAvgFreq = allFrequencies[-1] an average of this
             features = json.dumps({'type': mostRecentPredAvg, 'freq': mostRecentFreqAvg, 'totalNum': nSteps}, separators=(',',':'))
             self.wfile.write(features.encode('utf-8'))
-            
+ 
+           
         elif (key in "featuresEOR:"):
+            flatStepsBuffer = np.concatenate(stepsBuffer).ravel()
+            stepsStack = splitter(flatStepsBuffer)
+            # stepsStack should be fed into ML
             allSteps = np.concatenate(allPredictions).ravel()
             print(allSteps)
             featuresEOR = json.dumps({'type': mostRecentPredAvg, 'freq': mostRecentFreqAvg, 'totalNum': nSteps}, separators=(',',':'))
             self.wfile.write(str(allSteps).encode('utf-8'))
-            
-# TO DO LIST: WHAT"S UP WITH CREATE PROFILE SERVER FUNCTION
-# ASK JACOB DOES HE NEED COUNTS
-            
 
-          
-#        elif (key in "getTypeEOR"):
-#            
-#            
-#            
-#        elif (key in "getFreq"):
-#            self.wfile.write("GET request received".encode('utf-8'))
-#            
-#        elif (key in "getTypesEOR"):
-#           flatten the list
-#            self.wfile.write()
-#            
-#        elif (key in "setUser"):
-#            self.wfile.write()
-#        elif (key in "createProfile"):
+
+#        elif (key in "startRun:"):
+#            record the time
             
-#        elif (key in "getUserDetails:"):
-#            
-#        elif (key in "setUserDetails:"):
+#        elif (key in "finishRun:"):
+#            write all the data into csv
+#            send data for visualisation
+#            self.wfile.write(str(loginReturn).encode('utf-8'))
+
+#        elif (key in "historicRuns:"):
+#            return a json with a csv file historic run
+#            self.wfile.write(str(loginReturn).encode('utf-8'))
             
         elif (key in "login:"):
             json_output = json.loads(value)
@@ -175,8 +166,8 @@ class S(SimpleHTTPRequestHandler):
         allFrequencies.append(currentBatchFreq)
         stepsBuffer.append(stepsBatch)
         # that needs to be cleared every time we call pronation classifier
-        
-        print(stepsBuffer) 
+        flatStepsBuffer = np.concatenate(stepsBuffer).ravel()
+        print(flatStepsBuffer) 
         # here we should have functions from N
 #        print(asstepsBuffer.shape)
         typePrediction = predictStepType(stepsBatch, pronationClassifier, 30) # probabilities for each step in the batch

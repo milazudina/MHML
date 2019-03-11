@@ -28,12 +28,10 @@ details = {
 }
 
 username = "Mila" #put username into there
-filename = now.strftime("%Y-%m-%d %h:%m:%s") + ".csv"
+filename = now.strftime("%Y-%m-%d %H:%M:%S") + ".csv"
 
 file_path = "/Users/mila/Bioengineering_Year_4/MHML/pronation_classification/VitaRunServer/userProfiles/"
 directory = os.path.dirname(file_path)
-
-
 
 
 def createFiles(Username, Password, Nickname, Age, Weight):
@@ -71,43 +69,6 @@ def createFiles(Username, Password, Nickname, Age, Weight):
             
         return 1
     return 0
-                # fd.write(myCsvRow)
-        #     header = ['Username', 'Password']
-        #     writer = csv.DictWriter(file, fieldnames=header)
-        #
-        #     newLogin = [Username, Password]
-        #     writer.writeheader()
-        #     print(type(newLogin))
-        #     print('hello')
-
-        # with open(directory + '/'+'Login.csv', 'a',newline ='') as outputFile:#load csv file
-        #     writer = csv.writer(outputFile)
-        #     writer.writerow(newLogin)
-        #     print(newLogin[0])
-        #     # fd.write(myCsvRow)
-
-
-
-
-
-        # fh = open('./'+ username + '/'+ filename,'w')
-
-        # f = csv.writer(open(directory+ '/' + Username + '/History.csv' , "w"))
-        # header = ['DateTime_Start', 'DateTime_End', 'Number_Of_Steps','Count_NP','Count_OP','Count_UP','Average_Frequency']
-
-
-
-
-
-    #
-    # f = csv.writer(open(directory+ '/' + username + '/'+ filename , "w"))
-    # header = ['DateTime Start', 'DateTime End', 'Number Of Steps','Count NP','Count OP','Count UP','Average Frequency']
-    # some_list = [1, 2, 3, 4, 5, 6]
-    # with open(directory+ '/' + username + '/'+ filename, 'wt', newline ='') as file:
-    #     writer = csv.writer(file, delimiter=',')
-    #     writer.writerow(i for i in header)
-    #     for '0' in file:
-    #         writer.writerow(4)
 
 
 def getPassword():
@@ -116,7 +77,6 @@ def getPassword():
 
 
 def addFreq(num):
-    num
     with open(directory+ '/' + username + '/'+ 'temp/frequecyRunData.csv', 'a', newline ='') as outputFile:
         writer = csv.writer(outputFile)
         writer.writerow([num])
@@ -124,9 +84,9 @@ def addFreq(num):
 
 def averageFreq():
     with open(directory+ '/' + username + '/'+ 'temp/frequecyRunData.csv') as fin:
-        # fin.next()
+        
         total = sum(int(r[0]) for r in csv.reader(fin))
-        print(total)
+        return total
 
 
 
@@ -146,6 +106,43 @@ def count_NP_last5():
         for x in range(length-5, length):
             count_NP_last5 = df[1:7]
             print(count_NP_last5)
+
+
+
+def writeHistory(Username, DateTime_Start, DateTime_End, Number_Of_Steps, Count_NP, Count_OP, Count_UP):
+    averageFreqency = averageFreq()
+    print(averageFreqency)
+    newEntry = [DateTime_Start, DateTime_End, Number_Of_Steps,Count_NP,Count_OP,Count_UP,averageFreqency]
+
+    print(newEntry)
+    with open(directory+ '/' + Username + '/'+ 'History.csv','a') as fin:
+        newEntry = [DateTime_Start, DateTime_End, Number_Of_Steps,Count_NP,Count_OP,Count_UP,averageFreqency]
+        writer = csv.writer(fin)
+        writer.writerow(newEntry)
+        return 1
+    
+def readHistoryFile(Username):
+
+    with open(directory+ '/' + Username + '/'+ 'History.csv') as csv_file:
+        df = pd.read_csv(csv_file)
+        length=len(df)
+        csv_file.close()
+    with open(directory+ '/' + Username + '/'+ 'History.csv') as csv_file:
+
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = 0
+
+        for row in csv_reader:
+            if line_count == 0:
+                line_count += 1
+            elif line_count == 1:
+                myDict = {'History': [{'DateTime_Start': row[0], 'DateTime_End': row[1], 'Number_Of_Steps': row[2],'Count_NP': row[3],'Count_OP': row[4],'Count_UP': row[5],'averageFreqency': row[6]}]}
+                line_count += 1
+            else:
+                myDict['History'].append(({'DateTime_Start': row[0], 'DateTime_End': row[1], 'Number_Of_Steps': row[2],'Count_NP': row[3],'Count_OP': row[4],'Count_UP': row[5],'averageFreqency': row[6]}))
+                test = json.dumps(myDict)            
+        return myDict, length
+
 
 
 
@@ -170,25 +167,6 @@ def login(Username, Password):
 
 
 
-
-
-
-
-def checkUsername(Username):
-    with open(directory+ '/' + 'Login.csv') as fin:
-        df = pd.read_csv(fin)
-        # print(df)
-        length=len(df)
-        # print(Username)
-        column_of_interest = df["Username"]
-        for x in range(1, length):
-            if column_of_interest[x] == Username:
-                print("good")
-
-
-
-
-
 def setUserDetails(Username, Password, Nickname, Age, Weight):
     os.remove(directory + '/'+ username + '/' + 'info.csv')
 
@@ -205,36 +183,10 @@ def setUserDetails(Username, Password, Nickname, Age, Weight):
 
 
 
-
-
 def getUserDetails():
-    
-    input = pd.read_csv(directory + '/'+ username + '/' + 'info.csv');
-    print(input.iloc[0])
-
-
-
-
-
-
-
-    # with open(directory + '/'+ username + '/' + 'info.csv') as fin:
-    #     reader = csv.reader(fin)
-    #     field_names_list = next(reader)
-    #     print(field_names_list)
-    #      # print ('{0}'.format(fin.readline().split()))
-    #      # line = fin.readline()
-    #      # print(line)
-    #      # print('test')
-    #      # for x in fin:
-    #      #        x=x.split()
-    #      #        # print ('{0}'.format(x[0],sum(map(int,x[1:]))))
-    #      #        line = fin.readline()
-
-
-
-
-
+    with open(directory + '/' + username + 'info.csv') as fin:
+        df = pd.read_csv(fin,skiprows=0)
+        return df
 
 
 def writeJsonToFile():
@@ -287,6 +239,7 @@ def writeJsonToFile():
 #getUserDetails()
 
 
+#writeHistory(Username,DateTime_Start, DateTime_End, Number_Of_Steps,Count_NP,Count_OP,Count_UP)
 
 
 
