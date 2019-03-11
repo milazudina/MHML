@@ -48,7 +48,7 @@ import static android.bluetooth.BluetoothAdapter.STATE_CONNECTED;
 import static android.bluetooth.BluetoothAdapter.STATE_DISCONNECTED;
 
 public class MainActivity extends AppCompatActivity
-                        implements TransportControlFragment.RunTransportListener{
+                        implements RunFragment.RunFragmentListener{
 
     public static HashMap<String, String> stridMACs;
     private static UUID stridServiceUUID;
@@ -85,9 +85,6 @@ public class MainActivity extends AppCompatActivity
         runFragment = new RunFragment();
         profileFragment = new ProfileFragment();
 
-        recommendationsFragment = runFragment.recommendationsFragment;
-
-
         // Only initialise bluetooth if NOT being run in emulator.
         if (!Build.FINGERPRINT.contains("generic")) {
             InitialiseBluetooth();
@@ -117,16 +114,19 @@ public class MainActivity extends AppCompatActivity
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
 
-        if (fragment instanceof TransportControlFragment) {
-            TransportControlFragment transportControlFragment = (TransportControlFragment) fragment;
-            transportControlFragment.setRunTransportListener(this);
+        if (fragment instanceof RunFragment) {
+            RunFragment runFragment = (RunFragment) fragment;
+            runFragment.setRunFragmentListener(this);
+
+            recommendationsFragment = runFragment.recommendationsFragment;
+            recommendationsFragment.test();
         }
     }
-
-    public void onInputASent(CharSequence input) {
-        recommendationsFragment.updateEditText(input);
-    }
-
+//
+//    public void onInputASent(CharSequence input) {
+//        recommendationsFragment.updateEditText(input);
+//    }
+//
 
     // RUN TRANSPORT STUFF
 

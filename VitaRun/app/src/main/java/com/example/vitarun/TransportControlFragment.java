@@ -19,29 +19,7 @@ import android.widget.ViewSwitcher;
 public class TransportControlFragment extends Fragment {
     ViewSwitcher mViewSwitcher;
 
-    private RunFragment runFragment;
-
-    RunTransportListener callback;
-
-    public void setRunTransportListener(MainActivity activity)
-    {
-        callback = activity;
-    }
-
-    // Interface for controlling RunEvent in MainActivity.
-    public interface RunTransportListener {
-        void StartRun();
-        void PauseRun();
-        void EndRun();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        // Get Reference to parent RunFragment.
-        runFragment = (RunFragment)this.getParentFragment();
-    }
+    RunFragment runFragment;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,12 +30,14 @@ public class TransportControlFragment extends Fragment {
         Button stopButton = (Button) view.findViewById(R.id.stop_button);
         Button pauseButton = (Button) view.findViewById(R.id.pause_button);
 
+        runFragment = (RunFragment) getParentFragment();
+
         startButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v ) {
 //                System.out.println("change view"); // some function here
                 // mViewSwitcher.setDisplayedChild(0);
-                callback.StartRun();
+                runFragment.callback.StartRun();
 
                 mViewSwitcher.showNext();
 //                System.out.println("change view complete?");
@@ -72,7 +52,7 @@ public class TransportControlFragment extends Fragment {
                 String text_pronate = "Pause";
                 Intent speechIntent = new Intent(getActivity(), TextToSpeechService.class);
 
-                callback.PauseRun();
+                runFragment.callback.PauseRun();
                 speechIntent.putExtra(TextToSpeechService.EXTRA_WORD, text_pronate );
 
                 getActivity().startService(speechIntent);
@@ -85,7 +65,7 @@ public class TransportControlFragment extends Fragment {
                 System.out.println("change view"); // some function here
                 // mViewSwitcher.setDisplayedChild(0);
 
-                callback.EndRun();
+                runFragment.callback.EndRun();
 
                 mViewSwitcher.showNext();
                 System.out.println("change view complete?");
