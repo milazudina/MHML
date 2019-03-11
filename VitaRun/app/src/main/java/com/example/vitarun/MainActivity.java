@@ -72,9 +72,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        runEvent = new RunEvent(this);
-
-
         stridMACs = new HashMap<>();
         stridMACs.put("0C:1C:57:6E:A1:B9", "left");
         stridMACs.put("F8:36:9B:74:6D:C8", "right");
@@ -133,11 +130,18 @@ public class MainActivity extends AppCompatActivity
 
     // RUN TRANSPORT STUFF
 
-    public void StartRun(){}
+    public void StartRun(){
+        runEvent = new RunEvent(this);
+        runEvent.StartRunEvent();
+    }
 
-    public void PauseRun(){}
+    public void PauseRun(){
+        runEvent.PauseRunEvent();
+    }
 
-    public void EndRun(){}
+    public void EndRun(){
+        runEvent.EndRunEvent();
+    }
 
     // BLUETOOTH STUFF
 

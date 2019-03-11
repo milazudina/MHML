@@ -55,21 +55,13 @@ public class TransportControlFragment extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v ) {
-                System.out.println("change view"); // some function here
+//                System.out.println("change view"); // some function here
                 // mViewSwitcher.setDisplayedChild(0);
-                mViewSwitcher.showNext();
-                System.out.println("change view complete?");
-                
+                callback.StartRun();
 
-                // This Changes Fragments:
-//                FragmentManager fm = getFragmentManager();
-//                TransportControlFragment f = (TransportControlFragment) fm.findFragmentById(R.id.transport_control_fragment);
-//                if (f == null) {
-//                    getFragmentManager()
-//                            .beginTransaction()
-//                            .replace(R.id.run_transportControl_container, new TransportControlFragment())
-//                            .commit();
-//                }
+                mViewSwitcher.showNext();
+//                System.out.println("change view complete?");
+
             }
         });
 
@@ -80,6 +72,7 @@ public class TransportControlFragment extends Fragment {
                 String text_pronate = "Pause";
                 Intent speechIntent = new Intent(getActivity(), TextToSpeechService.class);
 
+                callback.PauseRun();
                 speechIntent.putExtra(TextToSpeechService.EXTRA_WORD, text_pronate );
 
                 getActivity().startService(speechIntent);
@@ -91,6 +84,9 @@ public class TransportControlFragment extends Fragment {
             public void onClick(View v) {
                 System.out.println("change view"); // some function here
                 // mViewSwitcher.setDisplayedChild(0);
+
+                callback.EndRun();
+
                 mViewSwitcher.showNext();
                 System.out.println("change view complete?");
             }
