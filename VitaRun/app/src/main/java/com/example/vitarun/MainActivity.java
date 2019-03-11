@@ -337,7 +337,9 @@ public class MainActivity extends AppCompatActivity
 
                     byte[] DataBytes = characteristic.getValue();
 
-                    runEvent.addDataSample(side, DataBytes);
+                    if (runEvent != null && runEvent.paused == false) {
+                        runEvent.addDataSample(side, DataBytes);
+                    }
 
 //                        String DataString = new String(DataBytes, StandardCharsets.UTF_16);
 //                        System.out.println(DataString);

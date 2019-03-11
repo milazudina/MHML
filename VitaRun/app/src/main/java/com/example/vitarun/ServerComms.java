@@ -1,6 +1,7 @@
 package com.example.vitarun;
 
 import android.renderscript.Sampler;
+import android.util.Pair;
 
 import com.google.gson.Gson;
 
@@ -228,7 +229,7 @@ public class ServerComms {
     }
 
 
-    public void PostPressureData(ArrayList<Float[]> data)
+    public void PostPressureData(ArrayList<Pair<String, Float[]>> data)
     {
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
