@@ -22,6 +22,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -32,7 +37,7 @@ public class RunEvent {
 
     HashMap<Integer, Float[]> DATA_BUFFER;
 
-    static int dataBufferLength = 128;
+    static int dataBufferLength = 256;
     ServerComms serverComms;
 
     ArrayList<Float[]> dataSet;
@@ -60,6 +65,19 @@ public class RunEvent {
 
         dataIndex = 0;
         gson = new Gson();
+
+        Runnable refreshRunnable = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Refreshing");
+                if (!paused) {
+                    RefreshFeatures();
+                }
+            }
+        };
+
+        ScheduledExecutorService service  = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleAtFixedRate(refreshRunnable, 15, 15, TimeUnit.SECONDS);
     }
 
 
@@ -97,10 +115,11 @@ public class RunEvent {
 
     public void RefreshFeatures() {
         //Make get request.
+        String features = serverComms.getFeature("features");
+        System.out.println(String.format("Features: %s", features));
 
-        // Store result.
-
-        // Call recommendations fragment update text method
+        MainActivity activity = (MainActivity) context;
+        activity.UpdateRecommendations(features);
     }
 
     private void writeToFile(String data, Context context) {
