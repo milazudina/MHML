@@ -12,6 +12,12 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/insole_connection"></ScrollView>
 
+    <Button
+        android:id="@+id/button_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ok"/>
+
 
     <FrameLayout
         android:id="@+id/insole_connection"

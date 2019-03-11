@@ -19,56 +19,26 @@ import android.widget.TextView;
  */
 public class RecommendationsFragment extends Fragment {
 
-    private FragmentAlistener listener;
-    private TextView editText;
-    private Button buttonOk;
 
-    public interface FragmentAlistener {
-        void onInputASent(CharSequence input);
-    }
+
+    CharSequence input = "Overpronation";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_recommendations, container, false);
-
-        editText = v.findViewById(R.id.firstrecom_body);
-        buttonOk = v.findViewById(R.id.button_ok);
-        buttonOk.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                CharSequence input = "Overpronation";
-                listener.onInputASent(input);
-
-            }
-
-        });
-
-        return v;
-    }
-
-    public void updateEditText(CharSequence newText) {
-        editText.setText(newText);
-    }
+       View RootView = inflater.inflate(R.layout.fragment_recommendations, container, false);
 
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof FragmentAlistener) {
-//            listener = (FragmentAlistener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + "must implement FragmentAlistener");
-//        }
-//    }
+        TextView tv = (TextView)RootView.findViewById(R.id.firstrecom_body);
+        tv.setText(input);
+
 //
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        listener = null;
-//    }
+        return RootView;
+    }
+
+
+
+
 
 
 }

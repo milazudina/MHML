@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class RunFragment extends Fragment {
 
@@ -28,6 +29,7 @@ public class RunFragment extends Fragment {
 
     public RecommendationsFragment recommendationsFragment;
 
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -44,8 +46,12 @@ public class RunFragment extends Fragment {
         getChildFragmentManager().beginTransaction().replace(R.id.run_title_container,
                 new RunTitleFragment()).commit();
 
+
+
         return inflater.inflate(R.layout.fragment_run, container, false);
 
     }
+
+
 }
 
