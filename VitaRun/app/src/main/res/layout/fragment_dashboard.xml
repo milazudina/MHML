@@ -7,13 +7,13 @@
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-        android:id="@+id/Dashboard_title"
-            android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/left_fragment"
-        android:textSize="30sp" />
+        <!--<TextView-->
+        <!--android:id="@+id/Dashboard_title"-->
+            <!--android:layout_gravity="center_horizontal"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/left_fragment"-->
+        <!--android:textSize="30sp" />-->
         
         <!--<com.jjoe64.graphview.GraphView-->
             <!--android:layout_width="match_parent"-->
@@ -25,9 +25,14 @@
             android:layout_height="250dp"
             android:id="@+id/Bar_chart"/>
 
+        <View
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_weight="1"/>
+
         <TextView
             android:id="@+id/Month_title"
-            android:background="#ffe95451"
+            android:background="@color/colorPrimaryDark"
             android:textColor="#fff"
             android:textAlignment="center"
             android:layout_width="match_parent"
@@ -37,15 +42,15 @@
         <com.github.sundeepk.compactcalendarview.CompactCalendarView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/compactcalendar_view"
-            android:layout_width="fill_parent"
-            android:paddingRight="10dp"
-            android:paddingLeft="10dp"
+            android:layout_width="match_parent"
+            android:paddingRight="50dp"
+            android:paddingLeft="50dp"
             android:layout_height="250dp"
             app:compactCalendarTargetHeight="250dp"
             app:compactCalendarTextSize="12sp"
-            app:compactCalendarBackgroundColor="#ffe95451"
+            app:compactCalendarBackgroundColor="@color/colorPrimaryDark"
             app:compactCalendarTextColor="#fff"
-            app:compactCalendarCurrentSelectedDayBackgroundColor="#E57373"
+            app:compactCalendarCurrentSelectedDayBackgroundColor="@color/colorPrimary"
             app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
             app:compactCalendarMultiEventIndicatorColor="#fff"
             app:compactCalendarEventIndicatorStyle="fill_large_indicator"

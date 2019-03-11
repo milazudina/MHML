@@ -1,6 +1,7 @@
 package com.example.vitarun;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.util.Pair;
@@ -124,6 +125,17 @@ public class RunEvent {
         MainActivity activity = (MainActivity) context;
         // Calls the update recommendations
         activity.UpdateRecommendations(features);
+        GiveFeedback(features);
+
+    }
+
+    public void GiveFeedback(String features)
+    {
+        MainActivity activity = (MainActivity) context;
+        String text_pronate = "You are pronating";
+        Intent speechIntent = new Intent(activity, TextToSpeechService.class);
+        speechIntent.putExtra(TextToSpeechService.EXTRA_WORD, text_pronate );
+        activity.startService(speechIntent);
     }
 
     private void writeToFile(String data, Context context) {

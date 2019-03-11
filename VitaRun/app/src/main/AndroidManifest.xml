@@ -29,7 +29,7 @@
         <!-- Main Activity. -->
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme"></activity>
 
     <!-- Splash Screen Activity -->
         <activity
