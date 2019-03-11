@@ -129,20 +129,16 @@ public class MainActivity extends AppCompatActivity
 
             recommendationsFragment = runFragment.recommendationsFragment;
             endOfRunFragment = runFragment.endOfRunFragment;
-//            recommendationsFragment.test();
         }
     }
-//
-//    public void onInputASent(CharSequence input) {
-//        recommendationsFragment.updateEditText(input);
-//    }
-//
+
 
     // RUN TRANSPORT STUFF
 
     public void StartRun(){
         runEvent = new RunEvent(this);
         runEvent.StartRunEvent();
+        runEvent.testDataPacket();
         endOfRunFragment.mViewSwitcher.showNext();
     }
 
@@ -155,6 +151,12 @@ public class MainActivity extends AppCompatActivity
         endOfRunFragment.mViewSwitcher.showNext();
 
 
+    }
+
+    public void UpdateRecommendations(String features)
+    {
+//        ADD RECOMMENDATIONS UPDATE METHOD
+//        recommendationsFragment.
     }
 
     // BLUETOOTH STUFF
@@ -344,7 +346,9 @@ public class MainActivity extends AppCompatActivity
 
                     byte[] DataBytes = characteristic.getValue();
 
-                    runEvent.addDataSample(side, DataBytes);
+                    if (runEvent != null && runEvent.paused == false) {
+                        runEvent.addDataSample(side, DataBytes);
+                    }
 
 //                        String DataString = new String(DataBytes, StandardCharsets.UTF_16);
 //                        System.out.println(DataString);
