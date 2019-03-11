@@ -1,6 +1,7 @@
 package com.example.vitarun;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,13 +16,21 @@ import android.widget.Button;
 import android.widget.ViewSwitcher;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class TransportControlFragment extends Fragment {
     ViewSwitcher mViewSwitcher;
 
     private RunFragment runFragment;
+
+    RunTransportListener callback;
+
+    public void setRunTransportListener(Activity activity)
+    {
+        callback = activity;
+    }
+
+    public interface RunTransportListener {
+        void StartRun();
+    }
 
     @Override
     public void onAttach(Context context) {

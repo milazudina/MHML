@@ -47,7 +47,8 @@ import java.util.UUID;
 import static android.bluetooth.BluetoothAdapter.STATE_CONNECTED;
 import static android.bluetooth.BluetoothAdapter.STATE_DISCONNECTED;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+                        implements TransportControlFragment.RunTransportListener{
 
     public static HashMap<String, String> stridMACs;
     private static UUID stridServiceUUID;
@@ -63,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
     private RunFragment runFragment;
     private ProfileFragment profileFragment;
     private RecommendationsFragment recommendationsFragment;
-
 
     public RunEvent runEvent;
 
@@ -116,11 +116,30 @@ public class MainActivity extends AppCompatActivity {
                 new DashboardFragment()).commit();
     }
 
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+
+        if (fragment instanceof TransportControlFragment) {
+            TransportControlFragment transportControlFragment = (TransportControlFragment) fragment;
+            transportControlFragment.setRunTransportListener(this);
+        }
+    }
 
     public void onInputASent(CharSequence input) {
         recommendationsFragment.updateEditText(input);
     }
 
+
+    // RUN TRANSPORT STUFF
+
+    public void StartRun(){}
+
+    public void PauseRun(){}
+
+    public void EndRun(){}
+
+    // BLUETOOTH STUFF
 
     public void InitialiseBluetooth() {
         // Bluetooth Stuff
@@ -326,7 +345,8 @@ public class MainActivity extends AppCompatActivity {
         return new UUID(MSB | (value << 32), LSB);
     }
 
-    // NAVIGATION
+    // BOTTOM NAVIGATION STUFF
+
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
