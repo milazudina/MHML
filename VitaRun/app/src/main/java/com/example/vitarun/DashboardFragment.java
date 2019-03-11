@@ -89,52 +89,11 @@ public class DashboardFragment extends Fragment {
             System.out.println(historic_run.Datetime_Start);
             historic_runArrayList.add(historic_run);
         }
-//        System.out.println(historic_runArrayList.size());
-//        System.out.println(Arrays.toString(jsonString.split("(?<=\\})")));
-
-//        serverComms = new ServerComms();
-
-//        inputData = serverComms.GetFeature("HistoricData");
-
-//        Map<String, Object> map = gson.fromJson(jsonString, new TypeToken<Map<String, Object>>(){}.getType());
-//
-//        for (Map.Entry<String, Object> entry : map.entrySet())
-//        {
-//            System.out.println(entry.getKey() + "/" + entry.getValue());
-//        }
-
-        // Create Graph
-//        final GraphView graph = (GraphView) view.findViewById(R.id.graph);
-//        // NEED TO GET REQUEST DATA FROM SERVER
-//        // Set data input
-//            // Need to be datetime
-//        final BarGraphSeries<DataPoint> series = new BarGraphSeries<>(new DataPoint[] {
-//                new DataPoint(0, 1),
-//                new DataPoint(0, 0.5),
-//                new DataPoint(1, 5),
-//                new DataPoint(2, 3),
-//                new DataPoint(3, 2),
-//                new DataPoint(4, 6)
-//        });
-//
-//        // set month view on graph
-//        graph.getViewport().setXAxisBoundsManual(true);
-//        graph.getViewport().setMinX(0);
-//        graph.getViewport().setMaxX(4);
-//
-//        graph.addSeries(series);
-// Alternative Graph MPAndroid chart
-        // request data -> json format
-        // Input data into hashmap
-
-//        String[] title = {"2019-03-09 12:41:24", "2019-03-09 12:41:24", "90", "20", "40","30"};
-
-//        HashMap<String, String[]> inputData = new HashMap<String,String[]>();
-//        inputData.put(title[0],title );
 
         formatter = new SimpleDateFormat("YYYY-mm-dd HH:MM:SS");
         BarChart barChart = (BarChart) view.findViewById(R.id.Bar_chart);
         ArrayList<BarEntry> yValues = new ArrayList<>();
+
         for(Historic_run run : historic_runArrayList){
             String str_date = run.Datetime_Start;
             Date date = new Date();
@@ -153,9 +112,10 @@ public class DashboardFragment extends Fragment {
             float NP = Float.parseFloat(run.Count_NP);
             float OP = Float.parseFloat(run.Count_OP);
 
-            yValues.add(new BarEntry( unixTime,new float[]{UP,NP,OP}));
-            Event event = new Event(Color.RED, unixTime, "Run" );
-            compactCalendarView.addEvent(event);
+            yValues.add(new BarEntry( unixTime/1000000,new float[]{UP,NP,OP}));
+            Event event = new Event(Color.BLACK, 1552248509L , "Run" );
+
+            compactCalendarView.addEvent(event,true);
         }
 
         BarDataSet dataSet = new BarDataSet(yValues,"");
@@ -179,9 +139,9 @@ public class DashboardFragment extends Fragment {
         legend.setPosition(Legend.LegendPosition.ABOVE_CHART_CENTER);
         barChart.invalidate();
 
+
+
         // Create Calendar:
-
-
 
         monthTextView.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
         // Calendar Listeners
