@@ -69,7 +69,6 @@ public class RunEvent {
         Runnable refreshRunnable = new Runnable() {
             @Override
             public void run() {
-                System.out.println("Refreshing");
                 if (!paused) {
                     RefreshFeatures();
                 }
@@ -99,18 +98,21 @@ public class RunEvent {
     }
 
     public void testDataPacket() {
+        int _size = 800;
 
-        for (int dataIndex = 0; dataIndex < 1540; dataIndex++) {
+        for (int index = dataIndex*_size; dataIndex < _size; dataIndex++) {
             DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
         }
-        if (DATA_BUFFER.size() >= dataBufferLength) {
-            serverComms.PostPressureData(DATA_BUFFER);
 
-            String jsonString = gson.toJson(DATA_BUFFER);
-            writeToFile(jsonString, context);
-            System.out.println(jsonString);
-            DATA_BUFFER.clear();
-        }
+        serverComms.PostPressureData(DATA_BUFFER);
+
+
+        String jsonString = gson.toJson(DATA_BUFFER);
+        writeToFile(jsonString, context);
+        System.out.println(jsonString);
+        DATA_BUFFER.clear();
+
+        dataIndex += 1;
     }
 
     public void RefreshFeatures() {
