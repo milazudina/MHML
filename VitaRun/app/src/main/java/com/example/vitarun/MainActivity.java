@@ -116,11 +116,30 @@ public class MainActivity extends AppCompatActivity
                 new DashboardFragment()).commit();
     }
 
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+
+        if (fragment instanceof TransportControlFragment) {
+            TransportControlFragment transportControlFragment = (TransportControlFragment) fragment;
+            transportControlFragment.setRunTransportListener(this);
+        }
+    }
 
     public void onInputASent(CharSequence input) {
         recommendationsFragment.updateEditText(input);
     }
 
+
+    // RUN TRANSPORT STUFF
+
+    public void StartRun(){}
+
+    public void PauseRun(){}
+
+    public void EndRun(){}
+
+    // BLUETOOTH STUFF
 
     public void InitialiseBluetooth() {
         // Bluetooth Stuff
@@ -326,7 +345,8 @@ public class MainActivity extends AppCompatActivity
         return new UUID(MSB | (value << 32), LSB);
     }
 
-    // NAVIGATION
+    // BOTTOM NAVIGATION STUFF
+
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
