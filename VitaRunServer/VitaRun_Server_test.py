@@ -43,6 +43,8 @@ from http.server import SimpleHTTPRequestHandler, HTTPServer
 from mlFunctions import loadPronationClassifier
 from mlFunctions import predictStepType
 from userFunctions import login
+from userFunctions import createFiles
+from processFunctions import running_frequency
 
 import logging
 import json
@@ -58,47 +60,49 @@ class S(SimpleHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        print(str(self.headers)) # Host: localhost:3000
-                                #Connection: keep-alive
-                                #Accept: */*
-                                #User-Agent: Rested/2009 CFNetwork/976 Darwin/18.2.0 (x86_64)
-                                #Accept-Language: en-gb
-                                #Accept-Encoding: gzip, deflate
-                                #login: {"password":"789ab","username":"Mila123"}
-        #print(type(self.headers)) # <class 'http.client.HTTPMessage'>
+        print(str(self.headers))
+        
+#        key = str(self.headers).split()[0] 
+#        value = str(self.headers).split()[1]
+
+
+        
+        self._set_response()
         
         # test for LOGIN
 #        key = str(self.headers).split()[16] 
 #        value = str(self.headers).split()[17]
         
         # test for CREATE PROFILE
-#        key = str(self.headers).split()[2] 
-#        value = str(self.headers).split()[3]
+        key = str(self.headers).split()[2] 
+        value = str(self.headers).split()[3]
         
         # test for FEATURE EOR
-        key = str(self.headers).split()[13] 
-        value = str(self.headers).split()[14]
+#        key = str(self.headers).split()[13] 
+#        value = str(self.headers).split()[14]
 
-        print("Key:", key)
-        print("Value:", value)
-#        print(type(key)) # <class 'str'>
-#        print(type(value)) # <class 'str'>
-        
-        self._set_response()
-        # 17 is a temporary solution for using with Rested app
-        if (key in "feature:"):
+        print("Key:", key) # <class 'str'>
+        print("Value:", value) # <class 'str'>
+
+        if (key in "features:"):
             mostRecentPredAvg = int(stats.mode(allPredictions[-1])[0])
+            mostRecentFreqAvg = 180
+            allSteps = np.concatenate(allPredictions).ravel()
+            print(type(allSteps))
+            nSteps = allSteps.shape[0]
 #            mostRecentAvgFreq = allFrequencies[-1] an average of this
-            self.wfile.write(str(mostRecentPredAvg).encode('utf-8'))
+            features = json.dumps({'type': mostRecentPredAvg, 'freq': mostRecentFreqAvg, 'totalNum': nSteps}, separators=(',',':'))
+            self.wfile.write(features.encode('utf-8'))
             
-        elif (key in "featureEOR:"):
+        elif (key in "featuresEOR:"):
             allSteps = np.concatenate(allPredictions).ravel()
             print(allSteps)
+            featuresEOR = json.dumps({'type': mostRecentPredAvg, 'freq': mostRecentFreqAvg, 'totalNum': nSteps}, separators=(',',':'))
             self.wfile.write(str(allSteps).encode('utf-8'))
             
-# FIGURE OUT HOWTO PUT STUFF INTO JSON
 # TO DO LIST: WHAT"S UP WITH CREATE PROFILE SERVER FUNCTION
 # ASK JACOB DOES HE NEED COUNTS
+            
 
           
 #        elif (key in "getTypeEOR"):
@@ -122,38 +126,64 @@ class S(SimpleHTTPRequestHandler):
             
         elif (key in "login:"):
             json_output = json.loads(value)
-#            print(json_output) # {'password': '789ab', 'username': 'Mila123'}
-#            print(type(json_output)) # <class 'dict'>
+#            print(json_output) {'password': '789ab', 'username': 'Mila123'}
+#            print(type(json_output)) <class 'dict'>
             username = json_output["username"]
             password = json_output["password"]
-#            print(type(username)) # <class 'str'>
-#            print(type(password)) # <class 'str'>
+#            print(type(username)) <class 'str'>
+#            print(type(password)) <class 'str'>
             loginReturn = login(username, password)
             self.wfile.write(str(loginReturn).encode('utf-8'))
         
-        elif (key in "ProfileCreate:"):
+        elif (key in "createProfile:"):
             json_output = json.loads(value)
+            name = json_output["name"]
             username = json_output["username"]
             password = json_output["password"]
             age = json_output["age"]
             weight = json_output["weight"]
-            print(json_output)
+            createFilesReturn = createFiles(username, password, name, age, weight)
+            self.wfile.write(str(createFilesReturn).encode('utf-8'))
             
-
-
+        elif (key in "setUserDetails:"):
+            json_output = json.loads(value)
+            name = json_output["name"]
+            username = json_output["username"]
+            password = json_output["password"]
+            age = json_output["age"]
+            weight = json_output["weight"]
+            setUserDetails(username, password, name, age, weight)
+            
+        elif (key in "getUserDetails:"):
+            json_output = json.loads(value)
+            name = json_output["name"]
+            username = json_output["username"]
+            password = json_output["password"]
+            age = json_output["age"]
+            weight = json_output["weight"]
+            getUserDetails(username, password, name, age, weight)
+            
 # postPressureData        
     def do_POST(self):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         post_data = self.rfile.read(content_length) # <--- Gets the data itself
         postDataDict = json.loads(post_data.decode('utf-8'))
         stepsBatch = np.array(list(postDataDict.values()))
+        
+        # add a check that dim = 128 * 9
+        currentBatchFreq = running_frequency(stepsBatch)
+        allFrequencies.append(currentBatchFreq)
+        stepsBuffer.append(stepsBatch)
+        # that needs to be cleared every time we call pronation classifier
+        
+        print(stepsBuffer) 
         # here we should have functions from N
-        print(stepsBatch.shape)
+#        print(asstepsBuffer.shape)
         typePrediction = predictStepType(stepsBatch, pronationClassifier, 30) # probabilities for each step in the batch
         allPredictions.append(typePrediction) # appending to this array to return it at the end of run
         print(allPredictions)
-        # need to flatten the list
-        print(type(allPredictions))
+        print(allFrequencies)
+        #print(type(allPredictions)) list
         self._set_response()
         self.wfile.write("POST request received".encode('utf-8'))
         
@@ -173,8 +203,7 @@ pronationClassifier = loadPronationClassifier()
 # this list (when flattened) contains a 0,1 or 2 for each step
 # length = n of steps classified
 allPredictions = []
-
-
 allFrequencies = []
+stepsBuffer = []
  
 run()
