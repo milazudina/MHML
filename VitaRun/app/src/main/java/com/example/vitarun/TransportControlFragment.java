@@ -23,13 +23,16 @@ public class TransportControlFragment extends Fragment {
 
     RunTransportListener callback;
 
-    public void setRunTransportListener(Activity activity)
+    public void setRunTransportListener(MainActivity activity)
     {
         callback = activity;
     }
 
+    // Interface for controlling RunEvent in MainActivity.
     public interface RunTransportListener {
         void StartRun();
+        void PauseRun();
+        void EndRun();
     }
 
     @Override
@@ -56,8 +59,7 @@ public class TransportControlFragment extends Fragment {
                 // mViewSwitcher.setDisplayedChild(0);
                 mViewSwitcher.showNext();
                 System.out.println("change view complete?");
-
-                StartRun();
+                
 
                 // This Changes Fragments:
 //                FragmentManager fm = getFragmentManager();
@@ -96,21 +98,5 @@ public class TransportControlFragment extends Fragment {
         return view;
     }
 
-
-    // Call Run Methods in Parent Run Fragment.
-    private void StartRun()
-    {
-        runFragment.StartRun();
-    }
-
-    public void PauseRun()
-    {
-        runFragment.PauseRun();
-    }
-
-    public void StopRun()
-    {
-        runFragment.StopRun();
-    }
 }
 
