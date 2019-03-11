@@ -1,10 +1,12 @@
 package com.example.vitarun;
 
 import android.renderscript.Sampler;
+import android.util.Pair;
 
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -25,7 +27,7 @@ import okhttp3.Response;
 public class ServerComms {
 
     // ip address of server machine + port.
-    static String url = "http://146.169.129.196:3000";
+    static String url = "http://146.169.178.2:3000";
 
     Gson gson;
     OkHttpClient client;
@@ -159,37 +161,39 @@ public class ServerComms {
 
     }
 
-//
-//    public  Object getUserDetails(String username)
-//    {
-//        final SyncResult syncResult = new SyncResult();
-//
-//
-//        Request request = new Request.Builder()
-//                .url(url)
-//                .addHeader("getUserDetails", username)
-//                .build();
-//        client.newCall(request).enqueue((new Callback() {
-//
-//            String myResponse;
-//
-//            @Override
-//            public void onFailure(Call call, IOException e) {e.printStackTrace();}
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                if (response.isSuccessful()){
-//                    myResponse = response.body().string();
-//                    syncResult.setResult(myResponse);
-//
-//                }
-//
-//            }
-//        }));
-//        //User user = new User(UserNa)
-//
-//        return myResponse;
-//    }
+
+    public  User getUserDetails(String username)
+    {
+        final SyncResult syncResult = new SyncResult();
+
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("getUserDetails", username)
+                .build();
+        client.newCall(request).enqueue((new Callback() {
+
+            String myResponse;
+
+            @Override
+            public void onFailure(Call call, IOException e) {e.printStackTrace();}
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()){
+                    myResponse = response.body().string();
+                    syncResult.setResult(myResponse);
+
+                }
+
+            }
+        }));
+
+        String result = syncResult.getResult();
+        User user = gson.fromJson(result, User.class);
+
+        return user;
+    }
 
     public String getFeature(final String featureName)
     {
@@ -227,7 +231,7 @@ public class ServerComms {
     }
 
 
-    public void PostPressureData(HashMap<String, Float[]> data)
+    public void PostPressureData(HashMap<Integer, Float[]> data)
     {
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");

@@ -3,6 +3,7 @@ package com.example.vitarun;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.util.Pair;
 
 import com.google.gson.Gson;
 
@@ -29,7 +30,7 @@ public class RunEvent {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
-    HashMap<String, Float[]> DATA_BUFFER;
+    HashMap<Integer, Float[]> DATA_BUFFER;
 
     static int dataBufferLength = 128;
     ServerComms serverComms;
@@ -40,6 +41,8 @@ public class RunEvent {
     Gson gson;
     private Context context;
 
+    public boolean paused;
+
     final DateTimeFormatter dateFormat;
 
     public RunEvent(Context current) {
@@ -49,7 +52,7 @@ public class RunEvent {
         serverComms = new ServerComms();
         DATA_BUFFER = new HashMap<>();
 
-        dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 
         InputStream inputStream = context.getResources().openRawResource(R.raw.mockdata);
         CSVFile csvFile = new CSVFile(inputStream);
@@ -60,33 +63,39 @@ public class RunEvent {
     }
 
 
-    public void addDataSample(String side, byte[] dataSample) {
+    public void addDataSample(String side, byte[] data) {
 //        DATA_BUFFER.add(dataSample);
 
-        LocalDateTime currTimeDT = LocalDateTime.now(ZoneId.systemDefault());
-        String currTime = currTimeDT.format(dateFormat);
-//        System.out.println(side + "Data Sample Added");
-
-        DATA_BUFFER.put(currTime, dataSet.get(dataIndex));
+        // Add prerecorded data sample;
+        DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
 
 
-        if (DATA_BUFFER.size() == dataBufferLength) {
+        if (DATA_BUFFER.size() >= dataBufferLength) {
+
+            serverComms.PostPressureData(DATA_BUFFER);
+            String jsonString = gson.toJson(DATA_BUFFER);
+            System.out.println(jsonString);
+            DATA_BUFFER.clear();
+        }
+        dataIndex += 1;
+    }
+
+    public void testDataPacket() {
+
+        for (int dataIndex = 0; dataIndex < 1540; dataIndex++) {
+            DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
+        }
+        if (DATA_BUFFER.size() >= dataBufferLength) {
             serverComms.PostPressureData(DATA_BUFFER);
 
             String jsonString = gson.toJson(DATA_BUFFER);
-
             writeToFile(jsonString, context);
             System.out.println(jsonString);
-
             DATA_BUFFER.clear();
         }
-
-        dataIndex += 1;
-
     }
 
-    public void RefreshFeatures()
-    {
+    public void RefreshFeatures() {
         //Make get request.
 
         // Store result.
@@ -111,6 +120,7 @@ public class RunEvent {
     }
 
     public void PauseRunEvent() {
+        this.paused = true;
         System.out.println("Run Paused");
     }
 
@@ -148,9 +158,12 @@ public class RunEvent {
                     Float[] parsed = new Float[row.length];
                     for (int i = 0; i < row.length; i++) {
 
-                        parsed[i] = Float.valueOf(row[i] + "f");
+                        try {
+                            parsed[i] = Float.valueOf(row[i] + "f");
+                        } catch (NumberFormatException e) {
+                            parsed[i] = 0f;
+                        }
                     }
-
                     resultList.add(parsed);
                 }
             } catch (IOException ex) {

@@ -1,42 +1,70 @@
 package com.example.vitarun;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.ViewSwitcher;
+
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class ProfileFragment extends Fragment {
     ViewSwitcher mViewSwitcher;
     LocalStore userLocalStore;
     EditText etUsername, etNickname, etAge, etWeight;
+    TextView tvUsername, tvNickname, tvAge, tvWeight;
     ServerComms serverComms;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
-
-
         mViewSwitcher = view.findViewById(R.id.swProfileEdit);
         etUsername = (EditText) view.findViewById(R.id.etUsername);
         etNickname = (EditText) view.findViewById(R.id.etUserEmail);
         etAge = (EditText) view.findViewById(R.id.etUserAge);
         etWeight = (EditText) view.findViewById(R.id.etUserWeight);
 
+        tvUsername = view.findViewById(R.id.tvUserUsername);
+        tvNickname = view.findViewById(R.id.tvUserEmail);
+        tvAge = view.findViewById(R.id.tvUserAge);
+        tvWeight = view.findViewById(R.id.tvUserWeight);
+
+
         serverComms = new ServerComms();
 
         Button editButton = (Button) view.findViewById(R.id.bEditProfile);
         Button saveButton = (Button) view.findViewById(R.id.bSaveProfile);
         Button logOutButton = (Button) view.findViewById(R.id.bLogOut);
+
+        // Set User Information
+
+        String getUsername = SaveSharedPreferences.getUserName(getContext());
+        if(getUsername.equals("")){
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+        }
+
+        User getUser = serverComms.getUserDetails(getUsername);
+
+        tvUsername.setText(getUser.username);
+        tvAge.setText(getUser.age);
+        tvNickname.setText(getUser.nickname);
+        tvWeight.setText(getUser.weight);
 
         // Edit User Information
 
@@ -46,6 +74,8 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v ) {
                 System.out.println("change view"); // some function here
                 mViewSwitcher.showNext();
+
+
 
 
             }
@@ -65,7 +95,7 @@ public class ProfileFragment extends Fragment {
                 String username = etUsername.getText().toString();
                 String nickname = etNickname.getText().toString();
 
-                User user = new User(username,"", etNickname.getText().toString(), age_int, weight_int);
+                User user = new User(username,"", nickname, age_int, weight_int);
 
                 serverComms.setUserDetails(user);
 
@@ -76,6 +106,8 @@ public class ProfileFragment extends Fragment {
         logOutButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v ) {
+                SaveSharedPreferences.setUsername(getContext(), "");
+
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
                 //userLocalStore.setUserLoggedIn(false);

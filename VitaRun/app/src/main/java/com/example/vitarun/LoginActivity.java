@@ -1,11 +1,13 @@
 package com.example.vitarun;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.EditText;
@@ -13,6 +15,7 @@ import android.widget.Button;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.net.ConnectException;
 
@@ -63,6 +66,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 } else {
                     finish();
                     System.out.println("Correct Password");
+
+                    SaveSharedPreferences.setUsername(this.getBaseContext(), username);
+
                 }
 //
 //                    Snackbar sbConnection = Snackbar.make(v, "Unable to Connect, check WiFi Settings", Snackbar.LENGTH_LONG);
