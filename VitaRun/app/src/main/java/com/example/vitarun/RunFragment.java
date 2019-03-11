@@ -28,34 +28,5 @@ public class RunFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_run, container, false);
 
     }
-
-//    private HashMap<String, BluetoothLeService> BleServices;
-//
-//    public void setBleServices(HashMap<String, BluetoothLeService> _BleServices)
-//    {
-//        this.BleServices = _BleServices;
-//
-//        for (String MAC : BleServices.keySet()) {
-//            System.out.println(MAC);
-//        }
-//    }
-
-    RunEvent runEvent;
-
-    public void StartRun()
-    {
-//        runEvent = new RunEvent();
-    }
-
-    public void PauseRun()
-    {
-        runEvent.PauseRunEvent();
-    }
-
-    public void StopRun()
-    {
-        runEvent.EndRunEvent();
-    }
-
 }
 
