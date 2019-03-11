@@ -66,6 +66,7 @@ public class RunEvent {
         dataIndex = 0;
         gson = new Gson();
 
+        // Runnable for refreshing features.
         Runnable refreshRunnable = new Runnable() {
             @Override
             public void run() {
@@ -75,6 +76,7 @@ public class RunEvent {
             }
         };
 
+        // Schedules get requests for recommendations.
         ScheduledExecutorService service  = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(refreshRunnable, 15, 15, TimeUnit.SECONDS);
     }
@@ -97,21 +99,20 @@ public class RunEvent {
         dataIndex += 1;
     }
 
+    // Send a test packet of data
     public void testDataPacket() {
         int _size = 800;
 
         for (int index = dataIndex*_size; dataIndex < _size; dataIndex++) {
-            DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
+            DATA_BUFFER.put(index, dataSet.get(dataIndex));
         }
 
         serverComms.PostPressureData(DATA_BUFFER);
-
 
         String jsonString = gson.toJson(DATA_BUFFER);
         writeToFile(jsonString, context);
         System.out.println(jsonString);
         DATA_BUFFER.clear();
-
         dataIndex += 1;
     }
 
@@ -121,6 +122,7 @@ public class RunEvent {
         System.out.println(String.format("Features: %s", features));
 
         MainActivity activity = (MainActivity) context;
+        // Calls the update recommendations
         activity.UpdateRecommendations(features);
     }
 
