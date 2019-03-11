@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.channels.FileLock;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -26,19 +27,18 @@ public class RunEvent {
     private ZonedDateTime startTime;
     private ZonedDateTime endTime;
 
-    HashMap<String, double[]> DATA_BUFFER;
+    HashMap<String, Float[]> DATA_BUFFER;
 
     static int dataBufferLength = 128;
     ServerComms serverComms;
 
-    ArrayList<double[]> dataSet;
+    ArrayList<Float[]> dataSet;
     int dataIndex;
 
     Gson gson;
     private Context context;
 
-    public RunEvent(Context current)
-    {
+    public RunEvent(Context current) {
         System.out.println("Run Event Created");
         this.context = current;
 
@@ -54,8 +54,7 @@ public class RunEvent {
     }
 
 
-    public void addDataSample(String side, byte[] dataSample)
-    {
+    public void addDataSample(String side, byte[] dataSample) {
 //        DATA_BUFFER.add(dataSample);
 
         ZonedDateTime currZDTime = ZonedDateTime.now(ZoneId.systemDefault());
@@ -65,8 +64,7 @@ public class RunEvent {
         DATA_BUFFER.put(currTime, dataSet.get(dataIndex));
 
 
-        if (DATA_BUFFER.size() == dataBufferLength)
-        {
+        if (DATA_BUFFER.size() == dataBufferLength) {
             serverComms.PostPressureData(DATA_BUFFER);
 
             String jsonString = gson.toJson(DATA_BUFFER);
@@ -81,76 +79,82 @@ public class RunEvent {
 
     }
 
-    private void writeToFile(String data,Context context) {
+    public void RefreshFeatures()
+    {
+        //Make get request.
+
+        // Store result.
+
+        // Call recommendations fragment update text method
+    }
+
+    private void writeToFile(String data, Context context) {
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("data.txt", Context.MODE_PRIVATE));
             outputStreamWriter.write(data);
             outputStreamWriter.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }
     }
 
-    public void StartRunEvent()
-    {
+    public void StartRunEvent() {
         startTime = ZonedDateTime.now(ZoneId.systemDefault());
     }
 
-    public void PauseRunEvent()
-    {
+    public void PauseRunEvent() {
 
     }
 
 
-    public void EndRunEvent()
-    {
+    public void EndRunEvent() {
         endTime = ZonedDateTime.now(ZoneId.systemDefault());
 
     }
 
-    public Duration getEllapsedTime()
-    {
+    public Duration getEllapsedTime() {
         return Duration.between(startTime, ZonedDateTime.now(ZoneId.systemDefault()));
     }
 
-    public ZonedDateTime getStartTime()
-    {
+    public ZonedDateTime getStartTime() {
         return startTime;
     }
-
 
 
     public class CSVFile {
         InputStream inputStream;
 
-        public CSVFile(InputStream inputStream){
+        public CSVFile(InputStream inputStream) {
             this.inputStream = inputStream;
         }
 
-        public ArrayList<double[]> read(){
-            ArrayList<double[]> resultList = new ArrayList<>();
+        public ArrayList<Float[]> read() {
+            ArrayList<Float[]> resultList = new ArrayList<>();
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             try {
                 String csvLine;
                 while ((csvLine = reader.readLine()) != null) {
                     String[] row = csvLine.split(",");
 
-                    double[] parsed = new double[row.length];
-                    for (int i = 0; i<row.length; i++) parsed[i] = Double.valueOf(row[i]);
+                    Float[] parsed = new Float[row.length];
+                    for (int i = 0; i < row.length; i++) {
+
+                        if (row[i].equals("0")) {
+                            parsed[i] = 0f;
+//                        } else {
+//                            parsed[i] = Float.valueOf(row[i]);
+                        }
+                    }
 
                     resultList.add(parsed);
                 }
-            }
-            catch (IOException ex) {
-                throw new RuntimeException("Error in reading CSV file: "+ex);
-            }
-            finally {
+            } catch (IOException ex) {
+                throw new RuntimeException("Error in reading CSV file: " + ex);
+            } finally {
                 try {
                     inputStream.close();
-                }
-                catch (IOException e) {
-                    throw new RuntimeException("Error while closing input stream: "+e);
+                } catch (IOException e) {
+                    throw new RuntimeException("Error while closing input stream: " + e);
                 }
             }
             return resultList;

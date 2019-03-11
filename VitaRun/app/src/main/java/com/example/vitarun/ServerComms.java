@@ -227,7 +227,7 @@ public class ServerComms {
     }
 
 
-    public void PostPressureData(HashMap<String, double[]> data)
+    public void PostPressureData(HashMap<String, Float[]> data)
     {
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");

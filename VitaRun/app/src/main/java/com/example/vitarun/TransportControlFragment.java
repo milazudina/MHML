@@ -1,6 +1,7 @@
 package com.example.vitarun;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,13 +16,24 @@ import android.widget.Button;
 import android.widget.ViewSwitcher;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class TransportControlFragment extends Fragment {
     ViewSwitcher mViewSwitcher;
 
     private RunFragment runFragment;
+
+    RunTransportListener callback;
+
+    public void setRunTransportListener(MainActivity activity)
+    {
+        callback = activity;
+    }
+
+    // Interface for controlling RunEvent in MainActivity.
+    public interface RunTransportListener {
+        void StartRun();
+        void PauseRun();
+        void EndRun();
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -47,8 +59,7 @@ public class TransportControlFragment extends Fragment {
                 // mViewSwitcher.setDisplayedChild(0);
                 mViewSwitcher.showNext();
                 System.out.println("change view complete?");
-
-                StartRun();
+                
 
                 // This Changes Fragments:
 //                FragmentManager fm = getFragmentManager();
@@ -87,21 +98,5 @@ public class TransportControlFragment extends Fragment {
         return view;
     }
 
-
-    // Call Run Methods in Parent Run Fragment.
-    private void StartRun()
-    {
-        runFragment.StartRun();
-    }
-
-    public void PauseRun()
-    {
-        runFragment.PauseRun();
-    }
-
-    public void StopRun()
-    {
-        runFragment.StopRun();
-    }
 }
 

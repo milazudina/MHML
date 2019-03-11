@@ -15,7 +15,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/run_reccomendation_container"
+        android:id="@+id/run_recommendation_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/run_title_container"
@@ -27,7 +27,7 @@
         android:id="@+id/run_transportControl_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/run_reccomendation_container">
+        android:layout_below="@+id/run_recommendation_container">
     </FrameLayout>
 
 </RelativeLayout>
