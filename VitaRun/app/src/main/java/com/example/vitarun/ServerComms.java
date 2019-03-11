@@ -5,6 +5,7 @@ import android.renderscript.Sampler;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -25,7 +26,7 @@ import okhttp3.Response;
 public class ServerComms {
 
     // ip address of server machine + port.
-    static String url = "http://146.169.129.196:3000";
+    static String url = "http://146.169.178.2:3000";
 
     Gson gson;
     OkHttpClient client;
@@ -227,7 +228,7 @@ public class ServerComms {
     }
 
 
-    public void PostPressureData(HashMap<String, Float[]> data)
+    public void PostPressureData(ArrayList<Float[]> data)
     {
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
