@@ -146,6 +146,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void UpdateRecommendations(String features)
+    {
+//        ADD RECOMMENDATIONS UPDATE METHOD
+//        recommendationsFragment.
+    }
+
     // BLUETOOTH STUFF
 
     public void InitialiseBluetooth() {
