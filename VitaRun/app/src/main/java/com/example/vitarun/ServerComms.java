@@ -159,37 +159,39 @@ public class ServerComms {
 
     }
 
-//
-//    public  Object getUserDetails(String username)
-//    {
-//        final SyncResult syncResult = new SyncResult();
-//
-//
-//        Request request = new Request.Builder()
-//                .url(url)
-//                .addHeader("getUserDetails", username)
-//                .build();
-//        client.newCall(request).enqueue((new Callback() {
-//
-//            String myResponse;
-//
-//            @Override
-//            public void onFailure(Call call, IOException e) {e.printStackTrace();}
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                if (response.isSuccessful()){
-//                    myResponse = response.body().string();
-//                    syncResult.setResult(myResponse);
-//
-//                }
-//
-//            }
-//        }));
-//        //User user = new User(UserNa)
-//
-//        return myResponse;
-//    }
+
+    public  User getUserDetails(String username)
+    {
+        final SyncResult syncResult = new SyncResult();
+
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("getUserDetails", username)
+                .build();
+        client.newCall(request).enqueue((new Callback() {
+
+            String myResponse;
+
+            @Override
+            public void onFailure(Call call, IOException e) {e.printStackTrace();}
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()){
+                    myResponse = response.body().string();
+                    syncResult.setResult(myResponse);
+
+                }
+
+            }
+        }));
+
+        String result = syncResult.getResult();
+        User user = gson.fromJson(result, User.class);
+
+        return user;
+    }
 
     public String getFeature(final String featureName)
     {

@@ -14,6 +14,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.os.Build;
@@ -66,13 +67,18 @@ public class MainActivity extends AppCompatActivity
     private ProfileFragment profileFragment;
     private RecommendationsFragment recommendationsFragment;
     private EndOfRunFragment endOfRunFragment;
-
     public RunEvent runEvent;
+    private SharedPreferences mPreferences;
+    private String sharedPrefFile = "com.example.android.user_shared_preferences";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+
 
         stridMACs = new HashMap<>();
         stridMACs.put("0C:1C:57:6E:A1:B9", "left");
@@ -80,6 +86,7 @@ public class MainActivity extends AppCompatActivity
 
         // The Stridalyzer Service UUID.
         stridServiceUUID = convertFromInteger(0x1814);
+
         // The Stridalyser pressure/acc Characteristic UUID.
         stridBioCharUUID = convertFromInteger(0x2A53);
 
