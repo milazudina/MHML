@@ -1,33 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android='http://schemas.android.com/apk/res/android'
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
+<ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recomswitcher"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical">
 
-
-
-    <FrameLayout
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/insole_connection"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="230dp"
         android:background="@color/offwhite">
 
         <TextView
-        android:id="@+id/recommendations_title"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text='@string/latest_recommendations'
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        android:padding="20dp"/>
-
+            android:id="@+id/recommendations_title"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text='Your live recommendations'
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:padding="20dp"/>
 
         <TextView
             android:id="@+id/firstrecom_body"
             android:layout_width="match_parent"
             android:layout_height="400dp"
-            android:text='try wearing theses shoes because you are overpronating '
+            android:text='You are classification'
             android:textColor="@color/colorPrimary"
             android:paddingRight="30dp"
             android:paddingTop="70dp"
@@ -38,15 +36,81 @@
             android:id="@+id/secondrecom_body"
             android:layout_width="match_parent"
             android:layout_height="400dp"
-            android:text='run with shorter steps in order to reduce your stride length'
+            android:text='Your stride frequency is'
             android:textColor="@color/colorPrimary"
             android:paddingRight="30dp"
             android:paddingTop="120dp"
             android:paddingBottom="30dp"
             android:paddingLeft="30dp"/>
 
+        <TextView
+            android:id="@+id/thirdrecom_body"
+            android:layout_width="match_parent"
+            android:layout_height="600dp"
+            android:text='You have run 0 steps so far'
+            android:textColor="@color/colorPrimary"
+            android:paddingRight="30dp"
+            android:paddingTop="180dp"
+            android:paddingBottom="30dp"
+            android:paddingLeft="30dp"/>
+
+    </RelativeLayout>
 
 
-    </FrameLayout>
 
-</LinearLayout>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/insole_connection2"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:background="@color/offwhite">
+
+
+    <TextView
+        android:id="@+id/summary_title"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text='Your summary as a VitaRun user'
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        android:padding="20dp"/>
+
+
+        <TextView
+            android:id="@+id/firstsum_body"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:text='You are classification'
+            android:textColor="@color/colorPrimary"
+            android:paddingRight="30dp"
+            android:paddingTop="70dp"
+            android:paddingBottom="30dp"
+            android:paddingLeft="30dp"/>
+
+        <TextView
+            android:id="@+id/secondsum_body"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:text='Your average stride frequency per run is'
+            android:textColor="@color/colorPrimary"
+            android:paddingRight="30dp"
+            android:paddingTop="120dp"
+            android:paddingBottom="30dp"
+            android:paddingLeft="30dp"/>
+
+        <TextView
+            android:id="@+id/thirdsum_body"
+            android:layout_width="match_parent"
+            android:layout_height="600dp"
+            android:text='You have run 0 steps so far'
+            android:textColor="@color/colorPrimary"
+            android:paddingRight="30dp"
+            android:paddingTop="180dp"
+            android:paddingBottom="30dp"
+            android:paddingLeft="30dp"/>
+
+
+
+    </RelativeLayout>
+
+</ViewSwitcher>
