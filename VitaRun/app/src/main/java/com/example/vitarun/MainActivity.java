@@ -1,6 +1,7 @@
 package com.example.vitarun;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -12,6 +13,7 @@ import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -102,12 +104,8 @@ public class MainActivity extends AppCompatActivity
 
         ImageButton bluetooth_button = (ImageButton) findViewById(R.id.bluetooth_icon);
         bluetooth_button.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Scanning for Insoles", 2000)
-                        .setAction("Action", null).show();
-
                 RunBLE();
             }
         });
@@ -150,7 +148,6 @@ public class MainActivity extends AppCompatActivity
         runEvent.EndRunEvent();
         endOfRunFragment.mViewSwitcher.showNext();
 
-
     }
 
     public void UpdateRecommendations(String features)
@@ -192,8 +189,26 @@ public class MainActivity extends AppCompatActivity
 
         rightFound = false;
         rightStrid = new StridBLE("F8:36:9B:74:6D:C8", "right");
-        ;
+
         setSoleConnected(false, "right");
+
+        AlertDialog.Builder scanningAlertBuilder = new AlertDialog.Builder(this);
+        scanningAlertBuilder.setMessage("Scanning for Insoles...")
+                            .setCancelable(true)
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    bluetoothAdapter.stopLeScan(scanCallback);
+                                }
+                            })
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+        scanningAlertBuilder.create();
+        scanningAlertBuilder.show();
 
         // Stop scanning, used in case scan was already being performed.
         bluetoothAdapter.stopLeScan(scanCallback);
@@ -211,8 +226,9 @@ public class MainActivity extends AppCompatActivity
 
         // Start the scan.
         bluetoothAdapter.startLeScan(scanCallback);
-        System.out.println("Starting Scan");
+
     }
+
 
     boolean leftFound = false;
     boolean rightFound = false;
@@ -359,13 +375,13 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
     public UUID convertFromInteger(int i) {
         final long MSB = 0x0000000000001000L;
         final long LSB = 0x800000805f9b34fbL;
         long value = i & 0xFFFFFFFF;
         return new UUID(MSB | (value << 32), LSB);
     }
+
 
     // BOTTOM NAVIGATION STUFF
 
