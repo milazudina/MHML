@@ -140,6 +140,7 @@ public class MainActivity extends AppCompatActivity
         runEvent.StartRunEvent();
         runEvent.testDataPacket();
         endOfRunFragment.mViewSwitcher.showNext();
+        recommendationsFragment.mViewSwitcher.showNext();
     }
 
     public void PauseRun(){
@@ -149,6 +150,7 @@ public class MainActivity extends AppCompatActivity
     public void EndRun(){
         runEvent.EndRunEvent();
         endOfRunFragment.mViewSwitcher.showNext();
+        recommendationsFragment.mViewSwitcher.showNext();
 
 
     }

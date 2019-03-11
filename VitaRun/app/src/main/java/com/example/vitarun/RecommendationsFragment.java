@@ -28,6 +28,12 @@ public class RecommendationsFragment extends Fragment {
     TextView tv2;
     TextView tv3;
 
+    TextView tv4;
+    TextView tv5;
+    TextView tv6;
+
+
+    public ViewSwitcher mViewSwitcher;
 
 
 
@@ -36,67 +42,26 @@ public class RecommendationsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        View RootView = inflater.inflate(R.layout.fragment_recommendations, container, false);
 
-        String requestfromserver = "{'type': 1, 'freq': 150, 'totalNum': 73}";
+        String requestfromserver1 = "{'type': 1, 'freq': 175, 'totalNum': 73}";
+        String requestfromserver2 = "{'type': 2, 'freq': 150, 'totalNum': 103}";
 
 
         tv = (TextView)RootView.findViewById(R.id.firstrecom_body);
         tv2 = (TextView)RootView.findViewById(R.id.secondrecom_body);
         tv3 = (TextView)RootView.findViewById(R.id.thirdrecom_body);
 
-        updaterecomText(requestfromserver);
+        tv4 = (TextView)RootView.findViewById(R.id.firstsum_body);
+        tv5 = (TextView)RootView.findViewById(R.id.secondsum_body);
+        tv6 = (TextView)RootView.findViewById(R.id.thirdsum_body);
 
-//        Summary_recom summary_recom = gson.fromJson(request , Summary_recom.class);
-//        System.out.println(summary_recom.type);
-//        System.out.println(summary_recom.freq);
-//        System.out.println(summary_recom.totalNum);
+        mViewSwitcher = (ViewSwitcher) RootView.findViewById(R.id.recomswitcher);
+        mViewSwitcher.showNext();
+        mViewSwitcher.reset();
 
-
-//
-//        switch (summary_recom.type) {
-//            case "0":
-//                tv.setText("Normal Pronation");
-//                break;
-//            case "1":
-//                tv.setText("UnderPronation");
-//                break;
-//            case "2":
-//                tv.setText("OverPronation");
-//                break;
-//        }
-
-//        float freq = Float.parseFloat(summary_recom.freq);
-//        String Stridefreq1  = "Your current stride frequency is equal to ";
-//        String Stridefreq2  = " steps per min. You should ";
-//
-//        if (freq > 180){
-//            String Stridefreq3  = "try running with smaller steps!";
-//            String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
-////            System.out.println(FinalStridefreq1);
-//            tv2.setText(FinalStridefreq1);
-//        }
-//
-//        if (freq < 180){
-//            String Stridefreq3  = "try running with larger steps!";
-//            String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
-////            System.out.println(FinalStridefreq1);
-//            tv2.setText(FinalStridefreq1);
-//        }
-//
-//        if (freq == 180){
-//            String Stridefreq3  = "keep the same pace!";
-//            String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
-////            System.out.println(FinalStridefreq1);
-//            tv2.setText(FinalStridefreq1);
-//        }
-//
-//        String TotalNbsteps1  = "You have run ";
-//        String TotalNbsteps2  = " steps so far!";
-//        String FinalTotalNbsteps  = TotalNbsteps1 + summary_recom.totalNum + TotalNbsteps2;
-//        tv3.setText(FinalTotalNbsteps);
+        updaterecomText(requestfromserver1);
+        updaterecomText2(requestfromserver2);
 
 
-
-//
         return RootView;
     }
 
@@ -122,17 +87,31 @@ public class RecommendationsFragment extends Fragment {
 
         float freq = Float.parseFloat(summary_recom.freq);
         String Stridefreq1  = "Your current stride frequency is equal to ";
-        String Stridefreq2  = " steps per min. You should ";
+        String Stridefreq2  = " steps per min. You ";
 
-        if (freq > 180){
-            String Stridefreq3  = "try running with smaller steps!";
+        if (freq > 200){
+            String Stridefreq3  = "should try running with smaller steps!";
             String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
 //            System.out.println(FinalStridefreq1);
             tv2.setText(FinalStridefreq1);
         }
 
-        if (freq < 180){
-            String Stridefreq3  = "try running with larger steps!";
+        if (180 < freq && freq < 200){
+            String Stridefreq3  = "are close to the right running pace, try running with smaller steps!";
+            String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
+//            System.out.println(FinalStridefreq1);
+            tv2.setText(FinalStridefreq1);
+        }
+
+        if (170 < freq && freq < 180){
+            String Stridefreq3  = "are close to the right running pace, try running with larger steps!";
+            String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
+//            System.out.println(FinalStridefreq1);
+            tv2.setText(FinalStridefreq1);
+        }
+
+        if (freq < 170){
+            String Stridefreq3  = "should try running with larger steps!";
             String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
 //            System.out.println(FinalStridefreq1);
             tv2.setText(FinalStridefreq1);
@@ -149,6 +128,59 @@ public class RecommendationsFragment extends Fragment {
         String TotalNbsteps2  = " steps so far!";
         String FinalTotalNbsteps  = TotalNbsteps1 + summary_recom.totalNum + TotalNbsteps2;
         tv3.setText(FinalTotalNbsteps);
+
+    }
+
+
+
+    public void updaterecomText2(String string){
+
+        Summary_recom summary_recom = gson.fromJson(string , Summary_recom.class);
+        System.out.println(summary_recom.type);
+        System.out.println(summary_recom.freq);
+        System.out.println(summary_recom.totalNum);
+
+        switch (summary_recom.type) {
+            case "0":
+                tv4.setText("Normal Pronation");
+                break;
+            case "1":
+                tv4.setText("UnderPronation");
+                break;
+            case "2":
+                tv4.setText("OverPronation");
+                break;
+        }
+
+        float freq = Float.parseFloat(summary_recom.freq);
+        String Stridefreq1  = "Your current stride frequency is equal to ";
+        String Stridefreq2  = " steps per min. You should ";
+
+        if (freq > 180){
+            String Stridefreq3  = "try running with smaller steps!";
+            String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
+//            System.out.println(FinalStridefreq1);
+            tv5.setText(FinalStridefreq1);
+        }
+
+        if (freq < 180){
+            String Stridefreq3  = "try running with larger steps!";
+            String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
+//            System.out.println(FinalStridefreq1);
+            tv5.setText(FinalStridefreq1);
+        }
+
+        if (freq == 180){
+            String Stridefreq3  = "keep the same pace!";
+            String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
+//            System.out.println(FinalStridefreq1);
+            tv5.setText(FinalStridefreq1);
+        }
+
+        String TotalNbsteps1  = "You have run ";
+        String TotalNbsteps2  = " steps so far!";
+        String FinalTotalNbsteps  = TotalNbsteps1 + summary_recom.totalNum + TotalNbsteps2;
+        tv6.setText(FinalTotalNbsteps);
 
     }
 
