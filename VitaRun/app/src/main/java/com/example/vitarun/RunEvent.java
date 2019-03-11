@@ -63,30 +63,36 @@ public class RunEvent {
     }
 
 
-    public void addDataSample() {
+    public void addDataSample(String side, byte[] data) {
 //        DATA_BUFFER.add(dataSample);
 
-        LocalDateTime currTimeDT = LocalDateTime.now(ZoneId.systemDefault());
-        String currTime = currTimeDT.format(dateFormat);
-//        System.out.println(side + "Data Sample Added");
+        // Add prerecorded data sample;
+        DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
+
+
+        if (DATA_BUFFER.size() >= dataBufferLength) {
+
+            serverComms.PostPressureData(DATA_BUFFER);
+            String jsonString = gson.toJson(DATA_BUFFER);
+            System.out.println(jsonString);
+            DATA_BUFFER.clear();
+        }
+        dataIndex += 1;
+    }
+
+    public void testDataPacket() {
 
         for (int dataIndex = 0; dataIndex < 1540; dataIndex++) {
             DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
         }
-
-        if (DATA_BUFFER.size() == dataBufferLength) {
-
+        if (DATA_BUFFER.size() >= dataBufferLength) {
             serverComms.PostPressureData(DATA_BUFFER);
 
             String jsonString = gson.toJson(DATA_BUFFER);
-
-//            writeToFile(jsonString, context);
+            writeToFile(jsonString, context);
             System.out.println(jsonString);
-
             DATA_BUFFER.clear();
         }
-
-        dataIndex += 1;
     }
 
     public void RefreshFeatures() {

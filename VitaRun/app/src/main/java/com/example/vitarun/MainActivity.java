@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity
     public void StartRun(){
         runEvent = new RunEvent(this);
         runEvent.StartRunEvent();
+        runEvent.testDataPacket();
         endOfRunFragment.mViewSwitcher.showNext();
     }
 
