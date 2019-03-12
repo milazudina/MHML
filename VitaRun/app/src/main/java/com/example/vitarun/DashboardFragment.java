@@ -123,26 +123,7 @@ public class DashboardFragment extends Fragment {
 
 
 
-        // Calendar Listeners
-        compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
-            @Override
-            public void onDayClick(Date dateClicked) {
-                System.out.println(dateClicked);
-                List<Event> events = compactCalendarView.getEvents(dateClicked);
-                System.out.println(events);
-//                graph.getViewport().setMinX(1);
-//                graph.getViewport().setMaxX(3);
-//                graph.addSeries(series);
-            }
 
-            @Override
-            public void onMonthScroll(Date firstDayOfNewMonth) {
-                System.out.println("month scrolled");
-                //  System.out.println(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
-                monthTextView.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
-            }
-
-        });
 
 
         BarDataSet dataSet = new BarDataSet(yValues,"");
@@ -156,15 +137,37 @@ public class DashboardFragment extends Fragment {
         barChart.setData(barData);
 //        String[] labels = { "1","2","3","4","5"};
 //        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
-        XAxis xAxis = barChart.getXAxis();
+        final XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextSize(10f);
         xAxis.setTextColor(Color.RED);
         xAxis.setDrawAxisLine(true);
-        xAxis.setDrawGridLines(false);
+        xAxis.setDrawGridLines(true);
         Legend legend = barChart.getLegend();
         legend.setPosition(Legend.LegendPosition.ABOVE_CHART_CENTER);
         barChart.invalidate();
+
+        // Calendar Listeners
+        compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
+            @Override
+            public void onDayClick(Date dateClicked) {
+                System.out.println(dateClicked);
+                List<Event> events = compactCalendarView.getEvents(dateClicked);
+                System.out.println(events);
+//                xAxis.setAxisMaximum(float 100);
+//                graph.getViewport().setMinX(1);
+//                graph.getViewport().setMaxX(3);
+//                graph.addSeries(series);
+            }
+
+            @Override
+            public void onMonthScroll(Date firstDayOfNewMonth) {
+                System.out.println("month scrolled");
+                //  System.out.println(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
+                monthTextView.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
+            }
+
+        });
 
 
 
