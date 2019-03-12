@@ -145,9 +145,9 @@ public class ProfileFragment extends Fragment {
     public void setContents(User user){
         System.out.println("Set Contents to:"+user);
         tvUsername.setText(user.username);
-        tvAge.setText(String.format("%s", user.age));
+        tvAge.setText(String.format("%s years", user.age));
         tvName.setText(user.name);
-        tvWeight.setText(String.format("%s", user.weight));
+        tvWeight.setText(String.format("%s kg", user.weight));
 
     }
 }
