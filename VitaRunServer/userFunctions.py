@@ -101,6 +101,7 @@ def totalSteps():
     with open(directory+ '/' + username + '/'+ 'History.csv') as fin:
         df = pd.read_csv(fin)
         totalSteps = sum(df['Number_Of_Steps'])
+        return totalSteps
         print(totalSteps)
 
 
@@ -158,7 +159,7 @@ def writeHistory(Username,DateTime_Start, DateTime_End, Number_Of_Steps,Count_NP
         newEntry = [DateTime_Start, DateTime_End, Number_Of_Steps,Count_NP,Count_OP,Count_UP,averageFreqency]
         writer = csv.writer(fin)
         writer.writerow(newEntry)
-        return True
+#        return True
 
 
 def login(Username, Password):
@@ -211,7 +212,7 @@ def getUserDetails(username):
             if line_count == 0:
                 line_count += 1
             elif line_count == 1:
-                historyDict = {'Name': row[0], 'Username': row[1], 'Password': row[2], 'weight': row[3], 'Age': row[4]}
+                historyDict = {'name': row[0], 'username': row[1], 'password': row[2], 'weight': row[3], 'age': row[4]}
                 return historyDict
 
 

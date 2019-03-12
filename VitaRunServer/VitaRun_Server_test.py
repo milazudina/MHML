@@ -1,6 +1,6 @@
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 from mlFunctions import loadPronationClassifier, predictStepType
-from userFunctions import login, createFiles, setUserDetails, getUserDetails, writeHistory, readHistoryFile, addFreq
+from userFunctions import login, createFiles, setUserDetails, getUserDetails, writeHistory, readHistoryFile, addFreq, addPronation, startRun
 from processFunctions import local_running_frequency, splitter, running_frequency
 
 import json
@@ -22,20 +22,23 @@ class S(SimpleHTTPRequestHandler):
 
         
         # test for LOGIN
-#        key = str(self.headers).split()[0] 
-#        value = str(self.headers).split()[1]
+        key = str(self.headers).split()[0] 
+        value = str(self.headers).split()[1]
         
         # test for CREATE PROFILE
 #        key = str(self.headers).split()[2] 
 #        value = str(self.headers).split()[3]
         
         # test for FEATURE EOR
-        key = str(self.headers).split()[0] 
-        value = str(self.headers).split()[1]
+#       endRun: Obie1
+#        key = str(self.headers).split()[4] 
+#        value = str(self.headers).split()[5]
+#       startRun: Obie1
+#        key = str(self.headers).split()[16] 
+#        value = str(self.headers).split()[17]
 
         print("Key:", key)
         print("Value:", value)
-        
 
         if (key in "features:"):
             # When Client requests return features (pronationType, avgFreq and nSteps):
@@ -70,6 +73,7 @@ class S(SimpleHTTPRequestHandler):
  
            
         elif (key in "featuresEOR:"):
+            # this one will be Kenza's end of run
             flatStepsBuffer = np.vstack(stepsBuffer)
             stepsStack = splitter(flatStepsBuffer)
             # stepsStack should be fed into ML
@@ -80,33 +84,35 @@ class S(SimpleHTTPRequestHandler):
 
 
         elif (key in "startRun:"):
+            username = value
             startTime = datetime.datetime.now()
             startTimeString = startTime.strftime("%Y-%m-%d %H:%M:%S")
             startTimeHolder.append(startTimeString)
-            print(startTimeHolder[0])
+            startRun(username)
+            
             
         elif (key in "endRun:"):
             username = value
+            print(username)
             endTime = datetime.datetime.now()
             endTimeString = endTime.strftime("%Y-%m-%d %H:%M:%S")
-#            nSteps  
-#            countNP
-#            countOP
-#            countUP
-            writeHistoryReturn = writeHistory(username, startTimeHolder[0], endTimeString, 
-                         nSteps, CountNP, CountOP, CountUP)
-#            write all the data into csv
-#            send data for visualisation
-            
-#            self.wfile.write(str(loginReturn).encode('utf-8'))
+            print(endTimeString)
+            nSteps = 10
+            # write the summary into csv
+            writeHistory(username, startTimeHolder[0], endTimeString, 
+                         nSteps, 1, 2, 3)
+#           # send data for visualisation
+#            self.wfile.write(str(frequencies).encode('utf-8'))
 
-        elif (key in "historicRuns:"):
+
+        elif (key in "historicRuns:"): #    doesn't work yet
             json_output = json.loads(value)
             # or just using a string in value again
             username = json_output["username"]
             userHistory, nRows = readHistoryFile(username)
             userHistoryJson = json.dumps(userHistory, separators=(',',':'))
             self.wfile.write(userHistoryJson.encode('utf-8'))
+
             
         elif (key in "login:"):
             json_output = json.loads(value)
@@ -120,6 +126,7 @@ class S(SimpleHTTPRequestHandler):
             loginReturn = login(username, password)
             print(loginReturn)
             self.wfile.write(str(loginReturn).encode('utf-8'))
+
         
         elif (key in "createProfile:"):
             json_output = json.loads(value)
@@ -131,6 +138,7 @@ class S(SimpleHTTPRequestHandler):
             createFilesReturn = createFiles(username, password, name, age, weight)
             print(createFilesReturn)
             self.wfile.write(str(createFilesReturn).encode('utf-8'))
+
             
         elif (key in "setUserDetails:"):
             json_output = json.loads(value)
@@ -140,6 +148,7 @@ class S(SimpleHTTPRequestHandler):
             age = json_output["age"]
             weight = json_output["weight"]
             setUserDetails(username, password, name, age, weight)
+
             
         elif (key in "getUserDetails:"):
             username = value
@@ -151,6 +160,7 @@ class S(SimpleHTTPRequestHandler):
 
        
     def do_POST(self):
+        usernameHolder = 'Norb456'
         self._set_response()
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         post_data = self.rfile.read(content_length) # <--- Gets the data itself
@@ -161,7 +171,7 @@ class S(SimpleHTTPRequestHandler):
         currentBatchFreq = local_running_frequency(stepsBatch, 256)
         frequenciesBuffer.append(currentBatchFreq)
 #        print(frequenciesBuffer)
-        #addFreq(usernameHolder[0], currentBatchFreq)
+        addFreq(usernameHolder, currentBatchFreq)
         print("Frequency of current 128 samples:", currentBatchFreq)
         print(stepsBuffer)
         # add a check that dim = 128 * 9
@@ -175,8 +185,8 @@ class S(SimpleHTTPRequestHandler):
             # 1.3) predict the type of each step in steps stack and return the mode
             typePrediction = predictStepType(stepsStack, pronationClassifier, 30)
             print("array of predictions:", typePrediction)
-            
-#           ADD: should save it into a csv and an array to return later
+            addPronation(usernameHolder[0], typePrediction)
+
             wholeRunStepTypes.append(typePrediction) 
             
             # 1.4) buffer is emptied
