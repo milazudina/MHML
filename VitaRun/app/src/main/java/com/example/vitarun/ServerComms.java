@@ -42,7 +42,7 @@ public class ServerComms {
     }
 
     // Method to set user database on server side.
-    public boolean login(String userName, String password)
+    public int login(String userName, String password)
     {
         final SyncResult syncResult = new SyncResult();
         Map<String, String> table = new Hashtable<>();
@@ -78,10 +78,15 @@ public class ServerComms {
 
 
         try {
-            return  Boolean.parseBoolean(syncResult.getResult());
+            if (Boolean.parseBoolean(syncResult.getResult())){
+                return 1;
+
+            }else{
+                return 0;
+        }
         }catch(Exception e){
             System.out.print("Non-boolean response to login GET request");
-            return false;
+            return -1;
         }
     }
     public boolean createProfile(String userName, String password, String name, int Age, int weight)
