@@ -4,7 +4,7 @@
     <item android:drawable="@color/offwhite" />
 
     <item>
-        <bitmap android:src="@drawable/background_logo_screen"
+        <bitmap android:src="@drawable/logo_background_bigger"
             android:gravity="center"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
