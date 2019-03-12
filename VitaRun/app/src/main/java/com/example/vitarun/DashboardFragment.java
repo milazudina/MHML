@@ -65,7 +65,7 @@ public class DashboardFragment extends Fragment {
 
     ArrayList<Historic_run> historic_runArrayList = new ArrayList<Historic_run>();
 
-    static String jsonString = "{\"Datetime_Start\": \"2019-03-09 12:41:24\",\"Datetime_Stop\":\"2019-03-09 12:50:24\",\"Number_Of_Steps\": \"100\",\"Count_NP\": \"20\",\"Count_OP\": \"40\",\"Count_UP\":\"40\",\"Average_Frequency\": \"3\"}{\"Datetime_Start\": \"2019-03-08 12:41:24\",\"Datetime_Stop\": \"2019-03-08 12:50:24\",\"Number_Of_Steps\": \"100\",\"Count_NP\": \"20\",\"Count_OP\": \"40\",\"Count_UP\":\"\"40\",\"Average_Frequency\": \"3\"}";
+    static String jsonString = "{'DictA' : {\"Datetime_Start\": \"2019-03-09 12:41:24\",\"Datetime_Stop\":\"2019-03-09 12:50:24\",\"Number_Of_Steps\": \"100\",\"Count_NP\": \"20\",\"Count_OP\": \"40\",\"Count_UP\":\"40\",\"Average_Frequency\": \"3\"}, 'DictB' : {\"Datetime_Start\": \"2019-03-08 12:41:24\",\"Datetime_Stop\": \"2019-03-08 12:50:24\",\"Number_Of_Steps\": \"100\",\"Count_NP\": \"20\",\"Count_OP\": \"40\",\"Count_UP\":\"\"40\",\"Average_Frequency\": \"3\"}}";
 
     String jsonString2 = "{\"Datetime_Start\": \"2019-03-09 12:41:24\",\"Datetime_Stop\":\"2019-03-09 12:50:24\",\"Number_Of_Steps\": \"100\",\"Count_NP\": \"20\",\"Count_OP\": \"40\",\"Count_UP\": \"40\",\"Average_Frequency\": \"3\"}";
 
@@ -77,11 +77,24 @@ public class DashboardFragment extends Fragment {
         final CompactCalendarView compactCalendarView = (CompactCalendarView) view.findViewById(R.id.compactcalendar_view);
         final SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMM - yyyy", Locale.getDefault());
         final TextView monthTextView = (TextView) view.findViewById(R.id.Month_title);
-
+        serverComms = new ServerComms();
         // Set up Calendar:
         monthTextView.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
 
+        String jsonString3 = serverComms.getFeature("historicRuns");
+
+
         String[] runsArray = jsonString2.split("(?<=\\})");
+        System.out.println(jsonString3);
+
+//        JSONObject req = new JSONObject(join(LoadStrings(jsonString)));
+//        Object obj = parser.parse(jsonString);
+//        JSONArray array = (JSONArray)obj;
+//        System.out.println(array);
+//        System.out.println(array.get(1));
+
+//        System.out.println(runsArray);
+
         for(String run : runsArray){
 //            System.out.println(run);
             JsonReader reader = new JsonReader(new StringReader(run));
@@ -123,26 +136,7 @@ public class DashboardFragment extends Fragment {
 
 
 
-        // Calendar Listeners
-        compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
-            @Override
-            public void onDayClick(Date dateClicked) {
-                System.out.println(dateClicked);
-                List<Event> events = compactCalendarView.getEvents(dateClicked);
-                System.out.println(events);
-//                graph.getViewport().setMinX(1);
-//                graph.getViewport().setMaxX(3);
-//                graph.addSeries(series);
-            }
 
-            @Override
-            public void onMonthScroll(Date firstDayOfNewMonth) {
-                System.out.println("month scrolled");
-                //  System.out.println(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
-                monthTextView.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
-            }
-
-        });
 
 
         BarDataSet dataSet = new BarDataSet(yValues,"");
@@ -156,15 +150,37 @@ public class DashboardFragment extends Fragment {
         barChart.setData(barData);
 //        String[] labels = { "1","2","3","4","5"};
 //        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
-        XAxis xAxis = barChart.getXAxis();
+        final XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextSize(10f);
         xAxis.setTextColor(Color.RED);
         xAxis.setDrawAxisLine(true);
-        xAxis.setDrawGridLines(false);
+        xAxis.setDrawGridLines(true);
         Legend legend = barChart.getLegend();
         legend.setPosition(Legend.LegendPosition.ABOVE_CHART_CENTER);
         barChart.invalidate();
+
+        // Calendar Listeners
+        compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
+            @Override
+            public void onDayClick(Date dateClicked) {
+                System.out.println(dateClicked);
+                List<Event> events = compactCalendarView.getEvents(dateClicked);
+                System.out.println(events);
+//                xAxis.setAxisMaximum(float 100);
+//                graph.getViewport().setMinX(1);
+//                graph.getViewport().setMaxX(3);
+//                graph.addSeries(series);
+            }
+
+            @Override
+            public void onMonthScroll(Date firstDayOfNewMonth) {
+                System.out.println("month scrolled");
+                //  System.out.println(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
+                monthTextView.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
+            }
+
+        });
 
 
 

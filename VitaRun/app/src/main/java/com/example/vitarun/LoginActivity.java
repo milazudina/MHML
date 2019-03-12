@@ -73,8 +73,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     sbUsername.show();
                     System.out.println("Response Incorrect");
                 } else {
+
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("result",username);
+                    setResult(LoginActivity.RESULT_OK,returnIntent);
+
                     finish();
                     System.out.println("Correct Password");
+
 
                     SaveSharedPreferences.setUsername(this.getBaseContext(), username);
 
@@ -99,6 +105,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             case(R.id.tvNewProfile):
                 startActivity(new Intent(this, RegisterActivity.class));
+                finish();
         }
     }
 }
