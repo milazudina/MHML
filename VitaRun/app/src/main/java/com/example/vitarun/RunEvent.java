@@ -83,7 +83,7 @@ public class RunEvent {
         service.scheduleAtFixedRate(RefreshRunnable, 15, 15, TimeUnit.SECONDS);
 
 
-        // Runnable for refreshing features.
+        // Runnable for generating audio feedback.
         Runnable FeedbackRunnable = new Runnable() {
             @Override
             public void run() {
@@ -146,10 +146,12 @@ public class RunEvent {
     public void GiveFeedback() {
 
         MainActivity activity = (MainActivity) context;
-        String text_pronate = "You are pronating";
-        Intent speechIntent = new Intent(activity, TextToSpeechService.class);
-        speechIntent.putExtra(TextToSpeechService.EXTRA_WORD, text_pronate);
-        activity.startService(speechIntent);
+
+        activity.GiveFeedback(features);
+//        String text_pronate = "You are pronating";
+//        Intent speechIntent = new Intent(activity, TextToSpeechService.class);
+//        speechIntent.putExtra(TextToSpeechService.EXTRA_WORD, text_pronate);
+//        activity.startService(speechIntent);
 
     }
 

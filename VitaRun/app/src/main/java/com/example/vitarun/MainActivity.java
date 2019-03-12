@@ -162,6 +162,11 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void GiveFeedback(String features)
+    {
+
+    }
+
     // Update recommendations fragment mid run;
     public void UpdateRecommendations(String features)
     {
@@ -171,6 +176,7 @@ public class MainActivity extends AppCompatActivity
     // Update recommendations after run.
     public void UpdateRecommendationsFinal(final String features)
     {
+        // Wait for 30 seconds before updating final recommendations view.
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
