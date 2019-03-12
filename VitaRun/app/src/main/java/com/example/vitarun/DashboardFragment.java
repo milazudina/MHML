@@ -151,7 +151,7 @@ public class DashboardFragment extends Fragment {
             } catch (java.text.ParseException e) {
                 e.printStackTrace();
             }
-            long unixTime = (long) date.getTime()/1000;
+            long unixTime = (long) date.getTime();
             System.out.println(unixTime);
             float steps = Float.parseFloat(run.Number_Of_Steps);
             float UP = Float.parseFloat(run.Count_UP);
@@ -177,7 +177,7 @@ public class DashboardFragment extends Fragment {
 
         dataSet.setStackLabels(new String[]{"Over", "Under", "Normal"});
         BarData barData = new BarData(dataSet);
-        barData.setBarWidth(20f);
+        barData.setBarWidth(10000f);
         barChart.setData(barData);
 //        String[] labels = { "1","2","3","4","5"};
 //        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
