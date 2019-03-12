@@ -63,20 +63,12 @@ public class ProfileFragment extends Fragment {
 
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
+
+
         } else {
+            System.out.println(getUsername);
             final User getUser = serverComms.getUserDetails(getUsername);
-
             System.out.println(getUser);
-//            try {
-//            }catch (NullPointerException e) {
-//                System.out.println(e);
-//            }
-            System.out.println(getUser.username);
-            System.out.println(getUser.age);
-            System.out.println(getUser.name);
-            System.out.println(getUser.weight);
-
-
             tvUsername.setText(getUser.username);
             tvAge.setText(String.format("%s", getUser.age));
             tvName.setText(getUser.name);
@@ -135,6 +127,8 @@ public class ProfileFragment extends Fragment {
 
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
+
+
                     //userLocalStore.setUserLoggedIn(false);
                     //userLocalStore.clearUserData();
 

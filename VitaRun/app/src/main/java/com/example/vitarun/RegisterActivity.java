@@ -59,6 +59,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     Snackbar sbInvalidDetails = Snackbar.make(v, "Details Invalid", Snackbar.LENGTH_LONG);
                     sbInvalidDetails.show();
                     System.out.println("Unsuccessful Creation");
+
+
+
+
+
+
                 }
 
 

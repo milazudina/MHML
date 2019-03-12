@@ -193,7 +193,7 @@ public class ServerComms {
         System.out.println("Json Result"+result);
 
         User user = gson.fromJson(result, User.class);
-        System.out.println("Name:"+user.name+"Username:"+user.username+"Age:"+user.age+"Weight"+user.weight);
+        System.out.println("Received: Name:"+user.name+" Username:"+user.username+" Age:"+user.age+" Weight"+user.weight);
         return user;
     }
 
