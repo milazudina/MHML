@@ -74,8 +74,9 @@ public class RunEvent {
             @Override
             public void run() {
                 if (!paused) {
-                    RefreshFeatures();
+//                    RefreshFeatures();
                 }
+                System.out.println("REFRESH");
             }
         };
         // Schedules get requests for recommendations.
@@ -90,10 +91,12 @@ public class RunEvent {
                 if (!paused) {
                     GiveFeedback();
                 }
+                System.out.println("REFRESH2");
             }
         };
-        ScheduledExecutorService service2 = Executors.newSingleThreadScheduledExecutor();
-        service2.scheduleAtFixedRate(FeedbackRunnable, 20, 30, TimeUnit.SECONDS);
+
+        service.scheduleAtFixedRate(FeedbackRunnable, 20, 30, TimeUnit.SECONDS);
+        
     }
 
 

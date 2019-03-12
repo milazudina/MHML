@@ -42,7 +42,7 @@ public class RecommendationsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        View RootView = inflater.inflate(R.layout.fragment_recommendations, container, false);
 
-        String requestfromserver1 = "{'type': 1, 'freq': 175, 'totalNum': 73}";
+        String requestfromserver1 = "{'type': 1, 'freq': 174, 'totalNum': 73}";
         String requestfromserver2 = "{'type': 2, 'freq': 150, 'totalNum': 103}";
 
 
@@ -58,8 +58,8 @@ public class RecommendationsFragment extends Fragment {
         mViewSwitcher.showNext();
         mViewSwitcher.reset();
 
-        updaterecomText(requestfromserver1);
-        updaterecomText2(requestfromserver2);
+//        updaterecomText(requestfromserver1);
+//        updaterecomText2(requestfromserver2);
 
 
         return RootView;
@@ -103,7 +103,7 @@ public class RecommendationsFragment extends Fragment {
             tv2.setText(FinalStridefreq1);
         }
 
-        if (165 < freq && freq < 175){
+        if (165 <= freq && freq <= 175){
             String Stridefreq3  = "You are close to the perfect running pace, try taking smaller steps and reducing ground contact time!";
             String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
 //            System.out.println(FinalStridefreq1);
