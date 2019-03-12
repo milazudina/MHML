@@ -43,12 +43,12 @@
                 android:text="@string/username" />
 
             <TextView
-                android:id="@+id/tvEmail"
+                android:id="@+id/tvName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_weight="1"
-                android:text="@string/email" />
+                android:text="@string/name" />
 
 
             <TextView
@@ -115,12 +115,12 @@
                 android:text="@string/username" />
 
             <TextView
-                android:id="@+id/tvUserEmail"
+                android:id="@+id/tvUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_weight="1"
-                android:text="@string/email" />
+                android:text="@string/name" />
 
 
             <TextView
@@ -180,12 +180,12 @@
                 android:text="@string/username" />
 
             <TextView
-                android:id="@+id/tvEmailEdit"
+                android:id="@+id/tvnameEdit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_weight="1"
-                android:text="@string/email" />
+                android:text="@string/name" />
 
 
             <TextView
@@ -236,16 +236,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_weight="1"
-                android:text="@string/username" />
+                android:layout_weight="1"/>
 
             <EditText
-                android:id="@+id/etUserEmail"
+                android:id="@+id/etUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_weight="1"
-                android:text="@string/email" />
+                android:layout_weight="1" />
 
 
             <EditText
@@ -253,16 +251,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_weight="1"
-                android:text="@string/age" />
+                android:layout_weight="1"/>
 
             <EditText
                 android:id="@+id/etUserWeight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_weight="1"
-                android:text="@string/weight" />
+                android:layout_weight="1"/>
         </LinearLayout>
 
     </RelativeLayout>

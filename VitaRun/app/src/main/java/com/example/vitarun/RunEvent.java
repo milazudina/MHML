@@ -1,6 +1,7 @@
 package com.example.vitarun;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.util.Pair;
@@ -22,6 +23,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -32,7 +38,7 @@ public class RunEvent {
 
     HashMap<Integer, Float[]> DATA_BUFFER;
 
-    static int dataBufferLength = 128;
+    static int dataBufferLength = 256;
     ServerComms serverComms;
 
     ArrayList<Float[]> dataSet;
@@ -60,41 +66,76 @@ public class RunEvent {
 
         dataIndex = 0;
         gson = new Gson();
+
+        // Runnable for refreshing features.
+        Runnable refreshRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!paused) {
+                    RefreshFeatures();
+                }
+            }
+        };
+
+        // Schedules get requests for recommendations.
+        ScheduledExecutorService service  = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleAtFixedRate(refreshRunnable, 15, 15, TimeUnit.SECONDS);
     }
 
 
-    public void addDataSample() {
+    public void addDataSample(String side, byte[] data) {
 //        DATA_BUFFER.add(dataSample);
 
-        LocalDateTime currTimeDT = LocalDateTime.now(ZoneId.systemDefault());
-        String currTime = currTimeDT.format(dateFormat);
-//        System.out.println(side + "Data Sample Added");
+        // Add prerecorded data sample;
+        DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
 
-        for (int dataIndex = 0; dataIndex < 1540; dataIndex++) {
-            DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
-        }
 
-        if (DATA_BUFFER.size() == dataBufferLength) {
+        if (DATA_BUFFER.size() >= dataBufferLength) {
 
             serverComms.PostPressureData(DATA_BUFFER);
-
             String jsonString = gson.toJson(DATA_BUFFER);
-
-//            writeToFile(jsonString, context);
             System.out.println(jsonString);
-
             DATA_BUFFER.clear();
         }
+        dataIndex += 1;
+    }
 
+    // Send a test packet of data
+    public void testDataPacket() {
+        int _size = 800;
+
+        for (int index = dataIndex*_size; dataIndex < _size; dataIndex++) {
+            DATA_BUFFER.put(index, dataSet.get(dataIndex));
+        }
+
+        serverComms.PostPressureData(DATA_BUFFER);
+
+        String jsonString = gson.toJson(DATA_BUFFER);
+        writeToFile(jsonString, context);
+        System.out.println(jsonString);
+        DATA_BUFFER.clear();
         dataIndex += 1;
     }
 
     public void RefreshFeatures() {
         //Make get request.
+        String features = serverComms.getFeature("features");
+        System.out.println(String.format("Features: %s", features));
 
-        // Store result.
+        MainActivity activity = (MainActivity) context;
+        // Calls the update recommendations
+        activity.UpdateRecommendations(features);
+        GiveFeedback(features);
 
-        // Call recommendations fragment update text method
+    }
+
+    public void GiveFeedback(String features)
+    {
+        MainActivity activity = (MainActivity) context;
+        String text_pronate = "You are pronating";
+        Intent speechIntent = new Intent(activity, TextToSpeechService.class);
+        speechIntent.putExtra(TextToSpeechService.EXTRA_WORD, text_pronate );
+        activity.startService(speechIntent);
     }
 
     private void writeToFile(String data, Context context) {

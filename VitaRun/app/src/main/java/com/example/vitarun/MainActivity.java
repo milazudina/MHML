@@ -1,6 +1,7 @@
 package com.example.vitarun;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -12,8 +13,10 @@ import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.os.Build;
@@ -66,13 +69,23 @@ public class MainActivity extends AppCompatActivity
     private ProfileFragment profileFragment;
     private RecommendationsFragment recommendationsFragment;
     private EndOfRunFragment endOfRunFragment;
-
     public RunEvent runEvent;
+    private SharedPreferences mPreferences;
+    private String sharedPrefFile = "com.example.android.user_shared_preferences";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.logo_vitarun_small);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+
 
         stridMACs = new HashMap<>();
         stridMACs.put("0C:1C:57:6E:A1:B9", "left");
@@ -80,6 +93,7 @@ public class MainActivity extends AppCompatActivity
 
         // The Stridalyzer Service UUID.
         stridServiceUUID = convertFromInteger(0x1814);
+
         // The Stridalyser pressure/acc Characteristic UUID.
         stridBioCharUUID = convertFromInteger(0x2A53);
 
@@ -95,12 +109,8 @@ public class MainActivity extends AppCompatActivity
 
         ImageButton bluetooth_button = (ImageButton) findViewById(R.id.bluetooth_icon);
         bluetooth_button.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Scanning for Insoles", 2000)
-                        .setAction("Action", null).show();
-
                 RunBLE();
             }
         });
@@ -131,7 +141,9 @@ public class MainActivity extends AppCompatActivity
     public void StartRun(){
         runEvent = new RunEvent(this);
         runEvent.StartRunEvent();
+        runEvent.testDataPacket();
         endOfRunFragment.mViewSwitcher.showNext();
+        recommendationsFragment.mViewSwitcher.showNext();
     }
 
     public void PauseRun(){
@@ -141,8 +153,14 @@ public class MainActivity extends AppCompatActivity
     public void EndRun(){
         runEvent.EndRunEvent();
         endOfRunFragment.mViewSwitcher.showNext();
+        recommendationsFragment.mViewSwitcher.showNext();
 
+    }
 
+    public void UpdateRecommendations(String features)
+    {
+//        ADD RECOMMENDATIONS UPDATE METHOD
+//        recommendationsFragment.
     }
 
     // BLUETOOTH STUFF
@@ -178,8 +196,26 @@ public class MainActivity extends AppCompatActivity
 
         rightFound = false;
         rightStrid = new StridBLE("F8:36:9B:74:6D:C8", "right");
-        ;
+
         setSoleConnected(false, "right");
+
+        AlertDialog.Builder scanningAlertBuilder = new AlertDialog.Builder(this);
+        scanningAlertBuilder.setMessage("Scanning for Insoles...")
+                            .setCancelable(true)
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    bluetoothAdapter.stopLeScan(scanCallback);
+                                }
+                            })
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+        scanningAlertBuilder.create();
+        scanningAlertBuilder.show();
 
         // Stop scanning, used in case scan was already being performed.
         bluetoothAdapter.stopLeScan(scanCallback);
@@ -197,8 +233,9 @@ public class MainActivity extends AppCompatActivity
 
         // Start the scan.
         bluetoothAdapter.startLeScan(scanCallback);
-        System.out.println("Starting Scan");
+
     }
+
 
     boolean leftFound = false;
     boolean rightFound = false;
@@ -345,13 +382,13 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
     public UUID convertFromInteger(int i) {
         final long MSB = 0x0000000000001000L;
         final long LSB = 0x800000805f9b34fbL;
         long value = i & 0xFFFFFFFF;
         return new UUID(MSB | (value << 32), LSB);
     }
+
 
     // BOTTOM NAVIGATION STUFF
 

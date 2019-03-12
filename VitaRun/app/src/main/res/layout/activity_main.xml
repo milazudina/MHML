@@ -13,7 +13,6 @@
         android:layout_above="@+id/insole_connection"></ScrollView>
 
 
-
     <FrameLayout
         android:id="@+id/insole_connection"
         android:layout_width="match_parent"
@@ -27,14 +26,6 @@
             android:layout_gravity="center"
             tools:ignore="UselessParent">
 
-            <TextView
-                android:id="@+id/Connect_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                android:text="@string/connect"
-                android:layout_marginBottom="10dp"/>
-
             <ImageButton
                 android:id="@+id/bluetooth_icon"
                 android:layout_width="48dp"
@@ -44,6 +35,14 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@+id/bluetooth_icon"
                 android:src="@drawable/ic_bluetooth_black_24dp" />
+
+            <TextView
+                android:id="@+id/Connect_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:text="@string/connect"
+                android:layout_marginBottom="10dp"/>
 
         </FrameLayout>
 
@@ -70,7 +69,6 @@
                 android:src="@drawable/vitarun_insoleright" />
         </FrameLayout>
 
-
     </FrameLayout>
 
 
@@ -80,6 +78,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="?android:attr/windowBackground"
+        app:itemIconTint="@color/colorPrimaryDark"
+        app:itemTextColor="@color/colorPrimary"
         app:menu="@menu/bottom_navigation" />
 
 </RelativeLayout>

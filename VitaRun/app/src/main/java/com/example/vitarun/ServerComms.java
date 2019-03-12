@@ -84,10 +84,10 @@ public class ServerComms {
             return false;
         }
     }
-    public boolean createProfile(String userName, String password, String nickname, int Age, int weight)
+    public boolean createProfile(String userName, String password, String name, int Age, int weight)
     {
         final SyncResult syncResult = new SyncResult();
-        User user = new User(userName, password, nickname, Age, weight);
+        User user = new User(userName, password, name, Age, weight);
         String json = gson.toJson(user);
         //String header = String.format("login : , %s : %s", userName,password);
 
@@ -161,37 +161,41 @@ public class ServerComms {
 
     }
 
-//
-//    public  Object getUserDetails(String username)
-//    {
-//        final SyncResult syncResult = new SyncResult();
-//
-//
-//        Request request = new Request.Builder()
-//                .url(url)
-//                .addHeader("getUserDetails", username)
-//                .build();
-//        client.newCall(request).enqueue((new Callback() {
-//
-//            String myResponse;
-//
-//            @Override
-//            public void onFailure(Call call, IOException e) {e.printStackTrace();}
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                if (response.isSuccessful()){
-//                    myResponse = response.body().string();
-//                    syncResult.setResult(myResponse);
-//
-//                }
-//
-//            }
-//        }));
-//        //User user = new User(UserNa)
-//
-//        return myResponse;
-//    }
+
+    public  User getUserDetails(String username)
+    {
+        final SyncResult syncResult = new SyncResult();
+
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("getUserDetails", username)
+                .build();
+        client.newCall(request).enqueue((new Callback() {
+
+            String myResponse;
+
+            @Override
+            public void onFailure(Call call, IOException e) {e.printStackTrace();}
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()){
+                    myResponse = response.body().string();
+                    syncResult.setResult(myResponse);
+
+                }
+
+            }
+        }));
+
+        String result = syncResult.getResult();
+        System.out.println("Json Result"+result);
+
+        User user = gson.fromJson(result, User.class);
+        System.out.println("Received: Name:"+user.name+" Username:"+user.username+" Age:"+user.age+" Weight"+user.weight);
+        return user;
+    }
 
     public String getFeature(final String featureName)
     {
