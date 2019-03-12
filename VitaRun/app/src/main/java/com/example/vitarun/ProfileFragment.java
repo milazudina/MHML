@@ -25,7 +25,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class ProfileFragment extends Fragment {
     ViewSwitcher mViewSwitcher;
     LocalStore userLocalStore;
-    EditText  etName, etAge, etWeight;
+    EditText etUsername, etName, etAge, etWeight;
     TextView tvUsername, tvName, tvAge, tvWeight;
     ServerComms serverComms;
 
@@ -36,6 +36,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         mViewSwitcher = view.findViewById(R.id.swProfileEdit);
+        etUsername = (EditText) view.findViewById(R.id.etUserUsername);
         etName = (EditText) view.findViewById(R.id.etUserName);
         etAge = (EditText) view.findViewById(R.id.etUserAge);
         etWeight = (EditText) view.findViewById(R.id.etUserWeight);
@@ -57,7 +58,7 @@ public class ProfileFragment extends Fragment {
 
         // Set User Information
 
-        final String getUsername = SaveSharedPreferences.getUserName(getContext());
+        String getUsername = SaveSharedPreferences.getUserName(getContext());
         if(getUsername.equals("")){
 
             System.out.print("No username, starting login");
@@ -80,6 +81,7 @@ public class ProfileFragment extends Fragment {
                     System.out.println("change view"); // some function here
                     mViewSwitcher.showNext();
 
+                    etUsername.setText(getUser.username);
                     etAge.setText(String.format("%s", getUser.age));
                     etName.setText(getUser.name);
                     etWeight.setText(String.format("%s", getUser.weight));
@@ -99,9 +101,10 @@ public class ProfileFragment extends Fragment {
 
                     int age_int = Integer.parseInt(age);
                     int weight_int = Integer.parseInt(weight);
+                    String username = etUsername.getText().toString();
                     String name = etName.getText().toString();
 
-                    User user = new User(getUsername, getUser.password, name, age_int, weight_int);
+                    User user = new User(username, getUser.password, name, age_int, weight_int);
 
                     serverComms.setUserDetails(user);
                     setContents(user);
