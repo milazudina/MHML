@@ -6,6 +6,7 @@
         <item name="colorPrimary">@android:color/white</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:font">@font/paco</item>
     </style>
 
     <!-- Base app theme - NO ACTION BAR. -->

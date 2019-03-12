@@ -4,7 +4,9 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical" android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="60dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <!--<TextView-->
@@ -49,10 +51,10 @@
             android:layout_height="250dp"
             app:compactCalendarTargetHeight="250dp"
             app:compactCalendarTextSize="12sp"
-            app:compactCalendarBackgroundColor="@color/colorPrimaryDark"
-            app:compactCalendarTextColor="#fff"
+            app:compactCalendarBackgroundColor="@android:color/transparent"
+            app:compactCalendarTextColor="@color/colorPrimaryDark"
             app:compactCalendarCurrentSelectedDayBackgroundColor="@color/colorPrimary"
-            app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
+            app:compactCalendarCurrentDayBackgroundColor="@android:color/transparent"
             app:compactCalendarMultiEventIndicatorColor="#fff"
 
             />

@@ -35,13 +35,11 @@ public class TransportControlFragment extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v ) {
-//                System.out.println("change view"); // some function here
-                // mViewSwitcher.setDisplayedChild(0);
+
                 runFragment.callback.StartRun();
 
                 mViewSwitcher.showNext();
 //                System.out.println("change view complete?");
-
             }
         });
 
@@ -56,13 +54,13 @@ public class TransportControlFragment extends Fragment {
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("change view"); // some function here
+//                System.out.println("change view"); // some function here
                 // mViewSwitcher.setDisplayedChild(0);
 
                 runFragment.callback.EndRun();
 
                 mViewSwitcher.showNext();
-                System.out.println("change view complete?");
+//                System.out.println("change view complete?");
             }
         });
         return view;

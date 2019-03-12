@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.master_fragment_container,
-                new DashboardFragment()).commit();
+                runFragment).commit();
     }
 
     @Override
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity
     public void StartRun(){
         runEvent = new RunEvent(this);
         runEvent.StartRunEvent();
-        runEvent.testDataPacket();
+//        runEvent.testDataPacket();
         endOfRunFragment.mViewSwitcher.showNext();
         recommendationsFragment.mViewSwitcher.showNext();
     }
@@ -231,10 +231,9 @@ public class MainActivity extends AppCompatActivity
             }
         }, 8000);
 
-
         // Start the scan.
         bluetoothAdapter.startLeScan(scanCallback);
-
+        System.out.println("Started Scanning");
     }
 
 

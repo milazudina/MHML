@@ -150,7 +150,7 @@ public class RunEvent {
 
     public void StartRunEvent() {
         System.out.println("Run Started");
-        serverComms.getFeature("startRun");
+        serverComms.getFeature("startRun", SaveSharedPreferences.getUserName(context));
         startTime = LocalDateTime.now(ZoneId.systemDefault());
     }
 
@@ -162,6 +162,7 @@ public class RunEvent {
 
     public void EndRunEvent() {
         endTime = LocalDateTime.now(ZoneId.systemDefault());
+        serverComms.getFeature("endRun", SaveSharedPreferences.getUserName(context));
         System.out.println("Run Ended");
 
     }
