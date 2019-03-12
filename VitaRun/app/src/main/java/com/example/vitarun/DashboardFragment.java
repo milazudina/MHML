@@ -151,7 +151,7 @@ public class DashboardFragment extends Fragment {
             } catch (java.text.ParseException e) {
                 e.printStackTrace();
             }
-            long unixTime = (long) date.getTime()/1000;
+            long unixTime = (long) date.getTime();
             System.out.println(unixTime);
             float steps = Float.parseFloat(run.Number_Of_Steps);
             float UP = Float.parseFloat(run.Count_UP);
@@ -159,7 +159,7 @@ public class DashboardFragment extends Fragment {
             float OP = Float.parseFloat(run.Count_OP);
 
             yValues.add(new BarEntry( unixTime/1000,new float[]{UP,NP,OP}));
-            Event event = new Event(0xFF000000, unixTime , "Run" );
+            Event event = new Event(0xFF038F51, unixTime , "Run" );
 
             compactCalendarView.addEvent(event,true);
         }
