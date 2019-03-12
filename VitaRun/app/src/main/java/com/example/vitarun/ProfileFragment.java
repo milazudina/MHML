@@ -25,8 +25,8 @@ import static android.content.Context.MODE_PRIVATE;
 public class ProfileFragment extends Fragment {
     ViewSwitcher mViewSwitcher;
     LocalStore userLocalStore;
-    EditText etUsername, etname, etAge, etWeight;
-    TextView tvUsername, tvname, tvAge, tvWeight;
+    EditText etUsername, etName, etAge, etWeight;
+    TextView tvUsername, tvName, tvAge, tvWeight;
     ServerComms serverComms;
 
     @Nullable
@@ -35,12 +35,12 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         mViewSwitcher = view.findViewById(R.id.swProfileEdit);
         etUsername = (EditText) view.findViewById(R.id.etUserUsername);
-        etname = (EditText) view.findViewById(R.id.etUserName);
+        etName = (EditText) view.findViewById(R.id.etUserName);
         etAge = (EditText) view.findViewById(R.id.etUserAge);
         etWeight = (EditText) view.findViewById(R.id.etUserWeight);
 
         tvUsername = view.findViewById(R.id.tvUserUsername);
-        tvname = view.findViewById(R.id.tvUserName);
+        tvName = view.findViewById(R.id.tvUserName);
         tvAge = view.findViewById(R.id.tvUserAge);
         tvWeight = view.findViewById(R.id.tvUserWeight);
 
@@ -51,74 +51,92 @@ public class ProfileFragment extends Fragment {
         Button saveButton = (Button) view.findViewById(R.id.bSaveProfile);
         Button logOutButton = (Button) view.findViewById(R.id.bLogOut);
 
+
+        System.out.print("Running Profile Fragment");
+
         // Set User Information
 
         String getUsername = SaveSharedPreferences.getUserName(getContext());
         if(getUsername.equals("")){
+
+            System.out.print("No username, starting login");
+
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
+
+
+        } else {
+            System.out.println(getUsername);
+            final User getUser = serverComms.getUserDetails(getUsername);
+            System.out.println(getUser);
+            tvUsername.setText(getUser.username);
+            tvAge.setText(String.format("%s", getUser.age));
+            tvName.setText(getUser.name);
+            tvWeight.setText(String.format("%s", getUser.weight));
+
+            // Edit User Information
+
+
+            editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println("change view"); // some function here
+                    mViewSwitcher.showNext();
+
+                    etUsername.setText(getUser.username);
+                    etAge.setText(String.format("%s", getUser.age));
+                    etName.setText(getUser.name);
+                    etWeight.setText(String.format("%s", getUser.weight));
+
+
+                }
+            });
+
+            saveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println("change view"); // some function here
+                    mViewSwitcher.showNext();
+
+                    String age = etAge.getText().toString();
+                    String weight = etWeight.getText().toString();
+
+                    int age_int = Integer.parseInt(age);
+                    int weight_int = Integer.parseInt(weight);
+                    String username = etUsername.getText().toString();
+                    String name = etName.getText().toString();
+
+                    User user = new User(username, getUser.password, name, age_int, weight_int);
+
+                    serverComms.setUserDetails(user);
+
+                    tvUsername.setText(user.username);
+                    tvAge.setText(String.format("%s", user.age));
+                    tvName.setText(user.name);
+                    tvWeight.setText(String.format("%s", user.weight));
+
+
+
+                }
+            });
+
+            logOutButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SaveSharedPreferences.setUsername(getContext(), "");
+
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+
+                    System.out.print("LOGIN ACTIVITY FINISHED");
+                    //userLocalStore.setUserLoggedIn(false);
+                    //userLocalStore.clearUserData();
+
+
+                }
+            });
+
         }
-
-        User getUser = serverComms.getUserDetails(getUsername);
-
-        tvUsername.setText(getUser.username);
-        tvAge.setText(getUser.age);
-        tvname.setText(getUser.name);
-        tvWeight.setText(getUser.weight);
-
-        // Edit User Information
-
-
-        editButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v ) {
-                System.out.println("change view"); // some function here
-                mViewSwitcher.showNext();
-
-
-
-
-            }
-        });
-
-        saveButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v ) {
-                System.out.println("change view"); // some function here
-                mViewSwitcher.showNext();
-
-                String age = etAge.getText().toString();
-                String weight = etWeight.getText().toString();
-
-                int age_int = Integer.parseInt(age);
-                int weight_int = Integer.parseInt(weight);
-                String username = etUsername.getText().toString();
-                String name = etname.getText().toString();
-
-                User user = new User(username,"", name, age_int, weight_int);
-
-                serverComms.setUserDetails(user);
-
-
-            }
-        });
-
-        logOutButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v ) {
-                SaveSharedPreferences.setUsername(getContext(), "");
-
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
-                //userLocalStore.setUserLoggedIn(false);
-                //userLocalStore.clearUserData();
-
-
-            }
-        });
-
-
         return view;
-
     }
 }

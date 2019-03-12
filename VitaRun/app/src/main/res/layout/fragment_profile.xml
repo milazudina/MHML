@@ -236,16 +236,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_weight="1"
-                android:text="@string/username" />
+                android:layout_weight="1"/>
 
             <EditText
                 android:id="@+id/etUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_weight="1"
-                android:text="@string/name" />
+                android:layout_weight="1" />
 
 
             <EditText
@@ -253,16 +251,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_weight="1"
-                android:text="@string/age" />
+                android:layout_weight="1"/>
 
             <EditText
                 android:id="@+id/etUserWeight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_weight="1"
-                android:text="@string/weight" />
+                android:layout_weight="1"/>
         </LinearLayout>
 
     </RelativeLayout>
