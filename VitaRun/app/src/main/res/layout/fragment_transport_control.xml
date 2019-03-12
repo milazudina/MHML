@@ -3,7 +3,7 @@
     android:id="@+id/profileSwitcher"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:paddingTop="20dp">
+    android:paddingBottom="80dp">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -15,7 +15,8 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal ='true'
             android:fontFamily="@font/paco"
-            android:background="@color/colorPrimary"
+            android:paddingBottom="13dp"
+            android:background="@drawable/button_background"
             android:text="@string/start_run" />
 
     </RelativeLayout>
@@ -26,25 +27,23 @@
 
         <Button
             android:id="@+id/pause_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
             android:layout_marginStart ='90dp'
-            android:drawableTop="@drawable/ic_pause_black_24dp"
+            android:drawableTop="@drawable/pause_button"
             android:fontFamily="@font/paco"
-            android:background="@color/colorPrimary"
-            android:text="Pause"
+            android:background="@android:color/transparent"
             />
 
 
         <Button
             android:id="@+id/stop_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableTop="@drawable/ic_stop_black_24dp"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:drawableTop="@drawable/stop_button"
             android:layout_toEndOf="@id/pause_button"
-            android:layout_marginStart ='60dp'
-            android:background="@color/colorPrimary"
-            android:text="Stop" />
+            android:background="@android:color/transparent"
+            android:layout_marginStart ='60dp' />
 
 
 
