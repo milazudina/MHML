@@ -210,8 +210,8 @@ public class RunEvent {
         endTime = LocalDateTime.now(ZoneId.systemDefault());
         service.shutdown();
         String historic = serverComms.getFeature("endRun", SaveSharedPreferences.getUserName(context));
-        mainActivity.EndOfRunFeatures(historic);
         System.out.println(historic);
+        mainActivity.EndOfRunFeatures(historic);
 
     }
 

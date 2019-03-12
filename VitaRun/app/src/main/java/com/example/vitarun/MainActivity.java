@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity
             public void run() {
                 recommendationsFragment.updaterecomText2(features);
             }
-        }, 30000);
+        }, 10000);
     }
 
     // BLUETOOTH STUFF
