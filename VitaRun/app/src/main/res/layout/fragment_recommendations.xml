@@ -84,7 +84,7 @@
         android:layout_width="match_parent"
         android:layout_height="65dp"
         android:layout_marginHorizontal="15dp"
-        android:text='Your summary as a VitaRun user'
+        android:text='Your VitaRun summary'
         android:textAlignment="center"
         android:textSize="18sp"
         android:textColor="@color/colorPrimary"
