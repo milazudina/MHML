@@ -52,7 +52,7 @@ import static android.bluetooth.BluetoothAdapter.STATE_CONNECTED;
 import static android.bluetooth.BluetoothAdapter.STATE_DISCONNECTED;
 
 public class MainActivity extends AppCompatActivity
-                        implements RunFragment.RunFragmentListener{
+                        implements RunFragment.RunFragmentListener, RunEvent.IRunEvent{
 
     public static HashMap<String, String> stridMACs;
     private static UUID stridServiceUUID;
@@ -143,8 +143,11 @@ public class MainActivity extends AppCompatActivity
         runEvent = new RunEvent(this);
         runEvent.StartRunEvent();
 //        runEvent.testDataPacket();
+
+
         endOfRunFragment.mViewSwitcher.showNext();
         recommendationsFragment.mViewSwitcher.showNext();
+
     }
 
     public void PauseRun(){
@@ -168,9 +171,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     // Update recommendations fragment mid run;
-    public void UpdateRecommendations(String features)
+    public void RefreshFeatures(final String features)
     {
-        recommendationsFragment.updaterecomText(features);
+        System.out.println("Features" + features);
+
+        if (features.length() > 2)
+        {
+            // Wait for 30 seconds before updating final recommendations view.
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    recommendationsFragment.updaterecomText(features);
+                }
+            }, 100);
+        }
     }
 
     // Update recommendations after run.

@@ -53,6 +53,10 @@ public class RunEvent {
 
     final DateTimeFormatter dateFormat;
 
+    ScheduledExecutorService service;
+
+    private IRunEvent mainActivity;
+
     public RunEvent(Context current) {
         System.out.println("Run Event Created");
         this.context = current;
@@ -74,13 +78,14 @@ public class RunEvent {
             @Override
             public void run() {
                 if (!paused) {
-//                    RefreshFeatures();
+                    RefreshFeatures();
                 }
                 System.out.println("REFRESH");
             }
         };
         // Schedules get requests for recommendations.
-        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+
+        service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(RefreshRunnable, 15, 15, TimeUnit.SECONDS);
 
 
@@ -89,14 +94,15 @@ public class RunEvent {
             @Override
             public void run() {
                 if (!paused) {
-                    GiveFeedback();
+//                    GiveFeedback();
                 }
                 System.out.println("REFRESH2");
             }
         };
 
         service.scheduleAtFixedRate(FeedbackRunnable, 20, 30, TimeUnit.SECONDS);
-        
+
+        mainActivity = (IRunEvent) current;
     }
 
 
@@ -134,15 +140,20 @@ public class RunEvent {
         dataIndex += 1;
     }
 
+    public interface IRunEvent
+    {
+        public void RefreshFeatures(String features);
+        public void GiveFeedback(String features);
+    }
+
     public void RefreshFeatures() {
 
         //Make get request.
         features = serverComms.getFeature("features");
-        System.out.println(String.format("Features: %s", features));
+//        System.out.println(String.format("Features: %s", features));
 
-        MainActivity activity = (MainActivity) context;
         // Calls the update recommendations
-        activity.UpdateRecommendations(features);
+        mainActivity.RefreshFeatures(features);
 
     }
 
@@ -187,10 +198,10 @@ public class RunEvent {
 
     public void EndRunEvent() {
         endTime = LocalDateTime.now(ZoneId.systemDefault());
-        serverComms.getFeature("endRun", SaveSharedPreferences.getUserName(context));
-        MainActivity activity = (MainActivity) context;
-        activity.UpdateRecommendationsFinal(features);
-        System.out.println("Run Ended");
+        service.shutdown();
+        String historic = serverComms.getFeature("endRun", SaveSharedPreferences.getUserName(context));
+//        activity.UpdateRecommendationsFinal(features);
+        System.out.println(historic);
 
     }
 
