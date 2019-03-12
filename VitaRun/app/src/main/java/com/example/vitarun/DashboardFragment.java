@@ -151,7 +151,7 @@ public class DashboardFragment extends Fragment {
             } catch (java.text.ParseException e) {
                 e.printStackTrace();
             }
-            long unixTime = (long) date.getTime();
+            long unixTime = (long) date.getTime()/1000;
             System.out.println(unixTime);
             float steps = Float.parseFloat(run.Number_Of_Steps);
             float UP = Float.parseFloat(run.Count_UP);
@@ -159,7 +159,7 @@ public class DashboardFragment extends Fragment {
             float OP = Float.parseFloat(run.Count_OP);
 
             yValues.add(new BarEntry( unixTime/1000,new float[]{UP,NP,OP}));
-            Event event = new Event(0xFF038F51, unixTime , "Run" );
+            Event event = new Event(0xFF000000, unixTime , "Run" );
 
             compactCalendarView.addEvent(event,true);
         }
@@ -172,12 +172,11 @@ public class DashboardFragment extends Fragment {
         BarDataSet dataSet = new BarDataSet(yValues,"");
         dataSet.setDrawIcons(false);
         ArrayList<String> colors = new ArrayList<>();
-        colors.add("#ff038F51");
-        dataSet.setColors(new int[] {3,143, 81});
+        colors.add("#ffe95451");
+        dataSet.setColors(new int[] {-60179113,-00255, -255105970});
 
         dataSet.setStackLabels(new String[]{"Over", "Under", "Normal"});
         BarData barData = new BarData(dataSet);
-        barData.setBarWidth(30000f);
         barChart.setData(barData);
 //        String[] labels = { "1","2","3","4","5"};
 //        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
