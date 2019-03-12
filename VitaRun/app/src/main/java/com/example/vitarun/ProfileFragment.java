@@ -128,7 +128,7 @@ public class ProfileFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
 
-
+                    System.out.print("LOGIN ACTIVITY FINISHED");
                     //userLocalStore.setUserLoggedIn(false);
                     //userLocalStore.clearUserData();
 
