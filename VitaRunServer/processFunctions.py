@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun Mar 10 18:48:06 2019
-
 @author: mila
 """
 
@@ -41,7 +40,7 @@ def splitter(steps, stpnr, debug=False, log=False, lab1=0, lab2=0):
 
     for i in range(int(((len(steps) - wsize) / wshift))):
         window = steps[i * wshift: i * wshift + wsize - 1, :]
-        paces.append(running_frequency(window))
+        paces.append(local_running_frequency(window, wsize))
         if paces[-1] > 1.2:
             if debug: plt.axvspan((i) * wshift, (i + 1) * wshift, facecolor='g', alpha=0.3)
             runperiod[i * wshift:(i + 1) * wshift] = 1
@@ -164,6 +163,16 @@ def running_frequency(window):
     freq = freqs[idx]
     freq_in_hertz = abs(freq * 50)
     return freq_in_hertz
+
+
+def local_running_frequency(window, wsize):
+
+    wds = [0, 5, 10, 15, 20, 25, 30]
+    p = []
+    for j in wds:
+        p.append(running_frequency(window[:wsize - j, :]))
+    pace=sum(p) / float(len(p))
+    return pace
 
 
 if __name__ == "__main__": #stand-alone mod for debug
