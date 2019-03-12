@@ -86,39 +86,39 @@ public class RecommendationsFragment extends Fragment {
         }
 
         float freq = Float.parseFloat(summary_recom.freq);
-        String Stridefreq1  = "Your current stride frequency is equal to ";
-        String Stridefreq2  = " steps per min. You ";
+        String Stridefreq1  = "Your current stride frequency is ";
+        String Stridefreq2  = " steps per minute. ";
 
-        if (freq > 200){
-            String Stridefreq3  = "should try running with smaller steps!";
+        if (freq > 195){
+            String Stridefreq3  = "Are you sprinting? You should SLOW DOWNNNN!";
             String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
 //            System.out.println(FinalStridefreq1);
             tv2.setText(FinalStridefreq1);
         }
 
-        if (180 < freq && freq < 200){
-            String Stridefreq3  = "are close to the right running pace, try running with smaller steps!";
+        if (185 < freq && freq < 195){
+            String Stridefreq3  = "You are close to the perfect running pace, try taking larger steps and increasing ground contact time!";
             String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
 //            System.out.println(FinalStridefreq1);
             tv2.setText(FinalStridefreq1);
         }
 
-        if (170 < freq && freq < 180){
-            String Stridefreq3  = "are close to the right running pace, try running with larger steps!";
+        if (165 < freq && freq < 175){
+            String Stridefreq3  = "You are close to the perfect running pace, try taking smaller steps and reducing ground contact time!";
             String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
 //            System.out.println(FinalStridefreq1);
             tv2.setText(FinalStridefreq1);
         }
 
-        if (freq < 170){
-            String Stridefreq3  = "should try running with larger steps!";
+        if (freq < 165){
+            String Stridefreq3  = "Try taking smaller steps and reducing ground contact time!";
             String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
 //            System.out.println(FinalStridefreq1);
             tv2.setText(FinalStridefreq1);
         }
 
-        if (freq == 180){
-            String Stridefreq3  = "keep the same pace!";
+        if (175 < freq && freq < 185){
+            String Stridefreq3  = "Well done! Keep the same pace.";
             String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
 //            System.out.println(FinalStridefreq1);
             tv2.setText(FinalStridefreq1);
