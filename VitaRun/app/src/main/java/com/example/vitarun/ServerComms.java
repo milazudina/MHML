@@ -41,6 +41,37 @@ public class ServerComms {
         gson = new Gson();
     }
 
+    public String CheckConnection()
+    {
+        final SyncResult syncResult = new SyncResult();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("ConnectionCheck", "")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            String myResponse;
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    syncResult.setResult("1");
+                } else {
+                    syncResult.setResult("0");
+                }
+            }
+        });
+
+        return syncResult.getResult();
+    }
+
     // Method to set user database on server side.
     public int login(String userName, String password)
     {
