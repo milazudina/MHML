@@ -172,8 +172,8 @@ public class DashboardFragment extends Fragment {
         BarDataSet dataSet = new BarDataSet(yValues,"");
         dataSet.setDrawIcons(false);
         ArrayList<String> colors = new ArrayList<>();
-        colors.add("#ffe95451");
-        dataSet.setColors(new int[] {-60179113,-00255, -255105970});
+        colors.add("#ff038F51");
+        dataSet.setColors(new int[] {3,143, 81});
 
         dataSet.setStackLabels(new String[]{"Over", "Under", "Normal"});
         BarData barData = new BarData(dataSet);
