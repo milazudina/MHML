@@ -25,7 +25,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class ProfileFragment extends Fragment {
     ViewSwitcher mViewSwitcher;
     LocalStore userLocalStore;
-    EditText etUsername, etName, etAge, etWeight;
+    EditText etName, etAge, etWeight;
     TextView tvUsername, tvName, tvAge, tvWeight;
     ServerComms serverComms;
 
@@ -36,7 +36,6 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         mViewSwitcher = view.findViewById(R.id.swProfileEdit);
-        etUsername = (EditText) view.findViewById(R.id.etUserUsername);
         etName = (EditText) view.findViewById(R.id.etUserName);
         etAge = (EditText) view.findViewById(R.id.etUserAge);
         etWeight = (EditText) view.findViewById(R.id.etUserWeight);
@@ -81,12 +80,10 @@ public class ProfileFragment extends Fragment {
                     System.out.println("change view"); // some function here
                     mViewSwitcher.showNext();
 
-                    etUsername.setText(getUser.username);
                     etAge.setText(String.format("%s", getUser.age));
-                    etName.setText(getUser.name);
+                    String name_incl_spaces = getUser.name.replaceAll("_", " ");
+                    etName.setText(name_incl_spaces);
                     etWeight.setText(String.format("%s", getUser.weight));
-
-
                 }
             });
 
@@ -101,10 +98,10 @@ public class ProfileFragment extends Fragment {
 
                     int age_int = Integer.parseInt(age);
                     int weight_int = Integer.parseInt(weight);
-                    String username = etUsername.getText().toString();
-                    String name = etName.getText().toString();
+                    String name_raw = etName.getText().toString();
+                    String name = name_raw.replaceAll(" ","_");
 
-                    User user = new User(username, getUser.password, name, age_int, weight_int);
+                    User user = new User(getUser.username, getUser.password, name, age_int, weight_int);
 
                     serverComms.setUserDetails(user);
                     setContents(user);
@@ -148,9 +145,11 @@ public class ProfileFragment extends Fragment {
     public void setContents(User user){
         System.out.println("Set Contents to:"+user);
         tvUsername.setText(user.username);
-        tvAge.setText(String.format("%s", user.age));
-        tvName.setText(user.name);
-        tvWeight.setText(String.format("%s", user.weight));
+        tvAge.setText(String.format("%s years", user.age));
+        String name_incl_spaces = user.name.replaceAll("_", " ");
+        tvName.setText(name_incl_spaces);
+
+        tvWeight.setText(String.format("%s kg", user.weight));
 
     }
 }

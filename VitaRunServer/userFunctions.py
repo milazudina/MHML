@@ -82,11 +82,10 @@ def addFreq(username, num):
 
 
 def addPronation(username, num):
-    print(type(num[1]))
     with open(directory+ '/' + username + '/'+ 'temp/pronationRunData.csv', 'a', newline ='') as outputFile:
         writer = csv.writer(outputFile)
         for i in range(0,len(num)):
-            y = num[i]
+            y = str(num[i])
             writer.writerow(y)
 
 
@@ -152,28 +151,12 @@ def pronation(Username):
             return 'OP'
         else:
             return 'UP'
-def pronation(Username):
-    NP = count_NP_last5(Username)
-    OP = count_OP_last5(Username)
-    UP = count_UP_last5(Username)
-    if NP>OP:
-        if NP>UP:
-            return 'NP'
-        else:
-            return 'UP'
-    else:
-        if OP>UP:
-            return 'OP'
-        else:
-            return 'UP'
 
 
-
-
-def writeHistory(Username,DateTime_Start, DateTime_End, Number_Of_Steps,Count_NP,Count_OP,Count_UP):
+def writeHistory(Username, DateTime_Start, DateTime_End, Number_Of_Steps, Count_NP, Count_OP, Count_UP):
     averageFreqency = averageFreq(Username)
     with open(directory+ '/' + Username + '/'+ 'History.csv','a') as fin:
-        newEntry = [DateTime_Start, DateTime_End, Number_Of_Steps,Count_NP,Count_OP,Count_UP,averageFreqency]
+        newEntry = [DateTime_Start, DateTime_End, Number_Of_Steps, Count_NP, Count_OP, Count_UP, averageFreqency]
         writer = csv.writer(fin)
         writer.writerow(newEntry)
 #        return True
@@ -181,7 +164,6 @@ def writeHistory(Username,DateTime_Start, DateTime_End, Number_Of_Steps,Count_NP
 
 def login(Username, Password):
     with open(directory+ '/' + 'Login.csv') as fin:
-
         df = pd.read_csv(fin)
         length=len(df)
         # print(df)
@@ -196,21 +178,9 @@ def login(Username, Password):
                     return False
 
 
-def checkUsername(Username):
-    with open(directory+ '/' + 'Login.csv') as fin:
-        df = pd.read_csv(fin)
-        # print(df)
-        length=len(df)
-        # print(Username)
-        column_of_interest = df["Username"]
-        for x in range(1, length):
-            if column_of_interest[x] == Username:
-                print("good")
-
 
 def setUserDetails(Username, Password, Name, Age, Weight):
     os.remove(directory + '/'+ Username + '/' + 'info.csv')
-
     with open(directory + '/'+ Username + '/' + 'info.csv','a') as fin:
         header = ['Name', 'Username', 'Password', 'Weight', 'Age']
         writer = csv.DictWriter(fin, fieldnames=header)
@@ -218,6 +188,7 @@ def setUserDetails(Username, Password, Name, Age, Weight):
         newLogin = [Name, Username, Password, Weight, Age]
         writer = csv.writer(fin)
         writer.writerow(newLogin)
+
 
 
 def getUserDetails(username):
@@ -232,7 +203,9 @@ def getUserDetails(username):
                 return historyDict
 
 
+
 def startRun(Username):
+        # clears the temp directory
         os.remove(directory + '/'+ Username + '/' + 'temp/frequencyRunData.csv')
         with open(directory+ '/' + Username + '/'+ 'temp/frequencyRunData.csv', 'wt', newline ='') as file:
             file.close()
@@ -241,31 +214,25 @@ def startRun(Username):
             file.close()
 
 
-def readHistoryFile(Username):
 
+def readHistoryFile(Username):
     with open(directory+ '/' + Username + '/'+ 'History.csv') as csv_file:
         df = pd.read_csv(csv_file)
         length=len(df)
         csv_file.close()
     with open(directory+ '/' + Username + '/'+ 'History.csv') as csv_file:
-
         csv_reader = csv.reader(csv_file, delimiter=',')
-
         line_count = 0
-
+        historyDict = dict()
         for row in csv_reader:
-
             if line_count == 0:
-
-                line_count += 1
-            elif line_count == 1:
-                historyDict = {'DateTime_Start': row[0], 'DateTime_End': row[1], 'Number_Of_Steps': row[2],'Count_NP': row[3],'Count_OP': row[4],'Count_UP': row[5],'averageFreqency': row[6]}
                 line_count += 1
             else:
-                historyDict.append({'DateTime_Start': row[0], 'DateTime_End': row[1], 'Number_Of_Steps': row[2],'Count_NP': row[3],'Count_OP': row[4],'Count_UP': row[5],'averageFreqency': row[6]})
-                test = json.dumps(myDict)
+                historyDict[line_count] = {'DateTime_Start': row[0], 'DateTime_End': row[1], 'Number_Of_Steps': row[2],'Count_NP': row[3],'Count_OP': row[4],'Count_UP': row[5],'averageFreqency': row[6]}
+                line_count += 1
+        historyDict = json.dumps(historyDict)
+        return historyDict
 
-        return historyDict, length
 
 
 def readPronation(Username):

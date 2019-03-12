@@ -60,14 +60,12 @@ public class DashboardFragment extends Fragment {
     DateFormat formatter;
 
 
-
     DateFormat dateFormat = new SimpleDateFormat("YYYY-mm-dd HH:MM:SS");
 
 
-
-    static String jsonString = "{'DictA' : {\"Datetime_Start\": \"2019-03-09 12:41:24\",\"Datetime_Stop\":\"2019-03-09 12:50:24\",\"Number_Of_Steps\": \"100\",\"Count_NP\": \"20\",\"Count_OP\": \"40\",\"Count_UP\":\"40\",\"Average_Frequency\": \"3\"}, 'DictB' : {\"Datetime_Start\": \"2019-03-08 12:41:24\",\"Datetime_Stop\": \"2019-03-08 12:50:24\",\"Number_Of_Steps\": \"100\",\"Count_NP\": \"20\",\"Count_OP\": \"40\",\"Count_UP\":\"\"40\",\"Average_Frequency\": \"3\"}}";
-
-    String jsonString2 = "{\"Datetime_Start\": \"2019-03-09 12:41:24\",\"Datetime_Stop\":\"2019-03-09 12:50:24\",\"Number_Of_Steps\": \"100\",\"Count_NP\": \"20\",\"Count_OP\": \"40\",\"Count_UP\": \"40\",\"Average_Frequency\": \"3\"}";
+//    static String jsonString = "{'DictA' : {\"Datetime_Start\": \"2019-03-09 12:41:24\",\"Datetime_Stop\":\"2019-03-09 12:50:24\",\"Number_Of_Steps\": \"100\",\"Count_NP\": \"20\",\"Count_OP\": \"40\",\"Count_UP\":\"40\",\"Average_Frequency\": \"3\"}, 'DictB' : {\"Datetime_Start\": \"2019-03-08 12:41:24\",\"Datetime_Stop\": \"2019-03-08 12:50:24\",\"Number_Of_Steps\": \"100\",\"Count_NP\": \"20\",\"Count_OP\": \"40\",\"Count_UP\":\"\"40\",\"Average_Frequency\": \"3\"}}";
+//
+//    String jsonString2 = "{\"Datetime_Start\": \"2019-03-09 12:41:24\",\"Datetime_Stop\":\"2019-03-09 12:50:24\",\"Number_Of_Steps\": \"100\",\"Count_NP\": \"20\",\"Count_OP\": \"40\",\"Count_UP\": \"40\",\"Average_Frequency\": \"3\"}";
 
 
     @Nullable
@@ -80,19 +78,18 @@ public class DashboardFragment extends Fragment {
         serverComms = new ServerComms();
         // Set up Calendar:
         monthTextView.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
-
         String jsonString3 = serverComms.getFeature("historicRuns");
 
-        System.out.println(jsonString3);
+//        System.out.println(jsonString3);
         List<String> runsArray1 = Arrays.asList(jsonString3.split("(?=\\{)|(?<=\\})"));
         ArrayList<String> runsArrayFinal = new ArrayList<String>();
         ArrayList<Historic_run> historic_runArrayList = new ArrayList<Historic_run>();
 
 
-        for(String run : runsArray1) {
+        for (String run : runsArray1) {
             if (run != null) {
                 if (run.length() > 10) {
-                    System.out.println(run);
+//                    System.out.println(run);
                     runsArrayFinal.add(run);
                     //runsArrayFinal.add(run);
                     // runsArray1.remove(run);
@@ -105,13 +102,7 @@ public class DashboardFragment extends Fragment {
         }
 
 
-
-
-
         //String[] runsArray = jsonString3.split("(?=\\})");
-
-
-
 
 
 //        JSONObject req = new JSONObject(join(LoadStrings(jsonString)));
@@ -134,16 +125,17 @@ public class DashboardFragment extends Fragment {
 //        }
 
 
-
         BarChart barChart = (BarChart) view.findViewById(R.id.Bar_chart);
         ArrayList<BarEntry> yValues = new ArrayList<>();
 
         formatter = new SimpleDateFormat("d/M/y H:m");
 
-        for(Historic_run run : historic_runArrayList){
-            System.out.println(run.DateTime_Start);
+        for (Historic_run run : historic_runArrayList) {
+//            System.out.println(run.DateTime_Start);
 
             String str_date = run.DateTime_Start;
+            float formattedDate = HackDate(run.DateTime_Start);
+//            System.out.println(formattedDate);
             Date date = new Date();
             try {
                 date = (Date) formatter.parse(str_date);
@@ -152,31 +144,28 @@ public class DashboardFragment extends Fragment {
                 e.printStackTrace();
             }
             long unixTime = (long) date.getTime();
-            System.out.println(unixTime);
+//            System.out.println(unixTime);
             float steps = Float.parseFloat(run.Number_Of_Steps);
             float UP = Float.parseFloat(run.Count_UP);
             float NP = Float.parseFloat(run.Count_NP);
             float OP = Float.parseFloat(run.Count_OP);
 
-            yValues.add(new BarEntry( unixTime/1000,new float[]{UP,NP,OP}));
-            Event event = new Event(0xFF038F51, unixTime , "Run" );
+            yValues.add(new BarEntry(formattedDate, new float[]{UP, NP, OP}));
+            Event event = new Event(0xFF000000, unixTime, "Run");
 
-            compactCalendarView.addEvent(event,true);
+            compactCalendarView.addEvent(event, true);
         }
 
 
-
-
-
-
-        BarDataSet dataSet = new BarDataSet(yValues,"");
+        BarDataSet dataSet = new BarDataSet(yValues, "");
         dataSet.setDrawIcons(false);
         ArrayList<String> colors = new ArrayList<>();
         colors.add("#ffe95451");
-        dataSet.setColors(new int[] {-60179113,-00255, -255105970});
+        dataSet.setColors(new int[]{-60179113, -00255, -255105970});
 
         dataSet.setStackLabels(new String[]{"Over", "Under", "Normal"});
         BarData barData = new BarData(dataSet);
+        barData.setBarWidth(1f);
         barChart.setData(barData);
 //        String[] labels = { "1","2","3","4","5"};
 //        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
@@ -186,6 +175,7 @@ public class DashboardFragment extends Fragment {
         xAxis.setTextColor(Color.RED);
         xAxis.setDrawAxisLine(true);
         xAxis.setDrawGridLines(true);
+
         Legend legend = barChart.getLegend();
         legend.setPosition(Legend.LegendPosition.ABOVE_CHART_CENTER);
         barChart.invalidate();
@@ -196,6 +186,8 @@ public class DashboardFragment extends Fragment {
             public void onDayClick(Date dateClicked) {
                 System.out.println(dateClicked);
                 List<Event> events = compactCalendarView.getEvents(dateClicked);
+//                compactCalendarView.getWeekNumberForCurrentMonth();
+
                 System.out.println(events);
 //                xAxis.setAxisMaximum(float 100);
 //                graph.getViewport().setMinX(1);
@@ -213,7 +205,6 @@ public class DashboardFragment extends Fragment {
         });
 
 
-
         return view;
     }
 
@@ -226,8 +217,14 @@ public class DashboardFragment extends Fragment {
         public String Count_UP;
         public String averageFrequency;
 
-        public Historic_run(String DateTime_Start,String DateTime_End,String Number_Of_Steps,String Count_NP,String Count_OP, String Count_UP,String averageFrequency){
+//        public Float formattedDate;
+
+        public Historic_run(String DateTime_Start, String DateTime_End, String Number_Of_Steps, String Count_NP, String Count_OP, String Count_UP, String averageFrequency) {
             this.DateTime_Start = DateTime_Start;
+
+//            if (DateTime_Start != null) formattedDate = HackDate(this.DateTime_Start);
+//            formattedDate = 1f;
+
             this.DateTime_End = DateTime_End;
             this.Number_Of_Steps = Number_Of_Steps;
             this.Count_NP = Count_NP;
@@ -235,6 +232,25 @@ public class DashboardFragment extends Fragment {
             this.Count_UP = Count_UP;
             this.averageFrequency = averageFrequency;
         }
+
+
+    }
+    private Float HackDate(String date) {
+        String f = date.substring(0, 5);
+//        System.out.println(f);
+//        System.out.println(f.charAt(0));
+//        System.out.println(f.charAt(1));
+//        System.out.println(f.charAt(2));
+//        System.out.println(f.charAt(3));
+//        System.out.println(f.charAt(4));
+////        System.out.println(f.charAt(5));
+
+        String fd = String.format("%c %c f", f.charAt(3), f.charAt(4));
+        System.out.println(fd);
+
+        return 1f;
+//        return Float.parseFloat(fd);
+
     }
 
 }

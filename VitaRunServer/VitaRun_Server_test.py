@@ -18,61 +18,51 @@ class S(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         self._set_response()
-        print(str(self.headers))
+        #print(str(self.headers))
 
         
         # test for LOGIN
         key = str(self.headers).split()[0] 
         value = str(self.headers).split()[1]
-        
-        # test for CREATE PROFILE
-#        key = str(self.headers).split()[2] 
-#        value = str(self.headers).split()[3]
-        
-        # test for FEATURE EOR
-#       endRun: Obie1
-#        key = str(self.headers).split()[4] 
-#        value = str(self.headers).split()[5]
-#       startRun: Obie1
-#        key = str(self.headers).split()[16] 
-#        value = str(self.headers).split()[17]
 
         print("Key:", key)
-        print("Value:", value)
+        print("Value:", value, "\n")
 
         if (key in "features:"):
-            # When Client requests return features (pronationType, avgFreq and nSteps):
+            # When Client requests to return features (pronationType, avgFreq and nSteps):
             
-            # 1. Return the type of the majority of the steps of the last 1500 samples
-            predictionMode = int(stats.mode(wholeRunStepTypes[-1])[0])
-            print("prediction for this buffer:", predictionMode)
-            
+            # First check that enough data has been posted to return features
+            try:
+                # 1. Return the type of the majority of the steps of the last 1500+ samples
+                predictionMode = int(stats.mode(wholeRunStepTypes[-1])[0])
+                stepsBuffer.clear()
+                print("Prediction for this buffer:", predictionMode, "\n")
+                print("Frequencies for this buffer:", frequenciesBuffer, "\n")
+                # 2. Return average frequency of the last 1500 samples
+                # 2.1) return mean frequency in the buffer
+                avgFreq = np.mean(frequenciesBuffer)
+                # 2.2) empty the buffer
+                frequenciesBuffer.clear()
+                print("Average frequency for this buffer:", avgFreq, "\n")
+                
+                # 3. Return the number of steps for this run so far
+                flatWholeRunStepTypes = np.concatenate(wholeRunStepTypes).ravel()
+                nSteps = flatWholeRunStepTypes.shape[0]
+                print("Number of steps in this run so far:", nSteps, "\n")
 
-            # 2. Return average frequency of the last 1500 samples
-            
-            # 2.2) return mean frequency in the buffer
-            avgFreq = np.mean(frequenciesBuffer)
-            
-            # 2.3) empty the buffer
-            frequenciesBuffer.clear()
-            
-            
-            # 3. Return the number of steps for this run so far
-            flatWholeRunStepTypes = np.concatenate(wholeRunStepTypes).ravel()
-            nSteps = flatWholeRunStepTypes.shape[0]
-
-            print(wholeRunStepTypes)
-            print(frequenciesBuffer)
-        
-            allSteps = np.concatenate(wholeRunStepTypes).ravel()
-            print(type(allSteps))
-            
-            
-            features = json.dumps({'type': predictionMode, 'freq': avgFreq, 'totalNum': nSteps}, separators=(',',':'))
-            self.wfile.write(features.encode('utf-8'))
+                # Now send it off
+                features = json.dumps({'type': predictionMode, 'freq': avgFreq, 'totalNum': nSteps}, separators=(',',':'))
+                print("Returned", str(features), "\n")
+                self.wfile.write(features.encode('utf-8'))
+             
+            # If not enough data
+            except IndexError:
+                features = json.dumps({'type': 'not enough steps', 'freq': 'not enough steps', 'totalNum': 'not enough steps'}, separators=(',',':'))
+                self.wfile.write(features.encode('utf-8'))
+                print("Returned Not-Enough-Data warning\n")
  
            
-        elif (key in "featuresEOR:"):
+        elif (key in "recommendations:"):
             # this one will be Kenza's end of run
             flatStepsBuffer = np.vstack(stepsBuffer)
             stepsStack = splitter(flatStepsBuffer)
@@ -89,6 +79,8 @@ class S(SimpleHTTPRequestHandler):
             startTimeString = startTime.strftime("%Y-%m-%d %H:%M:%S")
             startTimeHolder.append(startTimeString)
             startRun(username)
+            wholeRunFrequencies.clear()
+            wholeRunStepTypes.clear()
             
             
         elif (key in "endRun:"):
@@ -97,21 +89,44 @@ class S(SimpleHTTPRequestHandler):
             endTime = datetime.datetime.now()
             endTimeString = endTime.strftime("%Y-%m-%d %H:%M:%S")
             print(endTimeString)
-            nSteps = 10
-            # write the summary into csv
-            writeHistory(username, startTimeHolder[0], endTimeString, 
-                         nSteps, 1, 2, 3)
-#           # send data for visualisation
-#            self.wfile.write(str(frequencies).encode('utf-8'))
+            # Return:
+            # number of steps for the whole run
+            flatWholeRunStepTypes = np.concatenate(wholeRunStepTypes).ravel()
+            nSteps = flatWholeRunStepTypes.shape[0]
+            
+            # majority type for the whole run and n of steps of each type
+            predictionMode = int(stats.mode(flatWholeRunStepTypes)[0])
+            counts = np.bincount(flatWholeRunStepTypes)
+            
+            # frequency for the whole run
+            flatWholeRunFrequencies = np.concatenate(wholeRunFrequencies).ravel()
+            
+            # average frequency
+            avgFreq = np.mean(flatWholeRunFrequencies)
+            
+            # write the run summary into a csv
+            writeHistory(username, startTimeHolder[0], endTimeString, nSteps, counts[0], counts[1], counts[2])
+            
+            # send frequencies for plotting
+            endRunJson = json.dumps({'type': predictionMode, 'freq': avgFreq, 'totalNum': nSteps, 'freqWholeRun': flatWholeRunFrequencies}, separators=(',',':'))
+            self.wfile.write(endRunJson.encode('utf-8'))
+            
+            # clears all the data accumulated during the run
+            wholeRunFrequencies.clear()
+            wholeRunStepTypes.clear()
 
 
-        elif (key in "historicRuns:"): #    doesn't work yet
-            json_output = json.loads(value)
-            # or just using a string in value again
-            username = json_output["username"]
-            userHistory, nRows = readHistoryFile(username)
-            userHistoryJson = json.dumps(userHistory, separators=(',',':'))
-            self.wfile.write(userHistoryJson.encode('utf-8'))
+        elif (key in "historicRuns:"):
+            # takes username from login or getUserDetails (in case username has been changed by setUserDetails)
+            username = usernameHolder[-1]
+            
+            # checks for no log in
+            if username == 'not logged in':
+                self.wfile.write(str(False).encode('utf-8'))
+                print("User is not logged in")
+            else: 
+                userHistoryJson = readHistoryFile(username)
+                self.wfile.write(userHistoryJson.encode('utf-8'))
 
             
         elif (key in "login:"):
@@ -152,6 +167,7 @@ class S(SimpleHTTPRequestHandler):
             
         elif (key in "getUserDetails:"):
             username = value
+            usernameHolder.append(username)
             userDetails = getUserDetails(username)
             userDetailsJson = json.dumps(userDetails)
             print(userDetails)
@@ -160,49 +176,35 @@ class S(SimpleHTTPRequestHandler):
 
        
     def do_POST(self):
-        usernameHolder = 'Norb456'
         self._set_response()
-        content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
-        post_data = self.rfile.read(content_length) # <--- Gets the data itself
+        
+        # decode  the current batch of samples into format used by functions
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length)
         postDataDict = json.loads(post_data.decode('utf-8'))
-#        print(postDataDict)
         stepsBatch = np.array(list(postDataDict.values()))
+        
+        
         stepsBuffer.append(stepsBatch)
         currentBatchFreq = local_running_frequency(stepsBatch, 256)
         frequenciesBuffer.append(currentBatchFreq)
-#        print(frequenciesBuffer)
-        addFreq(usernameHolder, currentBatchFreq)
-        print("Frequency of current 128 samples:", currentBatchFreq)
-        print(stepsBuffer)
+        addFreq(usernameHolder[-1], currentBatchFreq)
+        print("Frequency of this batch:", currentBatchFreq)
         # add a check that dim = 128 * 9
         flatStepsBuffer = np.vstack(stepsBuffer)
         print("flatStepsBuffer shape:", flatStepsBuffer.shape)
         if flatStepsBuffer.shape[0] > 1500:
-            # 1.2) divide them into steps
+            # 1) divide them into steps
             stepsStack = splitter(flatStepsBuffer[:,:9], flatStepsBuffer[:,9])
             print("stepsStack shape:", stepsStack.shape)
             
-            # 1.3) predict the type of each step in steps stack and return the mode
+            # 2) predict the type of each step in steps stack and return the mode
             typePrediction = predictStepType(stepsStack, pronationClassifier, 30)
-            print("array of predictions:", typePrediction)
-            addPronation(usernameHolder[0], typePrediction)
-
+            typePredictionList = typePrediction.tolist()
+            # 3) add to csv file 
+            addPronation(usernameHolder[-1], typePredictionList)
             wholeRunStepTypes.append(typePrediction) 
-            
-            # 1.4) buffer is emptied
-            stepsBuffer.clear()
 
-
-        
-        
-        
-        # that needs to be cleared every time we call pronation classifier
-        # that needs to be done differently
-
-        # here we should have functions from N
-#        print(asstepsBuffer.shape)
-
-        #print(type(allPredictions)) list
         
         self.wfile.write("POST request received".encode('utf-8'))
         
@@ -224,7 +226,7 @@ wholeRunFrequencies = []
 wholeRunStepTypes = []
 stepsBuffer = []
 startTimeHolder = []
-usernameHolder = []
+usernameHolder = ['not logged in']
 
 # this list (when flattened) contains a 0,1 or 2 for each step
 # length = n of steps classified

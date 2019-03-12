@@ -47,6 +47,8 @@ public class RunEvent {
     Gson gson;
     private Context context;
 
+    String features;
+
     public boolean paused;
 
     final DateTimeFormatter dateFormat;
@@ -68,18 +70,33 @@ public class RunEvent {
         gson = new Gson();
 
         // Runnable for refreshing features.
-        Runnable refreshRunnable = new Runnable() {
+        Runnable RefreshRunnable = new Runnable() {
             @Override
             public void run() {
                 if (!paused) {
-                    RefreshFeatures();
+//                    RefreshFeatures();
                 }
+                System.out.println("REFRESH");
+            }
+        };
+        // Schedules get requests for recommendations.
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleAtFixedRate(RefreshRunnable, 15, 15, TimeUnit.SECONDS);
+
+
+        // Runnable for generating audio feedback.
+        Runnable FeedbackRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!paused) {
+                    GiveFeedback();
+                }
+                System.out.println("REFRESH2");
             }
         };
 
-        // Schedules get requests for recommendations.
-        ScheduledExecutorService service  = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleAtFixedRate(refreshRunnable, 15, 15, TimeUnit.SECONDS);
+        service.scheduleAtFixedRate(FeedbackRunnable, 20, 30, TimeUnit.SECONDS);
+        
     }
 
 
@@ -104,7 +121,7 @@ public class RunEvent {
     public void testDataPacket() {
         int _size = 800;
 
-        for (int index = dataIndex*_size; dataIndex < _size; dataIndex++) {
+        for (int index = dataIndex * _size; dataIndex < _size; dataIndex++) {
             DATA_BUFFER.put(index, dataSet.get(dataIndex));
         }
 
@@ -118,24 +135,27 @@ public class RunEvent {
     }
 
     public void RefreshFeatures() {
+
         //Make get request.
-        String features = serverComms.getFeature("features");
+        features = serverComms.getFeature("features");
         System.out.println(String.format("Features: %s", features));
 
         MainActivity activity = (MainActivity) context;
         // Calls the update recommendations
         activity.UpdateRecommendations(features);
-        GiveFeedback(features);
 
     }
 
-    public void GiveFeedback(String features)
-    {
+    public void GiveFeedback() {
+
         MainActivity activity = (MainActivity) context;
-        String text_pronate = "You are pronating";
-        Intent speechIntent = new Intent(activity, TextToSpeechService.class);
-        speechIntent.putExtra(TextToSpeechService.EXTRA_WORD, text_pronate );
-        activity.startService(speechIntent);
+
+        activity.GiveFeedback(features);
+//        String text_pronate = "You are pronating";
+//        Intent speechIntent = new Intent(activity, TextToSpeechService.class);
+//        speechIntent.putExtra(TextToSpeechService.EXTRA_WORD, text_pronate);
+//        activity.startService(speechIntent);
+
     }
 
     private void writeToFile(String data, Context context) {
@@ -159,10 +179,17 @@ public class RunEvent {
         System.out.println("Run Paused");
     }
 
+    public void ResumeRunEvent() {
+        this.paused = false;
+        System.out.println("Run Resumed");
+    }
+
 
     public void EndRunEvent() {
         endTime = LocalDateTime.now(ZoneId.systemDefault());
         serverComms.getFeature("endRun", SaveSharedPreferences.getUserName(context));
+        MainActivity activity = (MainActivity) context;
+        activity.UpdateRecommendationsFinal(features);
         System.out.println("Run Ended");
 
     }

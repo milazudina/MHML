@@ -3,14 +3,14 @@
     android:id="@+id/recomswitcher"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:paddingTop="60dp"
+    android:paddingTop="100dp"
     android:orientation="vertical">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/insole_connection"
         android:layout_gravity="top|center"
         android:layout_width="320dp"
-        android:layout_height="280dp"
+        android:layout_height="250dp"
         android:background="@drawable/shadow_2">
 
         <TextView
@@ -75,7 +75,7 @@
         android:id="@+id/insole_connection2"
         android:layout_gravity="top|center"
         android:layout_width="300dp"
-        android:layout_height="270dp"
+        android:layout_height="250dp"
         android:background="@drawable/shadow_2">
 
 
@@ -84,7 +84,7 @@
         android:layout_width="match_parent"
         android:layout_height="65dp"
         android:layout_marginHorizontal="15dp"
-        android:text='Your summary as a VitaRun user'
+        android:text='Your VitaRun summary'
         android:textAlignment="center"
         android:textSize="18sp"
         android:textColor="@color/colorPrimary"

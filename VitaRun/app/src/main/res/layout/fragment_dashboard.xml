@@ -34,9 +34,12 @@
 
         <TextView
             android:id="@+id/Month_title"
-            android:background="@color/colorPrimaryDark"
-            android:textColor="#fff"
+            android:background="@android:color/transparent"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
             android:textAlignment="center"
+            android:textAllCaps="true"
+            android:paddingBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@font/paco"
@@ -51,11 +54,11 @@
             android:layout_height="250dp"
             app:compactCalendarTargetHeight="250dp"
             app:compactCalendarTextSize="12sp"
-            app:compactCalendarBackgroundColor="@color/colorPrimaryDark"
-            app:compactCalendarTextColor="#fff"
+            app:compactCalendarBackgroundColor="@android:color/transparent"
+            app:compactCalendarTextColor="@color/colorPrimaryDark"
             app:compactCalendarCurrentSelectedDayBackgroundColor="@color/colorPrimary"
-            app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
-            app:compactCalendarMultiEventIndicatorColor="#fff"
+            app:compactCalendarCurrentDayBackgroundColor="@android:color/transparent"
+            app:compactCalendarMultiEventIndicatorColor="@color/colorPrimaryDark"
 
             />
 

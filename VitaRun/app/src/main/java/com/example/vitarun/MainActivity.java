@@ -151,6 +151,10 @@ public class MainActivity extends AppCompatActivity
         runEvent.PauseRunEvent();
     }
 
+    public void ResumeRun(){
+        runEvent.ResumeRunEvent();
+    }
+
     public void EndRun(){
         runEvent.EndRunEvent();
         endOfRunFragment.mViewSwitcher.showNext();
@@ -158,14 +162,30 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void GiveFeedback(String features)
+    {
+
+    }
+
+    // Update recommendations fragment mid run;
     public void UpdateRecommendations(String features)
     {
-//        ADD RECOMMENDATIONS UPDATE METHOD
-//        recommendationsFragment.
+        recommendationsFragment.updaterecomText(features);
+    }
+
+    // Update recommendations after run.
+    public void UpdateRecommendationsFinal(final String features)
+    {
+        // Wait for 30 seconds before updating final recommendations view.
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                recommendationsFragment.updaterecomText2(features);
+            }
+        }, 30000);
     }
 
     // BLUETOOTH STUFF
-
     public void InitialiseBluetooth() {
         // Bluetooth Stuff
         // Use this check to determine whether BLE is supported on the device.  Then you can

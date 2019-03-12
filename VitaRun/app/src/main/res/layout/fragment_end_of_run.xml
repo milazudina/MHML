@@ -10,28 +10,19 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/OP_text"
+            android:id="@+id/title_text"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/paco"
-            android:text="Over Pronation = " />
-        <TextView
-            android:id="@+id/UP_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/paco"
-            android:text="Under Pronation = "
-            android:layout_toRightOf="@id/OP_text"/>
-        <TextView
-            android:id="@+id/NP_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/paco"
-            android:text="Normal Pronation = "
-            android:layout_toRightOf="@id/UP_text"/>
+            android:layout_height="40dp"
+            android:text='Your last run!'
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:fontFamily="@font/paco"/>
 
         <com.jjoe64.graphview.GraphView
             android:layout_width="match_parent"
+            android:layout_marginTop="30dp"
             android:layout_height="200dp"
             android:id="@+id/graph" />
 
