@@ -23,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Timer;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -36,7 +37,8 @@ public class RunEvent {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
-    HashMap<Integer, Float[]> DATA_BUFFER;
+    LinkedHashMap<Integer, Float[]> LEFT_DATA_BUFFER;
+    LinkedHashMap<Integer, Float[]> RIGHT_DATA_BUFFER;
 
     static int dataBufferLength = 256;
     ServerComms serverComms;
@@ -62,7 +64,8 @@ public class RunEvent {
         this.context = current;
 
         serverComms = new ServerComms();
-        DATA_BUFFER = new HashMap<>();
+        LEFT_DATA_BUFFER = new LinkedHashMap<>();
+        RIGHT_DATA_BUFFER = new LinkedHashMap<>();
 
         dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 
@@ -96,12 +99,11 @@ public class RunEvent {
                 if (!paused) {
 //                    GiveFeedback();
                 }
-                System.out.println("REFRESH2");
+//                System.out.println("REFRESH2");
             }
         };
 
         service.scheduleAtFixedRate(FeedbackRunnable, 20, 30, TimeUnit.SECONDS);
-
         mainActivity = (IRunEvent) current;
     }
 
@@ -110,17 +112,32 @@ public class RunEvent {
 //        DATA_BUFFER.add(dataSample);
 
         // Add prerecorded data sample;
-        DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
+        switch (side) {
+            case "left":
+                LEFT_DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
 
+                if (LEFT_DATA_BUFFER.size() >= dataBufferLength) {
 
-        if (DATA_BUFFER.size() >= dataBufferLength) {
+                    serverComms.PostPressureData(LEFT_DATA_BUFFER);
+                    String jsonString = gson.toJson(LEFT_DATA_BUFFER);
+                    System.out.println(jsonString);
+                    LEFT_DATA_BUFFER.clear();
+                }
+                dataIndex += 1;
+                break;
+            case "right":
+                RIGHT_DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
 
-            serverComms.PostPressureData(DATA_BUFFER);
-            String jsonString = gson.toJson(DATA_BUFFER);
-            System.out.println(jsonString);
-            DATA_BUFFER.clear();
+                if (RIGHT_DATA_BUFFER.size() >= dataBufferLength) {
+
+                    serverComms.PostPressureData(RIGHT_DATA_BUFFER);
+                    String jsonString = gson.toJson(RIGHT_DATA_BUFFER);
+                    System.out.println(jsonString);
+                    RIGHT_DATA_BUFFER.clear();
+                }
+                dataIndex += 1;
+                break;
         }
-        dataIndex += 1;
     }
 
     // Send a test packet of data
@@ -128,21 +145,22 @@ public class RunEvent {
         int _size = 800;
 
         for (int index = dataIndex * _size; dataIndex < _size; dataIndex++) {
-            DATA_BUFFER.put(index, dataSet.get(dataIndex));
+            LEFT_DATA_BUFFER.put(index, dataSet.get(dataIndex));
         }
 
-        serverComms.PostPressureData(DATA_BUFFER);
+        serverComms.PostPressureData(LEFT_DATA_BUFFER);
 
-        String jsonString = gson.toJson(DATA_BUFFER);
+        String jsonString = gson.toJson(LEFT_DATA_BUFFER);
         writeToFile(jsonString, context);
         System.out.println(jsonString);
-        DATA_BUFFER.clear();
+        LEFT_DATA_BUFFER.clear();
         dataIndex += 1;
     }
 
     public interface IRunEvent
     {
         public void RefreshFeatures(String features);
+        public void EndOfRunFeatures(String features);
         public void GiveFeedback(String features);
     }
 
@@ -150,8 +168,6 @@ public class RunEvent {
 
         //Make get request.
         features = serverComms.getFeature("features");
-//        System.out.println(String.format("Features: %s", features));
-
         // Calls the update recommendations
         mainActivity.RefreshFeatures(features);
 
@@ -159,13 +175,7 @@ public class RunEvent {
 
     public void GiveFeedback() {
 
-        MainActivity activity = (MainActivity) context;
-
-        activity.GiveFeedback(features);
-//        String text_pronate = "You are pronating";
-//        Intent speechIntent = new Intent(activity, TextToSpeechService.class);
-//        speechIntent.putExtra(TextToSpeechService.EXTRA_WORD, text_pronate);
-//        activity.startService(speechIntent);
+        mainActivity.GiveFeedback(features);
 
     }
 
@@ -200,7 +210,7 @@ public class RunEvent {
         endTime = LocalDateTime.now(ZoneId.systemDefault());
         service.shutdown();
         String historic = serverComms.getFeature("endRun", SaveSharedPreferences.getUserName(context));
-//        activity.UpdateRecommendationsFinal(features);
+        mainActivity.EndOfRunFeatures(historic);
         System.out.println(historic);
 
     }

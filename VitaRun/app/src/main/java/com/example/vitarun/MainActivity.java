@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity
 
     public void GiveFeedback(String features)
     {
-
+        recommendationsFragment.AudioFeedback(features);
     }
 
     // Update recommendations fragment mid run;
@@ -177,19 +177,12 @@ public class MainActivity extends AppCompatActivity
 
         if (features.length() > 2)
         {
-            // Wait for 30 seconds before updating final recommendations view.
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    recommendationsFragment.updaterecomText(features);
-                }
-            }, 100);
+            recommendationsFragment.updaterecomText(features);
         }
     }
 
-    // Update recommendations after run.
-    public void UpdateRecommendationsFinal(final String features)
-    {
+    public void EndOfRunFeatures(final String features) {
+
         // Wait for 30 seconds before updating final recommendations view.
         new Handler().postDelayed(new Runnable() {
             @Override

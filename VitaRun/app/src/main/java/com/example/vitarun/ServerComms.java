@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -303,7 +304,7 @@ public class ServerComms {
         return syncResult.getResult();
     }
 
-    public void PostPressureData(HashMap<Integer, Float[]> data)
+    public void PostPressureData(LinkedHashMap<Integer, Float[]> data)
     {
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
