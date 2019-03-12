@@ -137,7 +137,6 @@ tools:context=".LoginActivity">
                 android:fontFamily="@font/paco"
 
                 android:ems="10"
-                android:inputType="textPassword"
                 app:layout_constraintBottom_toTopOf="@+id/bCreateProfile"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.545"
