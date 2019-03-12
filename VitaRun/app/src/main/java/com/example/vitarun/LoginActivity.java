@@ -65,14 +65,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 System.out.println(attemptPassword + username);
 
 
-                boolean serverResponse = serverComms.login(username, attemptPassword);
+                int serverResponse = serverComms.login(username, attemptPassword);
                 System.out.print("Server Response:" + serverResponse);
 
-                if (!serverResponse) {
-                    Snackbar sbUsername = Snackbar.make(v, "Incorrect Username or Password", Snackbar.LENGTH_LONG);
+                if (serverResponse == 0) {
+                    Snackbar sbUsername = Snackbar.make(v, "Incorrect Password", Snackbar.LENGTH_LONG);
                     sbUsername.show();
                     System.out.println("Response Incorrect");
-                } else {
+                } else if (serverResponse == -1) {
+                    Snackbar sbUsername = Snackbar.make(v, "Username does not exist", Snackbar.LENGTH_LONG);
+                    sbUsername.setAction("Create Profile?", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startActivity(new Intent(new Intent(getBaseContext(), RegisterActivity.class)));
+                            finish();
+
+                        }
+                    });
+                    sbUsername.show();
+                    System.out.println("Response Incorrect");
+                } else{
 
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("result",username);
@@ -81,13 +93,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     finish();
                     System.out.println("Correct Password");
 
-
                     SaveSharedPreferences.setUsername(this.getBaseContext(), username);
 
                     System.out.println(username);
-
-
-
 
                 }
 //
