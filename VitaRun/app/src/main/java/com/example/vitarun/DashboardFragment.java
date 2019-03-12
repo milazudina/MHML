@@ -177,6 +177,7 @@ public class DashboardFragment extends Fragment {
 
         dataSet.setStackLabels(new String[]{"Over", "Under", "Normal"});
         BarData barData = new BarData(dataSet);
+        barData.setBarWidth(20f);
         barChart.setData(barData);
 //        String[] labels = { "1","2","3","4","5"};
 //        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
