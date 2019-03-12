@@ -55,16 +55,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch(v.getId()){
             case(R.id.bLogin):
-                String username = etUsername.getText().toString();
+                String username_raw = etUsername.getText().toString();
                 String attemptPassword = etPassword.getText().toString();
 
-                tvUsername = v.findViewById(R.id.tvUserUsername);
-                tvName = v.findViewById(R.id.tvUserName);
-                tvAge = v.findViewById(R.id.tvUserAge);
-                tvWeight = v.findViewById(R.id.tvUserWeight);
-                System.out.println(attemptPassword + username);
+                System.out.println(attemptPassword + username_raw);
 
-
+                String username = username_raw.replaceAll("\\s","");
                 int serverResponse = serverComms.login(username, attemptPassword);
                 System.out.print("Server Response:" + serverResponse);
 
