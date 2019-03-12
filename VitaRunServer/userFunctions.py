@@ -115,8 +115,8 @@ def count_NP_last5(username):
         sum1 = sum(test)
         return sum1
 
+
 def count_OP_last5(username):
-<<<<<<< HEAD
     with open(directory+ '/' + username + '/'+ 'History.csv') as fin:
         df = pd.read_csv(fin)
         length=len(df)
@@ -126,31 +126,32 @@ def count_OP_last5(username):
         sum1 = sum(test)
         return sum1
 
-def count_UP_last5(username):
-=======
->>>>>>> f891300811a1954b8edd7e69a7bab03d8cee834d
-    with open(directory+ '/' + username + '/'+ 'History.csv') as fin:
-        df = pd.read_csv(fin)
-        length=len(df)
-        # for x in range(length-5, length):
-<<<<<<< HEAD
-=======
-        count_NP_last5 = df['Count_OP']
-        test = count_NP_last5[length-5:length]
-        sum1 = sum(test)
-        return sum1
 
 def count_UP_last5(username):
     with open(directory+ '/' + username + '/'+ 'History.csv') as fin:
         df = pd.read_csv(fin)
         length=len(df)
         # for x in range(length-5, length):
->>>>>>> f891300811a1954b8edd7e69a7bab03d8cee834d
         count_NP_last5 = df['Count_UP']
         test = count_NP_last5[length-5:length]
         sum1 = sum(test)
         return sum1
 
+
+def pronation(Username):
+    NP = count_NP_last5(Username)
+    OP = count_OP_last5(Username)
+    UP = count_UP_last5(Username)
+    if NP>OP:
+        if NP>UP:
+            return 'NP'
+        else:
+            return 'UP'
+    else:
+        if OP>UP:
+            return 'OP'
+        else:
+            return 'UP'
 def pronation(Username):
     NP = count_NP_last5(Username)
     OP = count_OP_last5(Username)
@@ -189,15 +190,8 @@ def login(Username, Password):
         # print(column_of_interest)
         for x in range(0, length):
             if column_of_interest[x] in Username:
-<<<<<<< HEAD
                 if str(password_of_interest[x]) in Password:
                     return True
-=======
-
-                print('test1')
-                if str(password_of_interest[x]) in Password:
-                    return 1
->>>>>>> f891300811a1954b8edd7e69a7bab03d8cee834d
                 else:
                     return False
 
@@ -225,11 +219,6 @@ def setUserDetails(Username, Password, Name, Age, Weight):
         writer = csv.writer(fin)
         writer.writerow(newLogin)
 
-<<<<<<< HEAD
-
-=======
-def writeJsonToFile():
->>>>>>> f891300811a1954b8edd7e69a7bab03d8cee834d
 
 def getUserDetails(username):
     with open(directory+ '/' + username + '/'+ 'info.csv') as csv_file:
@@ -321,292 +310,3 @@ def readFrequency(Username):
                 test = json.dumps(dictPronation)
 
         return dictPronation
-<<<<<<< HEAD
-=======
-
-
-
-
-
-                # print(f'\t{row[0]} works in the {row[1]} department, and was born in {row[2]}.')
-                # data['DateTime_Start'] = row[0]
-                # data['DateTime_End'] = row[1]
-                # data['Number_Of_Steps'] = row[2]
-                # data['Count_NP'] = row[3]
-                # data['Count_OP'] = row[4]
-                # data['Count_UP'] = row[5]
-                # data['averageFreqency'] = row[6]
-                # json_data = json.dumps(data)
-
-        # print(f'Processed {line_count} lines.')
-
-
-
-    # f = open( directory+ '/' + Username + '/'+ 'History.csv' , 'rU' )
-    # reader = csv.DictReader( f, fieldnames = ("DateTime_Start","DateTime_End","Number_Of_Steps", "Count_NP","Count_OP","Count_UP","averageFreqency"))
-    # store = []
-    # framenames = []
-
-
-
-
-
-    # with open(directory + '/'+ username + '/' + 'info.csv') as fin:
-    #     reader = csv.reader(fin)
-    #     field_names_list = next(reader)
-    #     print(field_names_list)
-    #      # print ('{0}'.format(fin.readline().split()))
-    #      # line = fin.readline()
-    #      # print(line)
-    #      # print('test')
-    #      # for x in fin:
-    #      #        x=x.split()
-    #      #        # print ('{0}'.format(x[0],sum(map(int,x[1:]))))
-    #      #        line = fin.readline()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# createFiles('Jonny1', 'let me in', 'Midge','22','1333')
-
-# writeJsonToFile()
-
-# array()
-
-# addFreq('Jonny1', 199)
-
-# totalAV = averageFreq()
-# print(totalAV)
-
-# totalSteps()
-# x = ['2', '2','2','1','1']
-# addPronation('Jonny1', x)
-
-# count_NP_last5('Jonny1')
-
-test = pronation('Jonny1')
-print(test)
-# getPassword()
-
-# User = 'jacob'
-# p = 'hhi4'
-# test = login(User,p)
-# print(test)
-
-# checkUsername('Jonny1')
-
-# setUserDetails('Jonny123', 'test', 'hello', '23', '12')
-
-# test = getUserDetails('Jonny1')
-# print(test)
-
-# time =now.strftime("%Y-%m-%d %h:%m:%s")
-
-
-
-# Username = 'Jonny1'
-# DateTime_Start = '28'
-# DateTime_End = '29'
-# Number_Of_Steps = '6'
-# Count_NP = '5'
-# Count_OP = '2'
-# Count_UP = '7'
-# writeHistory(Username,DateTime_Start, DateTime_End, Number_Of_Steps,Count_NP,Count_OP,Count_UP)
-# print(now.strftime("%Y-%m-%d %H:%M:%S"))
-
-#
-# df,length = readHistoryFile('Jonny1')
-# print(df)
-# print(length)
-
-# startRun('Jonny1')
-
-# test = readPronation('Jonny1')
-# print(test)
-
-# test = readFrequency('Jonny1')
-# print(test)
-
-# #
-#
-#
-# new login
-# login
-# start run
-# end run
-#
-#
-#
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def array():
-#     print(a)
-#     np.savetxt('array.txt', a, fmt='%s')
-
-    # inputFile = list(post_data.values())
-    # a[3]=a[2]
-    # a[2]=a[1]
-    # a[1]=a[0]
-    # a[0] = inputFile[1], inputFile[2], inputFile[3], inputFile[4], inputFile[4], inputFile[6]
-    # print(a)
-
-
-
-
-
-
-
-#with open('newpath','w') as f: #open the new path file as f
-
-#    json.dump(post_data, f) #then dump the data into the file
-
-#print('done')
-
-
-
-
-
-    # f.close()
-    # f.writerow(["datetime", "P1", "P2", "P3"])
-    #
-    # for x in x:
-    #     f.writerow([x["datetime"],
-    #                 x["P1"],
-    #                 x["P2"],
-    #                 x["P3"],
-    #                 ])
-    # with open('./' + username + '/'+ filename, 'wb') as outcsv:
-    #     f = csv.writer(outcsv)
-    #     f.writerow(["Date", "P1", "P2", "P3"])
-    #
-    #     with open('t1.csv', 'rb') as incsv:
-    #         reader = csv.reader(incsv)
-    #         writer.writerows(row + [0.0] for row in reader)
-    #
-    #     with open('t2.csv', 'rb') as incsv:
-    #         reader = csv.reader(incsv)
-    #         writer.writerows(row[:1] + [0.0] + row[1:] for row in reader)
-    #     # f.write(json.dumps(post_data, indent=2))
-
-
-        # for j in some_list:
-        #     writer.writerow(j)
-    # f.close()
-
-
-
-
-# open the file and read the json packages within the file
-
-    # fh = open('./' + username + '/'+ filename, 'r')
-    #
-    #
-    # json_str = fh.read()
-    #
-    # json_value = json.loads(json_str)
-    #
-    # print(json_value['runNumber'])
-    #
-    # with open(r'./' + username + '/'+ filename,'a') as csvfile:
-    #     newfile = csv.write(csvfile)
-    #     newfile.writerow([])
-
-
-
-    #print(json_value([runNumber]))
-
-
-    #newpath = os.path.expanduser('~/Users/jonathanmidgen/Documents/MHML/newpath')
-
-    #if not os.path.exists(newpath): #see if the file exists
-
-    #os.makedirs("newpath") # if it doesnt then create it
-
-    #filename = "newpath"
-
-    #if not os.path.exists(os.path.dirname(filename)):
-
-    #    try:
-    #        os.makedirs(filename)
-
-    #    except OSError as exc:
-    #        if exc.errno != errno.EEXIST:
-
-    #            raise
-
-
-    #with open(filename,"w") as f:
-
-    #    f.write("Hello")
-
-
-    # data = jso(inputFile) #load json content
-
-    # inputFile.close() #close the input file
-
-    # output = csv.writer(outputFile) #create a csv.write
-    #
-    # # output.writerow(inputFile[0].keys())  # header row
-    #
-    #
-    # outputFile.writerow([inputFile["datetime"],
-    #             inputFile["P1"],
-    #             inputFile["P2"],
-    #             inputFile["P3"],
-    #             inputFile["P4"],
-    #             inputFile["P5"],
-    #             inputFile["P6"]])
-    #
-    # fh.close()
-
-
-
-
-# def readJsons():
-
-    # fh = open('./' + username + '/'+ filename, 'r')
-    #
-    # f = csv.writer(open('./' + username + '/'+ filename , "wb+"))
-    # f.writerow(["datetime", "P1", "P2", "P3"])
-    #
-    # for x in x:
-    # f.writerow([x["pk"],
-    #             x["model"],
-    #             x["fields"]["codename"],
-    #             x["fields"]["name"],
-    #             x["fields"]["content_type"]])
->>>>>>> f891300811a1954b8edd7e69a7bab03d8cee834d
