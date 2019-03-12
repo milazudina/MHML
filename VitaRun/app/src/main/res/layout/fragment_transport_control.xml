@@ -2,7 +2,8 @@
 <ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/profileSwitcher"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:paddingTop="20dp">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -30,6 +31,7 @@
             android:layout_marginStart ='90dp'
             android:drawableTop="@drawable/ic_pause_black_24dp"
             android:fontFamily="@font/paco"
+            android:background="@color/colorPrimary"
             android:text="Pause"
             />
 
@@ -41,6 +43,7 @@
             android:drawableTop="@drawable/ic_stop_black_24dp"
             android:layout_toEndOf="@id/pause_button"
             android:layout_marginStart ='60dp'
+            android:background="@color/colorPrimary"
             android:text="Stop" />
 
 
