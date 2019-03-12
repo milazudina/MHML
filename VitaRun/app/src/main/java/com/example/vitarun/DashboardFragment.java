@@ -78,6 +78,9 @@ public class DashboardFragment extends Fragment {
         final SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMM - yyyy", Locale.getDefault());
         final TextView monthTextView = (TextView) view.findViewById(R.id.Month_title);
 
+        // Set up Calendar:
+        monthTextView.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
+
         String[] runsArray = jsonString2.split("(?<=\\})");
         for(String run : runsArray){
 //            System.out.println(run);
@@ -90,9 +93,12 @@ public class DashboardFragment extends Fragment {
             historic_runArrayList.add(historic_run);
         }
 
-        formatter = new SimpleDateFormat("YYYY-mm-dd HH:MM:SS");
+
+
         BarChart barChart = (BarChart) view.findViewById(R.id.Bar_chart);
         ArrayList<BarEntry> yValues = new ArrayList<>();
+
+        formatter = new SimpleDateFormat("y-M-d H:m:s");
 
         for(Historic_run run : historic_runArrayList){
             String str_date = run.Datetime_Start;
@@ -104,19 +110,21 @@ public class DashboardFragment extends Fragment {
                 e.printStackTrace();
             }
             long unixTime = (long) date.getTime();
-
-            System.out.println(unixTime);
-
             float steps = Float.parseFloat(run.Number_Of_Steps);
             float UP = Float.parseFloat(run.Count_UP);
             float NP = Float.parseFloat(run.Count_NP);
             float OP = Float.parseFloat(run.Count_OP);
 
             yValues.add(new BarEntry( unixTime/1000000,new float[]{UP,NP,OP}));
-            Event event = new Event(Color.BLACK, 1552248509L , "Run" );
+            Event event = new Event(0xFF000000, unixTime , "Run" );
 
             compactCalendarView.addEvent(event,true);
         }
+
+
+
+
+
 
         BarDataSet dataSet = new BarDataSet(yValues,"");
         dataSet.setDrawIcons(false);
@@ -129,26 +137,24 @@ public class DashboardFragment extends Fragment {
         barChart.setData(barData);
 //        String[] labels = { "1","2","3","4","5"};
 //        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
-        XAxis xAxis = barChart.getXAxis();
+        final XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextSize(10f);
         xAxis.setTextColor(Color.RED);
         xAxis.setDrawAxisLine(true);
-        xAxis.setDrawGridLines(false);
+        xAxis.setDrawGridLines(true);
         Legend legend = barChart.getLegend();
         legend.setPosition(Legend.LegendPosition.ABOVE_CHART_CENTER);
         barChart.invalidate();
 
-
-
-        // Create Calendar:
-
-        monthTextView.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
         // Calendar Listeners
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
-                System.out.println("date clicked");
+                System.out.println(dateClicked);
+                List<Event> events = compactCalendarView.getEvents(dateClicked);
+                System.out.println(events);
+//                xAxis.setAxisMaximum(float 100);
 //                graph.getViewport().setMinX(1);
 //                graph.getViewport().setMaxX(3);
 //                graph.addSeries(series);
@@ -159,10 +165,10 @@ public class DashboardFragment extends Fragment {
                 System.out.println("month scrolled");
                 //  System.out.println(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
                 monthTextView.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
-
             }
 
         });
+
 
 
         return view;

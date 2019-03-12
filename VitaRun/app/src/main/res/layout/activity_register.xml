@@ -28,6 +28,7 @@ tools:context=".LoginActivity">
                 android:id="@+id/tvUsername"
                 android:layout_width="70dp"
                 android:layout_height="32dp"
+                android:fontFamily="@font/paco"
                 android:layout_weight="1"
 
                 android:text="@string/username"
@@ -40,6 +41,8 @@ tools:context=".LoginActivity">
                 android:id="@+id/tvPassword"
                 android:layout_width="59dp"
                 android:layout_height="21dp"
+                android:fontFamily="@font/paco"
+                android:paddingRight="30dp"
                 android:layout_weight="1"
 
                 android:text="@string/password"
@@ -51,6 +54,7 @@ tools:context=".LoginActivity">
             <TextView
                 android:id="@+id/tvName"
                 android:layout_width="59dp"
+                android:fontFamily="@font/paco"
                 android:layout_height="21dp"
                 android:layout_weight="1"
 
@@ -65,6 +69,7 @@ tools:context=".LoginActivity">
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/paco"
 
                 android:text="Age"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -75,6 +80,7 @@ tools:context=".LoginActivity">
             <TextView
                 android:id="@+id/tvWeight"
                 android:layout_width="wrap_content"
+                android:fontFamily="@font/paco"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
 
@@ -97,6 +103,7 @@ tools:context=".LoginActivity">
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/paco"
 
                 android:ems="10"
                 android:inputType="textPersonName"
@@ -112,6 +119,7 @@ tools:context=".LoginActivity">
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/paco"
 
                 android:ems="10"
                 android:inputType="textPassword"
@@ -126,6 +134,7 @@ tools:context=".LoginActivity">
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/paco"
 
                 android:ems="10"
                 android:inputType="textPassword"
@@ -141,6 +150,7 @@ tools:context=".LoginActivity">
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/paco"
 
                 android:ems="10"
                 android:inputType="number"
@@ -173,7 +183,9 @@ tools:context=".LoginActivity">
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/colorPrimary"
         app:layout_constraintTop_toTopOf="parent"
+        android:fontFamily="@font/paco"
         app:layout_constraintVertical_bias="0.68" />
 
 
@@ -186,6 +198,7 @@ tools:context=".LoginActivity">
         android:layout_height="21dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="@font/paco"
 
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"

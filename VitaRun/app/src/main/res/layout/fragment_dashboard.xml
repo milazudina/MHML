@@ -37,6 +37,7 @@
             android:textAlignment="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fontFamily="@font/paco"
             android:text="Month"/>
 
         <com.github.sundeepk.compactcalendarview.CompactCalendarView
@@ -53,7 +54,7 @@
             app:compactCalendarCurrentSelectedDayBackgroundColor="@color/colorPrimary"
             app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
             app:compactCalendarMultiEventIndicatorColor="#fff"
-            app:compactCalendarEventIndicatorStyle="fill_large_indicator"
+
             />
 
         <!--<CalendarView-->

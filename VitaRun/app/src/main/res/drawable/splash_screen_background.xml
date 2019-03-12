@@ -6,8 +6,8 @@
     <item>
         <bitmap android:src="@drawable/background_logo_screen"
             android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             />
     </item>
 </layer-list>

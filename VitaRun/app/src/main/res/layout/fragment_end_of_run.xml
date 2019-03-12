@@ -12,17 +12,20 @@
             android:id="@+id/OP_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fontFamily="@font/paco"
             android:text="Over Pronation = " />
         <TextView
             android:id="@+id/UP_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fontFamily="@font/paco"
             android:text="Under Pronation = "
             android:layout_toRightOf="@id/OP_text"/>
         <TextView
             android:id="@+id/NP_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fontFamily="@font/paco"
             android:text="Normal Pronation = "
             android:layout_toRightOf="@id/UP_text"/>
 
