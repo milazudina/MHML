@@ -35,13 +35,11 @@ public class TransportControlFragment extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v ) {
-//                System.out.println("change view"); // some function here
-                // mViewSwitcher.setDisplayedChild(0);
+
                 runFragment.callback.StartRun();
 
                 mViewSwitcher.showNext();
 //                System.out.println("change view complete?");
-
             }
         });
 
