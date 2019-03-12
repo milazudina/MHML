@@ -62,8 +62,6 @@
                 <category android:name="android.intent.caregory.android"/>
             </intent-filter>
         </activity>
-
-        <service android:name=".BluetoothLeService" android:enabled="true"/>
     </application>
 
 </manifest>
