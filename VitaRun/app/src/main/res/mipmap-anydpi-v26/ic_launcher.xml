@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@drawable/background_logo_screen" />
-    <foreground android:drawable="@drawable/background_logo_screen" />
+    <background android:drawable="@drawable/logo_vitarun_icon3" />
+    <foreground android:drawable="@drawable/logo_vitarun_icon3" />
 </adaptive-icon>

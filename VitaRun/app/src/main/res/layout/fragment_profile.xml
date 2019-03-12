@@ -234,6 +234,7 @@
             android:layout_marginTop="100dp"
             android:layout_marginStart="15dp"
             android:gravity="center_horizontal"
+            android:background="@drawable/button_background"
             android:text="@string/save" />
 
         <LinearLayout

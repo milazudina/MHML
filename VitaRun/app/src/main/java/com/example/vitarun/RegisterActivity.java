@@ -71,6 +71,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.tvLoginLink:
                 startActivity(new Intent(this, LoginActivity.class));
+                finish();
         }
     }
 }
