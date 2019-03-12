@@ -19,7 +19,6 @@ public class EndOfRunFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_end_of_run, container, false);
         mViewSwitcher = (ViewSwitcher) view.findViewById(R.id.viewSwitcher);
         mViewSwitcher.reset();
-
         return view;
     }
 }
