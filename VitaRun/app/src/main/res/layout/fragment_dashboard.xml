@@ -54,7 +54,7 @@
             app:compactCalendarCurrentSelectedDayBackgroundColor="@color/colorPrimary"
             app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
             app:compactCalendarMultiEventIndicatorColor="#fff"
-            app:compactCalendarEventIndicatorStyle="fill_large_indicator"
+
             />
 
         <!--<CalendarView-->
