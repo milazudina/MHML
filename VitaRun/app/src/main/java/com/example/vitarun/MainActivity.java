@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.master_fragment_container,
-                new DashboardFragment()).commit();
+                runFragment).commit();
     }
 
     @Override
