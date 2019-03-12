@@ -47,7 +47,7 @@ def splitter(steps, stpnr, debug=False, log=False, lab1=0, lab2=0):
 
     if debug:
         xaxis = np.linspace(0, len(paces) * wshift, len(paces))
-        pace = np.asarray(paces, dtype=np.int16)
+        pace = np.asarray(paces, dtype=np.float32)
 
         plt.plot(stepsums)
         plt.plot(xaxis, pace*100)
@@ -167,7 +167,7 @@ def running_frequency(window):
 
 def local_running_frequency(window, wsize):
 
-    wds = [0, 5, 10, 15, 20, 25, 30]
+    wds = [0, 4, 8, 12, 16, 20, 24, 28, 32]
     p = []
     for j in wds:
         p.append(running_frequency(window[:wsize - j, :]))
