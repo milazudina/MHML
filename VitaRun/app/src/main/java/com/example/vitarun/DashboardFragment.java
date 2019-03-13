@@ -19,12 +19,14 @@ import com.anychart.anychart.DataEntry;
 import com.anychart.anychart.Pie;
 import com.anychart.anychart.ValueDataEntry;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
@@ -128,6 +130,7 @@ public class DashboardFragment extends Fragment {
 
         final BarChart barChart = (BarChart) view.findViewById(R.id.Bar_chart);
         ArrayList<BarEntry> yValues = new ArrayList<>();
+        final ArrayList<String> xLabels = new ArrayList<>();
 
         formatter = new SimpleDateFormat("d/M/y H:m");
         int count = 0;
@@ -135,8 +138,9 @@ public class DashboardFragment extends Fragment {
 //            System.out.println(run.DateTime_Start);
 
             String str_date = run.DateTime_Start;
-            float formattedDate = HackDate(run.DateTime_Start);
-//            System.out.println(formattedDate);
+            xLabels.add(str_date);
+//            float formattedDate = HackDate(run.DateTime_Start);
+////            System.out.println(formattedDate);
             Date date = new Date();
             try {
                 date = (Date) formatter.parse(str_date);
@@ -179,6 +183,20 @@ public class DashboardFragment extends Fragment {
         xAxis.setDrawAxisLine(true);
         xAxis.setDrawGridLines(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            public String getFormattedValue(float value, AxisBase axis) {
+                formatter = new SimpleDateFormat("d/M");
+                java.util.Date time = new java.util.Date((long) value * 1000000);
+                String strDate = formatter.format(time);
+                System.out.println(strDate);
+
+                return strDate;
+            }
+
+        });
+        final YAxis yAxis = barChart.getAxisLeft();
+        yAxis.setDrawLabels(true); // no axis labels
+
 
         Legend legend = barChart.getLegend();
         legend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
@@ -188,18 +206,20 @@ public class DashboardFragment extends Fragment {
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
-                System.out.println(dateClicked);
+//
                 List<Event> events = compactCalendarView.getEvents(dateClicked);
                 if(events.size() != 0) {
-                    Event event = events.get(0);
+                    long time = dateClicked.getTime()/1000000;
+                    float t = time;
+                    //Event event = events.get(0);
 //                    System.out.println(event.getData());
-                    int runIndex = (Integer) event.getData();
+                    //int runIndex = (Integer) event.getData();
 //                    barChart.centerViewToAnimated(4,50, YAxis.AxisDependency.LEFT, 200);
-                    System.out.println(runIndex);
+                    System.out.println(t);
 //                    barChart.setVisibleXRangeMaximum(200);
                     barChart.setVisibleYRange(0,150, YAxis.AxisDependency.RIGHT);
                     barChart.setVisibleXRange(100,200);
-                    barChart.centerViewTo(10, 0, YAxis.AxisDependency.RIGHT);
+                    barChart.centerViewTo(t, 0, YAxis.AxisDependency.RIGHT);
 
 ////                    float lower = runIndex - 2;
 ////                    float upper = runIndex + 2;
@@ -209,7 +229,7 @@ public class DashboardFragment extends Fragment {
 //                    barChart.moveViewToX(50f);
 ////                    barChart.centerViewTo(5,50, YAxis.AxisDependency.RIGHT);
                     barChart.invalidate();
-                    barChart.animateXY(3000, 3000);
+//                    barChart.animateXY(1000, 1000);
 
                 }
                 else {
@@ -219,6 +239,7 @@ public class DashboardFragment extends Fragment {
 //                    barChart.centerViewToAnimated(4,50, XAxi, 200);
                     barChart.fitScreen();
                     barChart.invalidate();
+//                    barChart.animateXY(1000, 1000);
 //                    barChart.moveViewToX(runIndex);
 
 
@@ -247,6 +268,9 @@ public class DashboardFragment extends Fragment {
                 System.out.println("month scrolled");
                 //  System.out.println(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
                 monthTextView.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
+                barChart.fitScreen();
+                barChart.invalidate();
+                barChart.animateXY(1000, 1000);
             }
 
         });
