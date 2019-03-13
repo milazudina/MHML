@@ -59,6 +59,8 @@ public class RunEvent {
 
     private IRunEvent mainActivity;
 
+    boolean getFeaturesAllowed;
+
     public RunEvent(Context current) {
         System.out.println("Run Event Created");
         this.context = current;
@@ -80,7 +82,7 @@ public class RunEvent {
         Runnable RefreshRunnable = new Runnable() {
             @Override
             public void run() {
-                if (!paused) {
+                if (!paused && !getFeaturesAllowed) {
                     RefreshFeatures();
                 }
                 System.out.println("REFRESH");
@@ -97,13 +99,13 @@ public class RunEvent {
             @Override
             public void run() {
                 if (!paused) {
-//                    GiveFeedback();
+                    GiveFeedback();
                 }
-//                System.out.println("REFRESH2");
+                System.out.println("giving feedback");
             }
         };
 
-        service.scheduleAtFixedRate(FeedbackRunnable, 20, 30, TimeUnit.SECONDS);
+        service.scheduleAtFixedRate(FeedbackRunnable, 2, 4, TimeUnit.MINUTES);
         mainActivity = (IRunEvent) current;
     }
 
@@ -115,6 +117,7 @@ public class RunEvent {
         switch (side) {
             case "left":
                 LEFT_DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
+                LEFT_DATA_BUFFER.put(dataIndex+1, dataSet.get(dataIndex+1));
 
                 if (LEFT_DATA_BUFFER.size() >= dataBufferLength) {
 
@@ -123,10 +126,11 @@ public class RunEvent {
                     System.out.println(jsonString);
                     LEFT_DATA_BUFFER.clear();
                 }
-                dataIndex += 1;
+                dataIndex += 2;
                 break;
             case "right":
                 RIGHT_DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
+                RIGHT_DATA_BUFFER.put(dataIndex+1, dataSet.get(dataIndex+1));
 
                 if (RIGHT_DATA_BUFFER.size() >= dataBufferLength) {
 
@@ -135,7 +139,7 @@ public class RunEvent {
                     System.out.println(jsonString);
                     RIGHT_DATA_BUFFER.clear();
                 }
-                dataIndex += 1;
+                dataIndex += 2;
                 break;
         }
     }
@@ -148,7 +152,7 @@ public class RunEvent {
             LEFT_DATA_BUFFER.put(index, dataSet.get(dataIndex));
         }
 
-        serverComms.PostPressureData(LEFT_DATA_BUFFER);
+        getFeaturesAllowed = serverComms.PostPressureData(LEFT_DATA_BUFFER);
 
         String jsonString = gson.toJson(LEFT_DATA_BUFFER);
         writeToFile(jsonString, context);

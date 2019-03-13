@@ -68,10 +68,43 @@ public class RecommendationsFragment extends Fragment {
 
     public void AudioFeedback(String features)
     {
-        String text_pronate = "You are pronating";
 
-        speechIntent.putExtra(TextToSpeechService.EXTRA_WORD, text_pronate);
+        final Summary_recom summary_recom = gson.fromJson(features , Summary_recom.class);
+
+        float freq = Float.parseFloat(summary_recom.freq);
+
+        String Stridefreq3 =" ";
+
+        if (freq > 195) {
+            Stridefreq3 = "Are you sprinting? You should SLOW DOWNNNN, mate!";
+        }
+
+
+        else if (185 < freq && freq < 195) {
+            Stridefreq3 = "WOW!! You are running at elite runners' stride rate!";
+        }
+
+        else if (165 <= freq && freq <= 175) {
+            Stridefreq3 = "You are just under the perfect running pace, try taking smaller steps and reducing ground contact time!";
+        }
+
+        else if (freq < 165) {
+            Stridefreq3 = "Try taking smaller steps and reducing ground contact time!";
+            //            System.out.println(FinalStridefreq1);
+        }
+
+        else if (175 < freq && freq < 185) {
+            Stridefreq3 = "Well done! Keep the same pace.";
+            //            System.out.println(FinalStridefreq1);
+        }
+
+
+        speechIntent.putExtra(TextToSpeechService.EXTRA_WORD, Stridefreq3);
+
+        System.out.println("Speaking");
+
         getActivity().startService(speechIntent);
+
     }
 
 
@@ -190,7 +223,7 @@ public class RecommendationsFragment extends Fragment {
                 }
 
                 if (165 < freq && freq < 175) {
-                    String Stridefreq3 = "Your average is close to the perfect running pace. Try taking smaller steps and reducing ground contact time!";
+                    String Stridefreq3 = "Your average is close to the perfect running pace.";
                     String FinalStridefreq1 = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
 //            System.out.println(FinalStridefreq1);
                     tv5.setText(FinalStridefreq1);

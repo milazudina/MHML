@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity
         bluetooth_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                GiveFeedback("{'type': 1, 'freq': 174, 'totalNum': 73}");
                 RunBLE();
             }
         });

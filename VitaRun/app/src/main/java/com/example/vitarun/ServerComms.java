@@ -304,10 +304,12 @@ public class ServerComms {
         return syncResult.getResult();
     }
 
-    public void PostPressureData(LinkedHashMap<Integer, Float[]> data)
+    public boolean PostPressureData(LinkedHashMap<Integer, Float[]> data)
     {
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        final SyncResult syncResult = new SyncResult();
 
         // Convert data to JSON Format.
         String json = gson.toJson(data);
@@ -329,8 +331,20 @@ public class ServerComms {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 System.out.println(response.body().string());
+                syncResult.setResult(response.body().toString());
             }
         });
+
+        boolean r = false;
+
+        switch (syncResult.getResult())
+        {
+            case "True":
+                r = true;
+                break;
+        }
+
+        return r;
     }
 
     public class SyncResult {
