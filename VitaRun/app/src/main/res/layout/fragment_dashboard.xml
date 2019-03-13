@@ -31,21 +31,31 @@
             android:textAlignment="center"
             android:textAllCaps="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:fontFamily="@font/paco"
-            android:text="Steps"/>
+            android:text="My Runs"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Steps"
-            android:layout_gravity="left"
-            android:layout/>
-
-        <com.github.mikephil.charting.charts.BarChart
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:id="@+id/Bar_chart"/>
+            android:layout_height="200dp">
+
+            <TextView
+                android:layout_width="15dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical"
+                android:fontFamily="@font/paco"
+                android:text="Steps"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/Bar_chart"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
 
         <!--<TextView-->
             <!--android:id="@+id/Y_label"-->

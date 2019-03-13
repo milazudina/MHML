@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity
 //        runEvent.testDataPacket();
 
 
-        endOfRunFragment.mViewSwitcher.showNext();
+//        endOfRunFragment.mViewSwitcher.showNext();
         recommendationsFragment.mViewSwitcher.showNext();
 
     }
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity
 
     public void EndRun(){
         runEvent.EndRunEvent();
-        endOfRunFragment.mViewSwitcher.showNext();
+//        endOfRunFragment.mViewSwitcher.showNext();
         recommendationsFragment.mViewSwitcher.showNext();
 
     }
