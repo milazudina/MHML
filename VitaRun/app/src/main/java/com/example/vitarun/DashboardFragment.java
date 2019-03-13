@@ -229,7 +229,7 @@ public class DashboardFragment extends Fragment {
 //                    barChart.moveViewToX(50f);
 ////                    barChart.centerViewTo(5,50, YAxis.AxisDependency.RIGHT);
                     barChart.invalidate();
-//                    barChart.animateXY(1000, 1000);
+                    barChart.animateXY(1000, 1000);
 
                 }
                 else {
