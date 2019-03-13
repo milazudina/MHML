@@ -21,6 +21,7 @@ import com.anychart.anychart.ValueDataEntry;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -125,11 +126,11 @@ public class DashboardFragment extends Fragment {
 //        }
 
 
-        BarChart barChart = (BarChart) view.findViewById(R.id.Bar_chart);
+        final BarChart barChart = (BarChart) view.findViewById(R.id.Bar_chart);
         ArrayList<BarEntry> yValues = new ArrayList<>();
 
         formatter = new SimpleDateFormat("d/M/y H:m");
-
+        int count = 0;
         for (Historic_run run : historic_runArrayList) {
 //            System.out.println(run.DateTime_Start);
 
@@ -150,10 +151,11 @@ public class DashboardFragment extends Fragment {
             float NP = Float.parseFloat(run.Count_NP);
             float OP = Float.parseFloat(run.Count_OP);
 
-            yValues.add(new BarEntry(formattedDate, new float[]{UP, NP, OP}));
-            Event event = new Event(0xFF000000, unixTime, "Run");
-
+            yValues.add(new BarEntry(unixTime/1000000, new float[]{UP, NP, OP}));
+            Event event = new Event(0xFF000000, unixTime, count);
             compactCalendarView.addEvent(event, true);
+            count ++;
+            System.out.println(unixTime/1000000);
         }
 
 
@@ -164,9 +166,10 @@ public class DashboardFragment extends Fragment {
         dataSet.setColors(new int[]{-60179113, -00255, -255105970});
 
         dataSet.setStackLabels(new String[]{"Over", "Under", "Normal"});
-        BarData barData = new BarData(dataSet);
-        barData.setBarWidth(1f);
+        final BarData barData = new BarData(dataSet);
+        barData.setBarWidth(50f);
         barChart.setData(barData);
+        barChart.setVisibleYRange(0,150, YAxis.AxisDependency.RIGHT);
 //        String[] labels = { "1","2","3","4","5"};
 //        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
         final XAxis xAxis = barChart.getXAxis();
@@ -175,9 +178,10 @@ public class DashboardFragment extends Fragment {
         xAxis.setTextColor(Color.RED);
         xAxis.setDrawAxisLine(true);
         xAxis.setDrawGridLines(true);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
         Legend legend = barChart.getLegend();
-        legend.setPosition(Legend.LegendPosition.ABOVE_CHART_CENTER);
+        legend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
         barChart.invalidate();
 
         // Calendar Listeners
@@ -186,9 +190,52 @@ public class DashboardFragment extends Fragment {
             public void onDayClick(Date dateClicked) {
                 System.out.println(dateClicked);
                 List<Event> events = compactCalendarView.getEvents(dateClicked);
+                if(events.size() != 0) {
+                    Event event = events.get(0);
+//                    System.out.println(event.getData());
+                    int runIndex = (Integer) event.getData();
+//                    barChart.centerViewToAnimated(4,50, YAxis.AxisDependency.LEFT, 200);
+                    System.out.println(runIndex);
+//                    barChart.setVisibleXRangeMaximum(200);
+                    barChart.setVisibleYRange(0,150, YAxis.AxisDependency.RIGHT);
+                    barChart.setVisibleXRange(100,200);
+                    barChart.centerViewTo(10, 0, YAxis.AxisDependency.RIGHT);
+
+////                    float lower = runIndex - 2;
+////                    float upper = runIndex + 2;
+////                    xAxis.setAxisMinimum(1f);
+////                    xAxis.setAxisMaximum(6);
+////////                barChart.setVisibleXRangeMinimum(4);
+//                    barChart.moveViewToX(50f);
+////                    barChart.centerViewTo(5,50, YAxis.AxisDependency.RIGHT);
+                    barChart.invalidate();
+                    barChart.animateXY(3000, 3000);
+
+                }
+                else {
+                    System.out.println("empty");
+//                    barChart.setVisibleXRangeMaximum(20000);
+//                barChart.setVisibleXRangeMinimum(4);
+//                    barChart.centerViewToAnimated(4,50, XAxi, 200);
+                    barChart.fitScreen();
+                    barChart.invalidate();
+//                    barChart.moveViewToX(runIndex);
+
+
+                }
+
+                float time = dateClicked.getTime();
+                time = 500000000f;
+
+//                System.out.println(time);
+//                xAxis.setAxisMaxValue(1.0f);
+//                barChart.setVisibleXRangeMaximum(200);
+////                barChart.setVisibleXRangeMinimum(4);
+//                barChart.moveViewToX(5);
+//                barChart.invalidate();
 //                compactCalendarView.getWeekNumberForCurrentMonth();
 
-                System.out.println(events);
+//                System.out.println(events);
 //                xAxis.setAxisMaximum(float 100);
 //                graph.getViewport().setMinX(1);
 //                graph.getViewport().setMaxX(3);
