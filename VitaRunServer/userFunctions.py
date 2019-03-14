@@ -95,8 +95,17 @@ def averageFreq(username):
         total = sum(int(r[0]) for r in csv.reader(fin))
         return total
 
+def frequency(username):
+    with open(directory+ '/' + username + '/'+ 'History.csv') as fin:
+        df = pd.read_csv(fin)
+        length=len(df)
+        avFreq = df['Average_Frequency']
+        test = avFreq[length-5:length]
+        sum1 = sum(test)
+        av = sum1/5
+        return av
 
-def totalSteps():
+def totalSteps(username):
     with open(directory+ '/' + username + '/'+ 'History.csv') as fin:
         df = pd.read_csv(fin)
         totalSteps = sum(df['Number_Of_Steps'])
