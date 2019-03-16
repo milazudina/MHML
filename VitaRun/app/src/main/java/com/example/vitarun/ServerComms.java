@@ -28,7 +28,7 @@ import okhttp3.Response;
 public class ServerComms {
 
     // ip address of server machine + port.
-    static String url = "http://146.169.189.71:3000";
+    static String url = "http://146.169.154.135:3000";
 
     Gson gson;
     OkHttpClient client;
