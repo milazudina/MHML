@@ -40,34 +40,36 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case (R.id.bCreateProfile):
 
                 String username = etUsername.getText().toString();
-                String password = etPassword.getText().toString();
-                String name = etName.getText().toString();
+                String password_raw = etPassword.getText().toString();
+                String name_raw = etName.getText().toString();
+
+                String password = password_raw.replaceAll(" ","_");
+                String name = name_raw.replaceAll(" ","_");
+
+
                 int age = Integer.parseInt(etAge.getText().toString());
                 int weight = Integer.parseInt(etWeight.getText().toString());
 
-                User createProfile = new User(username, password, name, age, weight);
-                boolean created = serverComms.createProfile(username, password, name, age, weight);
-                System.out.println(createProfile);
-                System.out.println("New profile created: "+created);
-
-
-                if(created){
-                    System.out.println("Successful Creation");
-                    finish();
+                if(username.contains(" ")){
+                    Snackbar sbUsernameSpaces = Snackbar.make(v, "Username may not contain spaces. Try using \"_\"", Snackbar.LENGTH_LONG);
+                    sbUsernameSpaces.show();
 
                 } else {
-                    Snackbar sbInvalidDetails = Snackbar.make(v, "Details Invalid", Snackbar.LENGTH_LONG);
-                    sbInvalidDetails.show();
-                    System.out.println("Unsuccessful Creation");
 
+                    User createProfile = new User(username, password, name, age, weight);
+                    boolean created = serverComms.createProfile(username, password, name, age, weight);
+                    System.out.println(createProfile);
+                    System.out.println("New profile created: " + created);
+                    if(created){
+                        System.out.println("Successful Creation");
+                        finish();
 
-
-
-
-
+                    } else {
+                        Snackbar sbInvalidDetails = Snackbar.make(v, "Details Invalid", Snackbar.LENGTH_LONG);
+                        sbInvalidDetails.show();
+                        System.out.println("Unsuccessful Creation");
+                    }
                 }
-
-
                 break;
             case R.id.tvLoginLink:
                 startActivity(new Intent(this, LoginActivity.class));

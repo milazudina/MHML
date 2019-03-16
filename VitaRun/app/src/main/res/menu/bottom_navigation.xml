@@ -5,7 +5,7 @@
         android:id="@+id/nav_dashboard"
 
         android:visibility="gone"
-        android:title="Our advice" />
+        android:title="My History" />
     <item
         android:id="@+id/nav_run"
 

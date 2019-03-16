@@ -4,7 +4,7 @@
     android:id="@+id/swProfileEdit"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:paddingTop="60dp"
+    android:paddingTop="100dp"
     android:orientation="vertical">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -59,6 +59,8 @@
                     android:layout_height="30dp"
                     android:fontFamily="@font/paco"
                     android:layout_marginStart="10dp"
+                    android:textColor="@color/colorPrimary"
+
                     android:text="@string/age" />
 
 
@@ -87,7 +89,8 @@
                     android:layout_height="30dp"
                     android:fontFamily="@font/paco"
                     android:layout_marginStart="10dp"
-                    android:text="@string/weight" />
+                    android:text="@string/weight"
+                    android:textColor="@color/colorPrimary"/>
             </TableRow>
 
 
@@ -221,7 +224,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:fontFamily="@font/paco"/>
+                    android:fontFamily="@font/paco"
+                    android:textColor="@color/colorPrimary" />
             </TableRow>
 
             <TableRow
@@ -245,7 +249,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
 
-                    android:fontFamily="@font/paco"/>
+                    android:fontFamily="@font/paco"
+                    android:textColor="@color/colorPrimary" />
             </TableRow>
         </TableLayout>
 

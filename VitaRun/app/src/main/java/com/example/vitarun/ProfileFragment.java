@@ -81,10 +81,9 @@ public class ProfileFragment extends Fragment {
                     mViewSwitcher.showNext();
 
                     etAge.setText(String.format("%s", getUser.age));
-                    etName.setText(getUser.name);
+                    String name_incl_spaces = getUser.name.replaceAll("_", " ");
+                    etName.setText(name_incl_spaces);
                     etWeight.setText(String.format("%s", getUser.weight));
-
-
                 }
             });
 
@@ -99,7 +98,8 @@ public class ProfileFragment extends Fragment {
 
                     int age_int = Integer.parseInt(age);
                     int weight_int = Integer.parseInt(weight);
-                    String name = etName.getText().toString();
+                    String name_raw = etName.getText().toString();
+                    String name = name_raw.replaceAll(" ","_");
 
                     User user = new User(getUser.username, getUser.password, name, age_int, weight_int);
 
@@ -145,9 +145,11 @@ public class ProfileFragment extends Fragment {
     public void setContents(User user){
         System.out.println("Set Contents to:"+user);
         tvUsername.setText(user.username);
-        tvAge.setText(String.format("%s", user.age));
-        tvName.setText(user.name);
-        tvWeight.setText(String.format("%s", user.weight));
+        tvAge.setText(String.format("%s years", user.age));
+        String name_incl_spaces = user.name.replaceAll("_", " ");
+        tvName.setText(name_incl_spaces);
+
+        tvWeight.setText(String.format("%s kg", user.weight));
 
     }
 }

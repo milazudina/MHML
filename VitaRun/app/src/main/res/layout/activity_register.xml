@@ -94,7 +94,8 @@ tools:context=".LoginActivity">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="@string/weight"
+            android:hint="@string/weight_kg"
+            android:fontFamily="@font/paco"
             android:gravity="center"
 
 

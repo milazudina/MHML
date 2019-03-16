@@ -55,24 +55,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch(v.getId()){
             case(R.id.bLogin):
-                String username = etUsername.getText().toString();
-                String attemptPassword = etPassword.getText().toString();
+                String username_raw = etUsername.getText().toString();
+                String attemptPasswordRaw = etPassword.getText().toString();
 
-                tvUsername = v.findViewById(R.id.tvUserUsername);
-                tvName = v.findViewById(R.id.tvUserName);
-                tvAge = v.findViewById(R.id.tvUserAge);
-                tvWeight = v.findViewById(R.id.tvUserWeight);
-                System.out.println(attemptPassword + username);
+                String attemptPassword = attemptPasswordRaw.replaceAll(" ", "_");
 
-
-                boolean serverResponse = serverComms.login(username, attemptPassword);
+                String username = username_raw.replaceAll("\\s","");
+                int serverResponse = serverComms.login(username, attemptPassword);
                 System.out.print("Server Response:" + serverResponse);
 
-                if (!serverResponse) {
-                    Snackbar sbUsername = Snackbar.make(v, "Incorrect Username or Password", Snackbar.LENGTH_LONG);
+                if (serverResponse == 0) {
+                    Snackbar sbUsername = Snackbar.make(v, "Incorrect Password", Snackbar.LENGTH_LONG);
                     sbUsername.show();
                     System.out.println("Response Incorrect");
-                } else {
+                } else if (serverResponse == -1) {
+                    Snackbar sbUsername = Snackbar.make(v, "Username does not exist", Snackbar.LENGTH_LONG);
+                    sbUsername.setAction("Create Profile?", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startActivity(new Intent(new Intent(getBaseContext(), RegisterActivity.class)));
+                            finish();
+
+                        }
+                    });
+                    sbUsername.show();
+                    System.out.println("Response Incorrect");
+                } else{
 
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("result",username);
@@ -81,13 +89,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     finish();
                     System.out.println("Correct Password");
 
-
                     SaveSharedPreferences.setUsername(this.getBaseContext(), username);
 
                     System.out.println(username);
-
-
-
 
                 }
 //

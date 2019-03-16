@@ -2,6 +2,7 @@ package com.example.vitarun;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -32,17 +33,16 @@ public class RecommendationsFragment extends Fragment {
     TextView tv5;
     TextView tv6;
 
-
     public ViewSwitcher mViewSwitcher;
 
-
+    Intent speechIntent;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        View RootView = inflater.inflate(R.layout.fragment_recommendations, container, false);
 
-        String requestfromserver1 = "{'type': 1, 'freq': 175, 'totalNum': 73}";
+        String requestfromserver1 = "{'type': 1, 'freq': 174, 'totalNum': 73}";
         String requestfromserver2 = "{'type': 2, 'freq': 150, 'totalNum': 103}";
 
 
@@ -58,131 +58,199 @@ public class RecommendationsFragment extends Fragment {
         mViewSwitcher.showNext();
         mViewSwitcher.reset();
 
-        updaterecomText(requestfromserver1);
-        updaterecomText2(requestfromserver2);
+//        updaterecomText(requestfromserver1);
+//        updaterecomText2(requestfromserver2);
 
+        speechIntent = new Intent(getActivity(), TextToSpeechService.class);
 
         return RootView;
+    }
+
+    public void AudioFeedback(String features)
+    {
+
+        final Summary_recom summary_recom = gson.fromJson(features , Summary_recom.class);
+
+        float freq = Float.parseFloat(summary_recom.freq);
+
+        String Stridefreq3 =" ";
+
+        if (freq > 195) {
+            Stridefreq3 = "Are you sprinting? You should SLOW DOWNNNN, mate!";
+        }
+
+
+        else if (185 < freq && freq < 195) {
+            Stridefreq3 = "WOW!! You are running at elite runners' stride rate!";
+        }
+
+        else if (165 <= freq && freq <= 175) {
+            Stridefreq3 = "You are just under the perfect running pace, try taking smaller steps and reducing ground contact time!";
+        }
+
+        else if (freq < 165) {
+            Stridefreq3 = "Try taking smaller steps and reducing ground contact time!";
+            //            System.out.println(FinalStridefreq1);
+        }
+
+        else if (175 < freq && freq < 185) {
+            Stridefreq3 = "Well done! Keep the same pace.";
+            //            System.out.println(FinalStridefreq1);
+        }
+
+
+        speechIntent.putExtra(TextToSpeechService.EXTRA_WORD, Stridefreq3);
+
+        System.out.println("Speaking");
+
+        getActivity().startService(speechIntent);
+
     }
 
 
     public void updaterecomText(String string){
 
-        Summary_recom summary_recom = gson.fromJson(string , Summary_recom.class);
+        final Summary_recom summary_recom = gson.fromJson(string , Summary_recom.class);
         System.out.println(summary_recom.type);
         System.out.println(summary_recom.freq);
         System.out.println(summary_recom.totalNum);
 
-        switch (summary_recom.type) {
-            case "0":
-                tv.setText("Normal Pronation");
-                break;
-            case "1":
-                tv.setText("UnderPronation");
-                break;
-            case "2":
-                tv.setText("OverPronation");
-                break;
-        }
+        getActivity().runOnUiThread(new Runnable() {
 
-        float freq = Float.parseFloat(summary_recom.freq);
-        String Stridefreq1  = "Your current stride frequency is equal to ";
-        String Stridefreq2  = " steps per min. You ";
+            @Override
+            public void run() {
 
-        if (freq > 200){
-            String Stridefreq3  = "should try running with smaller steps!";
-            String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
-//            System.out.println(FinalStridefreq1);
-            tv2.setText(FinalStridefreq1);
-        }
+                switch (summary_recom.type) {
+                    case "0":
+                        tv.setText("You have Normal Pronation");
+                        break;
+                    case "1":
+                        tv.setText("You are UnderPronating");
+                        break;
+                    case "2":
+                        tv.setText("You are OverPronating");
+                        break;
+                }
 
-        if (180 < freq && freq < 200){
-            String Stridefreq3  = "are close to the right running pace, try running with smaller steps!";
-            String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
-//            System.out.println(FinalStridefreq1);
-            tv2.setText(FinalStridefreq1);
-        }
+                float freq = Float.parseFloat(summary_recom.freq);
+                String Stridefreq1 = "Your current stride frequency is ";
+                String Stridefreq2 = " steps per minute. ";
 
-        if (170 < freq && freq < 180){
-            String Stridefreq3  = "are close to the right running pace, try running with larger steps!";
-            String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
-//            System.out.println(FinalStridefreq1);
-            tv2.setText(FinalStridefreq1);
-        }
+                if (freq > 195) {
+                    String Stridefreq3 = "Are you sprinting? You should SLOW DOWNNNN, mate!";
+                    String FinalStridefreq1 = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
+                    //            System.out.println(FinalStridefreq1);
+                    tv2.setText(FinalStridefreq1);
+                }
 
-        if (freq < 170){
-            String Stridefreq3  = "should try running with larger steps!";
-            String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
-//            System.out.println(FinalStridefreq1);
-            tv2.setText(FinalStridefreq1);
-        }
+                if (185 < freq && freq < 195) {
+                    String Stridefreq3 = "WOW!! You are running at elite runners' stride rate!";
+                    String FinalStridefreq1 = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
+                    //            System.out.println(FinalStridefreq1);
+                    tv2.setText(FinalStridefreq1);
+                }
 
-        if (freq == 180){
-            String Stridefreq3  = "keep the same pace!";
-            String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
-//            System.out.println(FinalStridefreq1);
-            tv2.setText(FinalStridefreq1);
-        }
+                if (165 <= freq && freq <= 175) {
+                    String Stridefreq3 = "You are close to the perfect running pace, try taking smaller steps and reducing ground contact time!";
+                    String FinalStridefreq1 = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
+                    //            System.out.println(FinalStridefreq1);
+                    tv2.setText(FinalStridefreq1);
+                }
 
-        String TotalNbsteps1  = "You have run ";
-        String TotalNbsteps2  = " steps so far!";
-        String FinalTotalNbsteps  = TotalNbsteps1 + summary_recom.totalNum + TotalNbsteps2;
-        tv3.setText(FinalTotalNbsteps);
+                if (freq < 165) {
+                    String Stridefreq3 = "Try taking smaller steps and reducing ground contact time!";
+                    String FinalStridefreq1 = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
+                    //            System.out.println(FinalStridefreq1);
+                    tv2.setText(FinalStridefreq1);
+                }
 
+                if (175 < freq && freq < 185) {
+                    String Stridefreq3 = "Well done! Keep the same pace.";
+                    String FinalStridefreq1 = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
+                    //            System.out.println(FinalStridefreq1);
+                    tv2.setText(FinalStridefreq1);
+                }
+
+                String TotalNbsteps1 = "You have run ";
+                String TotalNbsteps2 = " steps so far!";
+                String FinalTotalNbsteps = TotalNbsteps1 + summary_recom.totalNum + TotalNbsteps2;
+                tv3.setText(FinalTotalNbsteps);
+            }
+        });
     }
 
 
 
     public void updaterecomText2(String string){
 
-        Summary_recom summary_recom = gson.fromJson(string , Summary_recom.class);
+        final Summary_recom summary_recom = gson.fromJson(string , Summary_recom.class);
         System.out.println(summary_recom.type);
         System.out.println(summary_recom.freq);
         System.out.println(summary_recom.totalNum);
 
-        switch (summary_recom.type) {
-            case "0":
-                tv4.setText("Normal Pronation");
-                break;
-            case "1":
-                tv4.setText("UnderPronation");
-                break;
-            case "2":
-                tv4.setText("OverPronation");
-                break;
-        }
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 
-        float freq = Float.parseFloat(summary_recom.freq);
-        String Stridefreq1  = "Your current stride frequency is equal to ";
-        String Stridefreq2  = " steps per min. You should ";
+                switch (summary_recom.type) {
+                    case "0":
+                        tv4.setText("You have Normal Pronation");
+                        break;
+                    case "1":
+                        tv4.setText("You are UnderPronating");
+                        break;
+                    case "2":
+                        tv4.setText("You are OverPronating");
+                        break;
+                }
 
-        if (freq > 180){
-            String Stridefreq3  = "try running with smaller steps!";
-            String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
+                float freq = Float.parseFloat(summary_recom.freq);
+                String Stridefreq1 = "Your average stride frequency is ";
+                String Stridefreq2 = " steps per minute. ";
+
+                if (freq > 195) {
+                    String Stridefreq3 = "Are you always late? Your average pace is too rapid, SLOW DOWNN, mate! ";
+                    String FinalStridefreq1 = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
 //            System.out.println(FinalStridefreq1);
-            tv5.setText(FinalStridefreq1);
-        }
+                    tv5.setText(FinalStridefreq1);
+                }
 
-        if (freq < 180){
-            String Stridefreq3  = "try running with larger steps!";
-            String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
+                if (185 < freq && freq < 195) {
+                    String Stridefreq3 = "WOW!! You are running at elite runners' stride rate!";
+                    String FinalStridefreq1 = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
 //            System.out.println(FinalStridefreq1);
-            tv5.setText(FinalStridefreq1);
-        }
+                    tv5.setText(FinalStridefreq1);
+                }
 
-        if (freq == 180){
-            String Stridefreq3  = "keep the same pace!";
-            String FinalStridefreq1  = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
+                if (165 < freq && freq < 175) {
+                    String Stridefreq3 = "Your average is close to the perfect running pace.";
+                    String FinalStridefreq1 = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
 //            System.out.println(FinalStridefreq1);
-            tv5.setText(FinalStridefreq1);
-        }
+                    tv5.setText(FinalStridefreq1);
+                }
 
-        String TotalNbsteps1  = "You have run ";
-        String TotalNbsteps2  = " steps so far!";
-        String FinalTotalNbsteps  = TotalNbsteps1 + summary_recom.totalNum + TotalNbsteps2;
-        tv6.setText(FinalTotalNbsteps);
+                if (freq < 165) {
+                    String Stridefreq3 = "Try taking smaller steps and reducing ground contact time!";
+                    String FinalStridefreq1 = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
+//            System.out.println(FinalStridefreq1);
+                    tv5.setText(FinalStridefreq1);
+                }
 
+                if (175 < freq && freq < 185) {
+                    String Stridefreq3 = "Well done! Your pace is perfect.";
+                    String FinalStridefreq1 = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
+//            System.out.println(FinalStridefreq1);
+                    tv5.setText(FinalStridefreq1);
+                }
+
+                String TotalNbsteps1 = "You have run ";
+                String TotalNbsteps2 = " steps so far!";
+                String FinalTotalNbsteps = TotalNbsteps1 + summary_recom.totalNum + TotalNbsteps2;
+                tv6.setText(FinalTotalNbsteps);
+            }
+    });
     }
+
 
     private class Summary_recom {
         public String type;
@@ -191,7 +259,7 @@ public class RecommendationsFragment extends Fragment {
 
         public Summary_recom(String type, String freq, String totalNum) {
             this.type = type;
-            this.freq = freq;
+            this.freq = freq.substring(0, 2);
             this.totalNum = totalNum;
         }
     }

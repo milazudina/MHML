@@ -23,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Timer;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -36,7 +37,8 @@ public class RunEvent {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
-    HashMap<Integer, Float[]> DATA_BUFFER;
+    LinkedHashMap<Integer, Float[]> LEFT_DATA_BUFFER;
+    LinkedHashMap<Integer, Float[]> RIGHT_DATA_BUFFER;
 
     static int dataBufferLength = 256;
     ServerComms serverComms;
@@ -47,16 +49,25 @@ public class RunEvent {
     Gson gson;
     private Context context;
 
+    String features;
+
     public boolean paused;
 
     final DateTimeFormatter dateFormat;
+
+    ScheduledExecutorService service;
+
+    private IRunEvent mainActivity;
+
+    boolean getFeaturesAllowed;
 
     public RunEvent(Context current) {
         System.out.println("Run Event Created");
         this.context = current;
 
         serverComms = new ServerComms();
-        DATA_BUFFER = new HashMap<>();
+        LEFT_DATA_BUFFER = new LinkedHashMap<>();
+        RIGHT_DATA_BUFFER = new LinkedHashMap<>();
 
         dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 
@@ -68,18 +79,34 @@ public class RunEvent {
         gson = new Gson();
 
         // Runnable for refreshing features.
-        Runnable refreshRunnable = new Runnable() {
+        Runnable RefreshRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!paused && !getFeaturesAllowed) {
+                    RefreshFeatures();
+                }
+                System.out.println("REFRESH");
+            }
+        };
+        // Schedules get requests for recommendations.
+
+        service = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleAtFixedRate(RefreshRunnable, 15, 15, TimeUnit.SECONDS);
+
+
+        // Runnable for generating audio feedback.
+        Runnable FeedbackRunnable = new Runnable() {
             @Override
             public void run() {
                 if (!paused) {
-                    RefreshFeatures();
+                    GiveFeedback();
                 }
+                System.out.println("giving feedback");
             }
         };
 
-        // Schedules get requests for recommendations.
-        ScheduledExecutorService service  = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleAtFixedRate(refreshRunnable, 15, 15, TimeUnit.SECONDS);
+        service.scheduleAtFixedRate(FeedbackRunnable, 2, 4, TimeUnit.MINUTES);
+        mainActivity = (IRunEvent) current;
     }
 
 
@@ -87,55 +114,73 @@ public class RunEvent {
 //        DATA_BUFFER.add(dataSample);
 
         // Add prerecorded data sample;
-        DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
+        switch (side) {
+            case "left":
+                LEFT_DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
+                LEFT_DATA_BUFFER.put(dataIndex+1, dataSet.get(dataIndex+1));
 
+                if (LEFT_DATA_BUFFER.size() >= dataBufferLength) {
 
-        if (DATA_BUFFER.size() >= dataBufferLength) {
+                    serverComms.PostPressureData(LEFT_DATA_BUFFER);
+                    String jsonString = gson.toJson(LEFT_DATA_BUFFER);
+                    System.out.println(jsonString);
+                    LEFT_DATA_BUFFER.clear();
+                }
+                dataIndex += 2;
+                break;
+            case "right":
+                RIGHT_DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
+                RIGHT_DATA_BUFFER.put(dataIndex+1, dataSet.get(dataIndex+1));
 
-            serverComms.PostPressureData(DATA_BUFFER);
-            String jsonString = gson.toJson(DATA_BUFFER);
-            System.out.println(jsonString);
-            DATA_BUFFER.clear();
+                if (RIGHT_DATA_BUFFER.size() >= dataBufferLength) {
+
+                    serverComms.PostPressureData(RIGHT_DATA_BUFFER);
+                    String jsonString = gson.toJson(RIGHT_DATA_BUFFER);
+                    System.out.println(jsonString);
+                    RIGHT_DATA_BUFFER.clear();
+                }
+                dataIndex += 2;
+                break;
         }
-        dataIndex += 1;
     }
 
     // Send a test packet of data
     public void testDataPacket() {
         int _size = 800;
 
-        for (int index = dataIndex*_size; dataIndex < _size; dataIndex++) {
-            DATA_BUFFER.put(index, dataSet.get(dataIndex));
+        for (int index = dataIndex * _size; dataIndex < _size; dataIndex++) {
+            LEFT_DATA_BUFFER.put(index, dataSet.get(dataIndex));
         }
 
-        serverComms.PostPressureData(DATA_BUFFER);
+        getFeaturesAllowed = serverComms.PostPressureData(LEFT_DATA_BUFFER);
 
-        String jsonString = gson.toJson(DATA_BUFFER);
+        String jsonString = gson.toJson(LEFT_DATA_BUFFER);
         writeToFile(jsonString, context);
         System.out.println(jsonString);
-        DATA_BUFFER.clear();
+        LEFT_DATA_BUFFER.clear();
         dataIndex += 1;
     }
 
-    public void RefreshFeatures() {
-        //Make get request.
-        String features = serverComms.getFeature("features");
-        System.out.println(String.format("Features: %s", features));
+    public interface IRunEvent
+    {
+        public void RefreshFeatures(String features);
+        public void EndOfRunFeatures(String features);
+        public void GiveFeedback(String features);
+    }
 
-        MainActivity activity = (MainActivity) context;
+    public void RefreshFeatures() {
+
+        //Make get request.
+        features = serverComms.getFeature("features");
         // Calls the update recommendations
-        activity.UpdateRecommendations(features);
-        GiveFeedback(features);
+        mainActivity.RefreshFeatures(features);
 
     }
 
-    public void GiveFeedback(String features)
-    {
-        MainActivity activity = (MainActivity) context;
-        String text_pronate = "You are pronating";
-        Intent speechIntent = new Intent(activity, TextToSpeechService.class);
-        speechIntent.putExtra(TextToSpeechService.EXTRA_WORD, text_pronate );
-        activity.startService(speechIntent);
+    public void GiveFeedback() {
+
+        mainActivity.GiveFeedback(features);
+
     }
 
     private void writeToFile(String data, Context context) {
@@ -159,11 +204,18 @@ public class RunEvent {
         System.out.println("Run Paused");
     }
 
+    public void ResumeRunEvent() {
+        this.paused = false;
+        System.out.println("Run Resumed");
+    }
+
 
     public void EndRunEvent() {
         endTime = LocalDateTime.now(ZoneId.systemDefault());
-        serverComms.getFeature("endRun", SaveSharedPreferences.getUserName(context));
-        System.out.println("Run Ended");
+        service.shutdown();
+        String historic = serverComms.getFeature("endRun", SaveSharedPreferences.getUserName(context));
+        System.out.println(historic);
+        mainActivity.EndOfRunFeatures(historic);
 
     }
 

@@ -19,11 +19,14 @@ import com.anychart.anychart.DataEntry;
 import com.anychart.anychart.Pie;
 import com.anychart.anychart.ValueDataEntry;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
@@ -60,14 +63,12 @@ public class DashboardFragment extends Fragment {
     DateFormat formatter;
 
 
-
     DateFormat dateFormat = new SimpleDateFormat("YYYY-mm-dd HH:MM:SS");
 
 
-
-    static String jsonString = "{'DictA' : {\"Datetime_Start\": \"2019-03-09 12:41:24\",\"Datetime_Stop\":\"2019-03-09 12:50:24\",\"Number_Of_Steps\": \"100\",\"Count_NP\": \"20\",\"Count_OP\": \"40\",\"Count_UP\":\"40\",\"Average_Frequency\": \"3\"}, 'DictB' : {\"Datetime_Start\": \"2019-03-08 12:41:24\",\"Datetime_Stop\": \"2019-03-08 12:50:24\",\"Number_Of_Steps\": \"100\",\"Count_NP\": \"20\",\"Count_OP\": \"40\",\"Count_UP\":\"\"40\",\"Average_Frequency\": \"3\"}}";
-
-    String jsonString2 = "{\"Datetime_Start\": \"2019-03-09 12:41:24\",\"Datetime_Stop\":\"2019-03-09 12:50:24\",\"Number_Of_Steps\": \"100\",\"Count_NP\": \"20\",\"Count_OP\": \"40\",\"Count_UP\": \"40\",\"Average_Frequency\": \"3\"}";
+//    static String jsonString = "{'DictA' : {\"Datetime_Start\": \"2019-03-09 12:41:24\",\"Datetime_Stop\":\"2019-03-09 12:50:24\",\"Number_Of_Steps\": \"100\",\"Count_NP\": \"20\",\"Count_OP\": \"40\",\"Count_UP\":\"40\",\"Average_Frequency\": \"3\"}, 'DictB' : {\"Datetime_Start\": \"2019-03-08 12:41:24\",\"Datetime_Stop\": \"2019-03-08 12:50:24\",\"Number_Of_Steps\": \"100\",\"Count_NP\": \"20\",\"Count_OP\": \"40\",\"Count_UP\":\"\"40\",\"Average_Frequency\": \"3\"}}";
+//
+//    String jsonString2 = "{\"Datetime_Start\": \"2019-03-09 12:41:24\",\"Datetime_Stop\":\"2019-03-09 12:50:24\",\"Number_Of_Steps\": \"100\",\"Count_NP\": \"20\",\"Count_OP\": \"40\",\"Count_UP\": \"40\",\"Average_Frequency\": \"3\"}";
 
 
     @Nullable
@@ -80,19 +81,18 @@ public class DashboardFragment extends Fragment {
         serverComms = new ServerComms();
         // Set up Calendar:
         monthTextView.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
-
         String jsonString3 = serverComms.getFeature("historicRuns");
 
-        System.out.println(jsonString3);
+//        System.out.println(jsonString3);
         List<String> runsArray1 = Arrays.asList(jsonString3.split("(?=\\{)|(?<=\\})"));
         ArrayList<String> runsArrayFinal = new ArrayList<String>();
         ArrayList<Historic_run> historic_runArrayList = new ArrayList<Historic_run>();
 
 
-        for(String run : runsArray1) {
+        for (String run : runsArray1) {
             if (run != null) {
                 if (run.length() > 10) {
-                    System.out.println(run);
+//                    System.out.println(run);
                     runsArrayFinal.add(run);
                     //runsArrayFinal.add(run);
                     // runsArray1.remove(run);
@@ -105,13 +105,7 @@ public class DashboardFragment extends Fragment {
         }
 
 
-
-
-
         //String[] runsArray = jsonString3.split("(?=\\})");
-
-
-
 
 
 //        JSONObject req = new JSONObject(join(LoadStrings(jsonString)));
@@ -134,16 +128,19 @@ public class DashboardFragment extends Fragment {
 //        }
 
 
-
-        BarChart barChart = (BarChart) view.findViewById(R.id.Bar_chart);
+        final BarChart barChart = (BarChart) view.findViewById(R.id.Bar_chart);
         ArrayList<BarEntry> yValues = new ArrayList<>();
+        final ArrayList<String> xLabels = new ArrayList<>();
 
         formatter = new SimpleDateFormat("d/M/y H:m");
-
-        for(Historic_run run : historic_runArrayList){
-            System.out.println(run.DateTime_Start);
+        int count = 0;
+        for (Historic_run run : historic_runArrayList) {
+//            System.out.println(run.DateTime_Start);
 
             String str_date = run.DateTime_Start;
+            xLabels.add(str_date);
+//            float formattedDate = HackDate(run.DateTime_Start);
+////            System.out.println(formattedDate);
             Date date = new Date();
             try {
                 date = (Date) formatter.parse(str_date);
@@ -151,52 +148,115 @@ public class DashboardFragment extends Fragment {
             } catch (java.text.ParseException e) {
                 e.printStackTrace();
             }
-            long unixTime = (long) date.getTime()/1000;
-            System.out.println(unixTime);
+            long unixTime = (long) date.getTime();
+//            System.out.println(unixTime);
             float steps = Float.parseFloat(run.Number_Of_Steps);
             float UP = Float.parseFloat(run.Count_UP);
             float NP = Float.parseFloat(run.Count_NP);
             float OP = Float.parseFloat(run.Count_OP);
 
-            yValues.add(new BarEntry( unixTime/1000,new float[]{UP,NP,OP}));
-            Event event = new Event(0xFF000000, unixTime , "Run" );
-
-            compactCalendarView.addEvent(event,true);
+            yValues.add(new BarEntry(unixTime/1000000, new float[]{UP, NP, OP}));
+            Event event = new Event(0xFF000000, unixTime, count);
+            compactCalendarView.addEvent(event, true);
+            count ++;
+            System.out.println(unixTime/1000000);
         }
 
 
-
-
-
-
-        BarDataSet dataSet = new BarDataSet(yValues,"");
+        BarDataSet dataSet = new BarDataSet(yValues, "");
         dataSet.setDrawIcons(false);
         ArrayList<String> colors = new ArrayList<>();
         colors.add("#ffe95451");
-        dataSet.setColors(new int[] {-60179113,-00255, -255105970});
+        dataSet.setColors(new int[]{-60179113, -00255, -255105970});
 
         dataSet.setStackLabels(new String[]{"Over", "Under", "Normal"});
-        BarData barData = new BarData(dataSet);
+        final BarData barData = new BarData(dataSet);
+        barData.setBarWidth(50f);
         barChart.setData(barData);
+        barChart.setVisibleYRange(0,150, YAxis.AxisDependency.RIGHT);
 //        String[] labels = { "1","2","3","4","5"};
 //        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
         final XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextSize(10f);
-        xAxis.setTextColor(Color.RED);
+        xAxis.setTextColor(Color.BLACK);
         xAxis.setDrawAxisLine(true);
         xAxis.setDrawGridLines(true);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            public String getFormattedValue(float value, AxisBase axis) {
+                formatter = new SimpleDateFormat("d/M");
+                java.util.Date time = new java.util.Date((long) value * 1000000);
+                String strDate = formatter.format(time);
+                System.out.println(strDate);
+
+                return strDate;
+            }
+
+        });
+        final YAxis yAxis = barChart.getAxisLeft();
+        yAxis.setDrawLabels(true); // no axis labels
+
+
         Legend legend = barChart.getLegend();
-        legend.setPosition(Legend.LegendPosition.ABOVE_CHART_CENTER);
+        legend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
         barChart.invalidate();
 
         // Calendar Listeners
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
-                System.out.println(dateClicked);
+//
                 List<Event> events = compactCalendarView.getEvents(dateClicked);
-                System.out.println(events);
+                if(events.size() != 0) {
+                    long time = dateClicked.getTime()/1000000;
+                    float t = time;
+                    //Event event = events.get(0);
+//                    System.out.println(event.getData());
+                    //int runIndex = (Integer) event.getData();
+//                    barChart.centerViewToAnimated(4,50, YAxis.AxisDependency.LEFT, 200);
+                    System.out.println(t);
+//                    barChart.setVisibleXRangeMaximum(200);
+                    barChart.setVisibleYRange(0,150, YAxis.AxisDependency.RIGHT);
+                    barChart.setVisibleXRange(100,200);
+                    barChart.centerViewTo(t, 0, YAxis.AxisDependency.RIGHT);
+
+////                    float lower = runIndex - 2;
+////                    float upper = runIndex + 2;
+////                    xAxis.setAxisMinimum(1f);
+////                    xAxis.setAxisMaximum(6);
+////////                barChart.setVisibleXRangeMinimum(4);
+//                    barChart.moveViewToX(50f);
+////                    barChart.centerViewTo(5,50, YAxis.AxisDependency.RIGHT);
+                    barChart.invalidate();
+                    barChart.animateXY(1000, 1000);
+
+                }
+                else {
+                    System.out.println("empty");
+//                    barChart.setVisibleXRangeMaximum(20000);
+//                barChart.setVisibleXRangeMinimum(4);
+//                    barChart.centerViewToAnimated(4,50, XAxi, 200);
+                    barChart.fitScreen();
+                    barChart.invalidate();
+//                    barChart.animateXY(1000, 1000);
+//                    barChart.moveViewToX(runIndex);
+
+
+                }
+
+                float time = dateClicked.getTime();
+                time = 500000000f;
+
+//                System.out.println(time);
+//                xAxis.setAxisMaxValue(1.0f);
+//                barChart.setVisibleXRangeMaximum(200);
+////                barChart.setVisibleXRangeMinimum(4);
+//                barChart.moveViewToX(5);
+//                barChart.invalidate();
+//                compactCalendarView.getWeekNumberForCurrentMonth();
+
+//                System.out.println(events);
 //                xAxis.setAxisMaximum(float 100);
 //                graph.getViewport().setMinX(1);
 //                graph.getViewport().setMaxX(3);
@@ -208,10 +268,12 @@ public class DashboardFragment extends Fragment {
                 System.out.println("month scrolled");
                 //  System.out.println(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
                 monthTextView.setText(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
+                barChart.fitScreen();
+                barChart.invalidate();
+                barChart.animateXY(1000, 1000);
             }
 
         });
-
 
 
         return view;
@@ -226,8 +288,14 @@ public class DashboardFragment extends Fragment {
         public String Count_UP;
         public String averageFrequency;
 
-        public Historic_run(String DateTime_Start,String DateTime_End,String Number_Of_Steps,String Count_NP,String Count_OP, String Count_UP,String averageFrequency){
+//        public Float formattedDate;
+
+        public Historic_run(String DateTime_Start, String DateTime_End, String Number_Of_Steps, String Count_NP, String Count_OP, String Count_UP, String averageFrequency) {
             this.DateTime_Start = DateTime_Start;
+
+//            if (DateTime_Start != null) formattedDate = HackDate(this.DateTime_Start);
+//            formattedDate = 1f;
+
             this.DateTime_End = DateTime_End;
             this.Number_Of_Steps = Number_Of_Steps;
             this.Count_NP = Count_NP;
@@ -235,6 +303,25 @@ public class DashboardFragment extends Fragment {
             this.Count_UP = Count_UP;
             this.averageFrequency = averageFrequency;
         }
+
+
+    }
+    private Float HackDate(String date) {
+        String f = date.substring(0, 5);
+//        System.out.println(f);
+//        System.out.println(f.charAt(0));
+//        System.out.println(f.charAt(1));
+//        System.out.println(f.charAt(2));
+//        System.out.println(f.charAt(3));
+//        System.out.println(f.charAt(4));
+////        System.out.println(f.charAt(5));
+
+        String fd = String.format("%c %c f", f.charAt(3), f.charAt(4));
+        System.out.println(fd);
+
+        return 1f;
+//        return Float.parseFloat(fd);
+
     }
 
 }

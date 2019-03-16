@@ -4,39 +4,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_marginHorizontal="50dp"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/OP_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/paco"
-            android:text="Over Pronation = " />
-        <TextView
-            android:id="@+id/UP_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/paco"
-            android:text="Under Pronation = "
-            android:layout_toRightOf="@id/OP_text"/>
-        <TextView
-            android:id="@+id/NP_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/paco"
-            android:text="Normal Pronation = "
-            android:layout_toRightOf="@id/UP_text"/>
-
-        <com.jjoe64.graphview.GraphView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:id="@+id/graph" />
-
-    </RelativeLayout>
-
     <RelativeLayout
         android:id="@+id/empty_layout"
         android:layout_width="match_parent"

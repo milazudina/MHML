@@ -52,7 +52,7 @@ import static android.bluetooth.BluetoothAdapter.STATE_CONNECTED;
 import static android.bluetooth.BluetoothAdapter.STATE_DISCONNECTED;
 
 public class MainActivity extends AppCompatActivity
-                        implements RunFragment.RunFragmentListener{
+                        implements RunFragment.RunFragmentListener, RunEvent.IRunEvent{
 
     public static HashMap<String, String> stridMACs;
     private static UUID stridServiceUUID;
@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity
         bluetooth_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                GiveFeedback("{'type': 1, 'freq': 174, 'totalNum': 73}");
                 RunBLE();
             }
         });
@@ -143,29 +144,56 @@ public class MainActivity extends AppCompatActivity
         runEvent = new RunEvent(this);
         runEvent.StartRunEvent();
 //        runEvent.testDataPacket();
-        endOfRunFragment.mViewSwitcher.showNext();
+
+
+//        endOfRunFragment.mViewSwitcher.showNext();
         recommendationsFragment.mViewSwitcher.showNext();
+
     }
 
     public void PauseRun(){
         runEvent.PauseRunEvent();
     }
 
+    public void ResumeRun(){
+        runEvent.ResumeRunEvent();
+    }
+
     public void EndRun(){
         runEvent.EndRunEvent();
-        endOfRunFragment.mViewSwitcher.showNext();
+//        endOfRunFragment.mViewSwitcher.showNext();
         recommendationsFragment.mViewSwitcher.showNext();
 
     }
 
-    public void UpdateRecommendations(String features)
+    public void GiveFeedback(String features)
     {
-//        ADD RECOMMENDATIONS UPDATE METHOD
-//        recommendationsFragment.
+        recommendationsFragment.AudioFeedback(features);
+    }
+
+    // Update recommendations fragment mid run;
+    public void RefreshFeatures(final String features)
+    {
+        System.out.println("Features" + features);
+
+        if (features.length() > 2)
+        {
+            recommendationsFragment.updaterecomText(features);
+        }
+    }
+
+    public void EndOfRunFeatures(final String features) {
+
+        // Wait for 30 seconds before updating final recommendations view.
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                recommendationsFragment.updaterecomText2(features);
+            }
+        }, 10000);
     }
 
     // BLUETOOTH STUFF
-
     public void InitialiseBluetooth() {
         // Bluetooth Stuff
         // Use this check to determine whether BLE is supported on the device.  Then you can
