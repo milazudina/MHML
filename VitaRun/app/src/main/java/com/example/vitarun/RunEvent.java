@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.channels.FileLock;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -33,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 //import opensl_example.AnalyticsLib;
 
 import opensl_example.AnalyticsLib;
+import opensl_example.StressInfo;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -65,6 +67,8 @@ public class RunEvent {
 
     boolean getFeaturesAllowed;
 
+    Thread stridInitThread;
+
     public RunEvent(Context current) {
         System.out.println("Run Event Created");
         this.context = current;
@@ -82,12 +86,6 @@ public class RunEvent {
         dataIndex = 0;
         gson = new Gson();
 
-
-        // STRIDALYSER LIBRARY.
-        AnalyticsLib.InitUser(0,0, 73, 9, 1, 1, 1);
-        AnalyticsLib.SetSensorSpecNew (7,6,9,10,4,5,8,11, 2, 4, 1);
-        AnalyticsLib.SetSensorSpecNew (10,6,9,7,4,8,5,11, 2, 4, 0);
-
         // Runnable for refreshing features.
         Runnable RefreshRunnable = new Runnable() {
             @Override
@@ -100,7 +98,7 @@ public class RunEvent {
         };
         // Schedules get requests for recommendations.
         service = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleAtFixedRate(RefreshRunnable, 15, 15, TimeUnit.SECONDS);
+//        service.scheduleAtFixedRate(RefreshRunnable, 15, 15, TimeUnit.SECONDS);
 
 
         // Runnable for generating audio feedback.
@@ -114,7 +112,7 @@ public class RunEvent {
             }
         };
 
-        service.scheduleAtFixedRate(FeedbackRunnable, 2, 4, TimeUnit.MINUTES);
+//        service.scheduleAtFixedRate(FeedbackRunnable, 2, 4, TimeUnit.MINUTES);
         mainActivity = (IRunEvent) current;
     }
 
@@ -126,7 +124,7 @@ public class RunEvent {
         switch (side) {
             case "left":
                 LEFT_DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
-                LEFT_DATA_BUFFER.put(dataIndex+1, dataSet.get(dataIndex+1));
+                LEFT_DATA_BUFFER.put(dataIndex + 1, dataSet.get(dataIndex + 1));
 
                 if (LEFT_DATA_BUFFER.size() >= dataBufferLength) {
 
@@ -139,7 +137,7 @@ public class RunEvent {
                 break;
             case "right":
                 RIGHT_DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
-                RIGHT_DATA_BUFFER.put(dataIndex+1, dataSet.get(dataIndex+1));
+                RIGHT_DATA_BUFFER.put(dataIndex + 1, dataSet.get(dataIndex + 1));
 
                 if (RIGHT_DATA_BUFFER.size() >= dataBufferLength) {
 
@@ -153,15 +151,37 @@ public class RunEvent {
         }
     }
 
-    public void addDataSample(String side, String data) {
+    public void addDataSample(String side, byte[] bytes) {
 
-//        AnalyticsLib.ProcessStride_FSR(data,
-                //String bytes, int l, float speed_m_s, float d_m, float alt_m,
-                // int isLeft, int mode, int isReset, int isInsight, int noConstrain
+//        char[] dataChars = new char[bytes.length];
+//
+//        for (int i = 0; i <bytes.length; i++)
+//        {
+//            dataChars[i] = (char) (bytes[i] & 0xFF);
+//        }
+//
+//        String dataString = String.valueOf(dataChars);
+
+        String dataString =  new String(bytes, StandardCharsets.US_ASCII);
+
+//        System.out.println();
 
         switch (side) {
             case "left":
-//                LEFT_DATA_BUFFER.put();
+
+                AnalyticsLib.ProcessStride_FSR(dataString, dataString.length(), 0, 0, 0, 1, 1, 0, 1, 0);
+
+                StressInfo sI = AnalyticsLib.GetStressInfo(1);
+//                StressInfo sI = AnalyticsLib.GetTotalStress(1);
+
+                Long stepCount = AnalyticsLib.GetRunInfo().getStrideCount();
+
+                Float[] entry = {sI.getHallux(), sI.getFront(), sI.getFront_2(), sI.getMid(),
+                        sI.getArch(), sI.getHeel(), 0f, 0f, 0f, stepCount.floatValue()};
+
+                System.out.println(Arrays.toString(entry));
+
+//              LEFT_DATA_BUFFER.put();
 
                 if (LEFT_DATA_BUFFER.size() >= dataBufferLength) {
 
@@ -170,7 +190,6 @@ public class RunEvent {
                     System.out.println(jsonString);
                     LEFT_DATA_BUFFER.clear();
                 }
-                dataIndex += 2;
                 break;
             case "right":
 //                RIGHT_DATA_BUFFER.put();
@@ -182,7 +201,7 @@ public class RunEvent {
                     System.out.println(jsonString);
                     RIGHT_DATA_BUFFER.clear();
                 }
-                dataIndex += 2;
+
                 break;
         }
     }
@@ -204,10 +223,11 @@ public class RunEvent {
         dataIndex += 1;
     }
 
-    public interface IRunEvent
-    {
+    public interface IRunEvent {
         public void RefreshFeatures(String features);
+
         public void EndOfRunFeatures(String features);
+
         public void GiveFeedback(String features);
     }
 
@@ -240,6 +260,13 @@ public class RunEvent {
         System.out.println("Run Started");
         serverComms.getFeature("startRun", SaveSharedPreferences.getUserName(context));
         startTime = LocalDateTime.now(ZoneId.systemDefault());
+
+        //        AnalyticsLib.InitUser(180, 80, 73, 25, 1, 1, 0);
+        AnalyticsLib.InitUser(0, 0, 0, 0, 1, 1, 1
+        );
+        AnalyticsLib.SetSensorSpecNew(9, 5, 6, 7, 8, 10, 4, 11, 2, 3, 1);
+        AnalyticsLib.SetSensorSpecNew(4, 8, 7, 6, 5, 10, 9, 11, 2, 3, 0);
+
     }
 
     public void PauseRunEvent() {
@@ -258,7 +285,7 @@ public class RunEvent {
         service.shutdown();
         String historic = serverComms.getFeature("endRun", SaveSharedPreferences.getUserName(context));
         System.out.println(historic);
-        mainActivity.EndOfRunFeatures(historic);
+//        mainActivity.EndOfRunFeatures(historic);
 
     }
 

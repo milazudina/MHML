@@ -42,6 +42,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import org.w3c.dom.Text;
+
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,12 +55,11 @@ import static android.bluetooth.BluetoothAdapter.STATE_CONNECTED;
 import static android.bluetooth.BluetoothAdapter.STATE_DISCONNECTED;
 
 public class MainActivity extends AppCompatActivity
-                        implements RunFragment.RunFragmentListener, RunEvent.IRunEvent{
+        implements RunFragment.RunFragmentListener, RunEvent.IRunEvent {
 
     static {
         System.loadLibrary("AnalyticsLib");
     }
-
 
     public static HashMap<String, String> stridMACs;
     private static UUID stridServiceUUID;
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity
 
     // RUN TRANSPORT STUFF
 
-    public void StartRun(){
+    public void StartRun() {
         runEvent = new RunEvent(this);
         runEvent.StartRunEvent();
 //        runEvent.testDataPacket();
@@ -157,33 +158,30 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void PauseRun(){
+    public void PauseRun() {
         runEvent.PauseRunEvent();
     }
 
-    public void ResumeRun(){
+    public void ResumeRun() {
         runEvent.ResumeRunEvent();
     }
 
-    public void EndRun(){
+    public void EndRun() {
         runEvent.EndRunEvent();
         endOfRunFragment.mViewSwitcher.showNext();
         recommendationsFragment.mViewSwitcher.showNext();
 
     }
 
-    public void GiveFeedback(String features)
-    {
+    public void GiveFeedback(String features) {
         recommendationsFragment.AudioFeedback(features);
     }
 
     // Update recommendations fragment mid run;
-    public void RefreshFeatures(final String features)
-    {
+    public void RefreshFeatures(final String features) {
         System.out.println("Features" + features);
 
-        if (features.length() > 2)
-        {
+        if (features.length() > 2) {
             recommendationsFragment.updaterecomText(features);
         }
     }
@@ -236,19 +234,19 @@ public class MainActivity extends AppCompatActivity
 
         AlertDialog.Builder scanningAlertBuilder = new AlertDialog.Builder(this);
         scanningAlertBuilder.setMessage("Scanning for Insoles...")
-                            .setCancelable(true)
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    bluetoothAdapter.stopLeScan(scanCallback);
-                                }
-                            })
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                .setCancelable(true)
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        bluetoothAdapter.stopLeScan(scanCallback);
+                    }
+                })
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            });
+                    }
+                });
         scanningAlertBuilder.create();
         scanningAlertBuilder.show();
 
@@ -401,15 +399,13 @@ public class MainActivity extends AppCompatActivity
                         characteristic) {
                     super.onCharacteristicChanged(gatt, characteristic);
 
-                    byte[] DataBytes = characteristic.getValue();
-                    String DataString = new String(DataBytes, StandardCharsets.UTF_8);
+                    byte[] bytes = characteristic.getValue();
+//                    String dataString = characteristic.getStringValue(0);
+
 
                     if (runEvent != null && runEvent.paused == false) {
-                        runEvent.addDataSample(side, DataString);
+                        runEvent.addDataSample(side, bytes);
                     }
-
-//                        String DataString = new String(DataBytes, StandardCharsets.UTF_16);
-//                        System.out.println(DataString);
                 }
             }
             ;
