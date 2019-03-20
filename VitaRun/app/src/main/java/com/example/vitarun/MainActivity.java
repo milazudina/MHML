@@ -42,6 +42,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -53,6 +54,11 @@ import static android.bluetooth.BluetoothAdapter.STATE_DISCONNECTED;
 
 public class MainActivity extends AppCompatActivity
                         implements RunFragment.RunFragmentListener, RunEvent.IRunEvent{
+
+    static {
+        System.loadLibrary("AnalyticsLib");
+    }
+
 
     public static HashMap<String, String> stridMACs;
     private static UUID stridServiceUUID;
@@ -146,7 +152,7 @@ public class MainActivity extends AppCompatActivity
 //        runEvent.testDataPacket();
 
 
-//        endOfRunFragment.mViewSwitcher.showNext();
+        endOfRunFragment.mViewSwitcher.showNext();
         recommendationsFragment.mViewSwitcher.showNext();
 
     }
@@ -161,7 +167,7 @@ public class MainActivity extends AppCompatActivity
 
     public void EndRun(){
         runEvent.EndRunEvent();
-//        endOfRunFragment.mViewSwitcher.showNext();
+        endOfRunFragment.mViewSwitcher.showNext();
         recommendationsFragment.mViewSwitcher.showNext();
 
     }
@@ -396,9 +402,10 @@ public class MainActivity extends AppCompatActivity
                     super.onCharacteristicChanged(gatt, characteristic);
 
                     byte[] DataBytes = characteristic.getValue();
+                    String DataString = new String(DataBytes, StandardCharsets.UTF_8);
 
                     if (runEvent != null && runEvent.paused == false) {
-                        runEvent.addDataSample(side, DataBytes);
+                        runEvent.addDataSample(side, DataString);
                     }
 
 //                        String DataString = new String(DataBytes, StandardCharsets.UTF_16);

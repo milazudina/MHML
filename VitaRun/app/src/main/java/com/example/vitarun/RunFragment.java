@@ -52,11 +52,9 @@ public class RunFragment extends Fragment {
                 endOfRunFragment).commit();
 
 
-
         return inflater.inflate(R.layout.fragment_run, container, false);
 
     }
-
 
 }
 

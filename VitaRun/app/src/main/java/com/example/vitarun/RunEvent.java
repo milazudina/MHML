@@ -30,6 +30,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+//import opensl_example.AnalyticsLib;
+
+import opensl_example.AnalyticsLib;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class RunEvent {
@@ -78,6 +82,12 @@ public class RunEvent {
         dataIndex = 0;
         gson = new Gson();
 
+
+        // STRIDALYSER LIBRARY.
+        AnalyticsLib.InitUser(0,0, 73, 9, 1, 1, 1);
+        AnalyticsLib.SetSensorSpecNew (7,6,9,10,4,5,8,11, 2, 4, 1);
+        AnalyticsLib.SetSensorSpecNew (10,6,9,7,4,8,5,11, 2, 4, 0);
+
         // Runnable for refreshing features.
         Runnable RefreshRunnable = new Runnable() {
             @Override
@@ -85,11 +95,10 @@ public class RunEvent {
                 if (!paused && !getFeaturesAllowed) {
                     RefreshFeatures();
                 }
-                System.out.println("REFRESH");
+//                System.out.println("REFRESH");
             }
         };
         // Schedules get requests for recommendations.
-
         service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(RefreshRunnable, 15, 15, TimeUnit.SECONDS);
 
@@ -101,7 +110,7 @@ public class RunEvent {
                 if (!paused) {
                     GiveFeedback();
                 }
-                System.out.println("giving feedback");
+//                System.out.println("giving feedback");
             }
         };
 
@@ -110,7 +119,7 @@ public class RunEvent {
     }
 
 
-    public void addDataSample(String side, byte[] data) {
+    public void MOCK_addDataSample(String side, byte[] data) {
 //        DATA_BUFFER.add(dataSample);
 
         // Add prerecorded data sample;
@@ -131,6 +140,40 @@ public class RunEvent {
             case "right":
                 RIGHT_DATA_BUFFER.put(dataIndex, dataSet.get(dataIndex));
                 RIGHT_DATA_BUFFER.put(dataIndex+1, dataSet.get(dataIndex+1));
+
+                if (RIGHT_DATA_BUFFER.size() >= dataBufferLength) {
+
+                    serverComms.PostPressureData(RIGHT_DATA_BUFFER);
+                    String jsonString = gson.toJson(RIGHT_DATA_BUFFER);
+                    System.out.println(jsonString);
+                    RIGHT_DATA_BUFFER.clear();
+                }
+                dataIndex += 2;
+                break;
+        }
+    }
+
+    public void addDataSample(String side, String data) {
+
+//        AnalyticsLib.ProcessStride_FSR(data,
+                //String bytes, int l, float speed_m_s, float d_m, float alt_m,
+                // int isLeft, int mode, int isReset, int isInsight, int noConstrain
+
+        switch (side) {
+            case "left":
+//                LEFT_DATA_BUFFER.put();
+
+                if (LEFT_DATA_BUFFER.size() >= dataBufferLength) {
+
+                    serverComms.PostPressureData(LEFT_DATA_BUFFER);
+                    String jsonString = gson.toJson(LEFT_DATA_BUFFER);
+                    System.out.println(jsonString);
+                    LEFT_DATA_BUFFER.clear();
+                }
+                dataIndex += 2;
+                break;
+            case "right":
+//                RIGHT_DATA_BUFFER.put();
 
                 if (RIGHT_DATA_BUFFER.size() >= dataBufferLength) {
 
