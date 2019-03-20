@@ -122,13 +122,13 @@ public class RecommendationsFragment extends Fragment {
 
                 switch (summary_recom.type) {
                     case "0":
-                        tv.setText("You have Normal Pronation");
+                        tv.setText("Normal Pronation");
                         break;
                     case "1":
-                        tv.setText("You are UnderPronating");
+                        tv.setText("UnderPronation");
                         break;
                     case "2":
-                        tv.setText("You are OverPronating");
+                        tv.setText("OverPronation");
                         break;
                 }
 
@@ -144,21 +144,21 @@ public class RecommendationsFragment extends Fragment {
                 }
 
                 if (185 < freq && freq < 195) {
-                    String Stridefreq3 = "WOW!! You are running at elite runners' stride rate!";
+                    String Stridefreq3 = "You are running at elite runners' stride rate!";
                     String FinalStridefreq1 = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
                     //            System.out.println(FinalStridefreq1);
                     tv2.setText(FinalStridefreq1);
                 }
 
                 if (165 <= freq && freq <= 175) {
-                    String Stridefreq3 = "You are close to the perfect running pace, try taking smaller steps and reducing ground contact time!";
+                    String Stridefreq3 = "Take smaller steps & reduce ground contact time!";
                     String FinalStridefreq1 = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
                     //            System.out.println(FinalStridefreq1);
                     tv2.setText(FinalStridefreq1);
                 }
 
                 if (freq < 165) {
-                    String Stridefreq3 = "Try taking smaller steps and reducing ground contact time!";
+                    String Stridefreq3 = "Take smaller steps & reduce ground contact time!";
                     String FinalStridefreq1 = Stridefreq1 + summary_recom.freq + Stridefreq2 + Stridefreq3;
                     //            System.out.println(FinalStridefreq1);
                     tv2.setText(FinalStridefreq1);
@@ -171,9 +171,9 @@ public class RecommendationsFragment extends Fragment {
                     tv2.setText(FinalStridefreq1);
                 }
 
-                String TotalNbsteps1 = "You have run ";
-                String TotalNbsteps2 = " steps so far!";
-                String FinalTotalNbsteps = TotalNbsteps1 + summary_recom.totalNum + TotalNbsteps2;
+
+                String TotalNbsteps2 = " steps overall!";
+                String FinalTotalNbsteps = summary_recom.totalNum + TotalNbsteps2;
                 tv3.setText(FinalTotalNbsteps);
             }
         });
